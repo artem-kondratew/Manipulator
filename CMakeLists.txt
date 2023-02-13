@@ -3,4 +3,4 @@ project(Manipulator)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Manipulator main.cpp)
+add_executable(Manipulator main.cpp Manipulator.ino)
