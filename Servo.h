@@ -17,8 +17,10 @@ private:
 public:
     Servo(uint16_t _min_angle, uint16_t _max_angle);
     Servo(uint16_t _min_angle, uint16_t _max_angle, uint16_t _angle);
+    ~Servo() = default;
     void setAngle(uint16_t _angle);
     [[nodiscard]] uint16_t getAngle() const;
+
 };
 
 
