@@ -19,8 +19,8 @@
 #ifndef DYNAMIXEL_TOOL_H
 #define DYNAMIXEL_TOOL_H
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 
 #include "DynamixelItem.h"
 
@@ -43,40 +43,40 @@ class DynamixelTool
   DynamixelTool();
   ~DynamixelTool();
 
-  void initTool(void);
+  void initTool();
 
-  bool addTool(const char *model_name, uint8_t id, const char **log = NULL);
-  bool addTool(uint16_t model_number, uint8_t id, const char **log = NULL);
+  bool addTool(const char *model_name, uint8_t id, const char **log = nullptr);
+  bool addTool(uint16_t model_number, uint8_t id, const char **log = nullptr);
 
   void addDXL(uint8_t id);
 
-  const char *getModelName(void);
-  uint16_t getModelNumber(void);
+  const char *getModelName();
+  uint16_t getModelNumber();
 
-  const uint8_t* getID(void);
-  uint8_t getDynamixelBuffer(void);
-  uint8_t getDynamixelCount(void);
+  const uint8_t* getID();
+  uint8_t getDynamixelBuffer();
+  uint8_t getDynamixelCount();
 
-  float getRPM(void);
+  float getRPM();
 
-  int64_t getValueOfMinRadianPosition(void);
-  int64_t getValueOfMaxRadianPosition(void);
-  int64_t getValueOfZeroRadianPosition(void);
+  int64_t getValueOfMinRadianPosition();
+  int64_t getValueOfMaxRadianPosition();
+  int64_t getValueOfZeroRadianPosition();
 
-  float getMinRadian(void);
-  float getMaxRadian(void);
+  float getMinRadian();
+  float getMaxRadian();
 
-  uint8_t getTheNumberOfControlItem(void);
+  uint8_t getTheNumberOfControlItem();
   
-  const ControlItem *getControlItem(const char *item_name, const char **log = NULL);
-  const ControlItem *getControlTable(void);
-  const ModelInfo *getModelInfo(void);
+  const ControlItem *getControlItem(const char *item_name, const char **log = nullptr);
+  const ControlItem *getControlTable();
+  const ModelInfo *getModelInfo();
 
  private:
-  bool setControlTable(const char *model_name, const char **log = NULL);
-  bool setControlTable(uint16_t model_number, const char **log = NULL);
+  bool setControlTable(const char *model_name, const char **log = nullptr);
+  bool setControlTable(uint16_t model_number, const char **log = nullptr);
 
-  bool setModelName(uint16_t model_number, const char **log = NULL);
-  bool setModelNumber(const char *model_name, const char **log = NULL);
+  bool setModelName(uint16_t model_number, const char **log = nullptr);
+  bool setModelNumber(const char *model_name, const char **log = nullptr);
 };
 #endif //DYNAMIXEL_TOOL_H
