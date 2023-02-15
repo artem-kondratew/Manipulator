@@ -11,11 +11,14 @@
 
 class Servo {
 private:
-    uint8_t min_angle;
-    uint8_t max_angle;
-    uint8_t angle;
+    uint16_t min_angle;
+    uint16_t max_angle;
+    uint16_t angle;
 public:
-    void setAngle(uint8_t _angle);
+    Servo(uint16_t _min_angle, uint16_t _max_angle);
+    Servo(uint16_t _min_angle, uint16_t _max_angle, uint16_t _angle);
+    void setAngle(uint16_t _angle);
+    [[nodiscard]] uint16_t getAngle() const;
 };
 
 
