@@ -1,32 +1,40 @@
 //Подключение библиотеки
 #include <DynamixelWorkbench.h>
+#include "Servo.h"
+
 //Требуется для инициализации
 #define DEVICE_NAME "3"
+
 //Боудрейт, для моторов - 1000000, для Serial порта - 57600
 #define BAUDRATE 1000000
 #define SERIAL_BAUDRATE 57600
+
 //ID моторов, должны идти по возрастанию
 #define DXL_ID1 1
 #define DXL_ID2 2
 #define DXL_ID3 3
 #define DXL_ID4 4
+
 //Пины для потенциометров
 #define ANALOG_PIN1 A0
 #define ANALOG_PIN2 A1
 #define ANALOG_PIN3 A2
 #define ANALOG_PIN4 A3
+
 //Пин для ИК датчика
 #define IR_SENSOR_PIN A8
 //Пин для кнопки
 #define BUTTON_PIN 10
 //Пин для звукоизлучателя
 #define BUZZ_PIN 11
+
 //Создание рабочего пространства servos
 DynamixelWorkbench servos;
+
 void setup() {
-const char *log;
+//const char *log;
 //Задаем всем аналоговым пинам то, что они работают на вход, также и
-//для цифровых, кроме звукоизлучателя, для него - выход.
+//0для цифровых, кроме звукоизлучателя, для него - выход.
 pinMode(ANALOG_PIN1, INPUT);
 pinMode(ANALOG_PIN2, INPUT);
 pinMode(ANALOG_PIN3, INPUT);
@@ -43,7 +51,7 @@ servos.ping(DXL_ID2, 0, 0);
 servos.ping(DXL_ID3, 0, 0);
 servos.ping(DXL_ID4, 0, 0);
 //Включение сервоприводов для движения: (ID, скорость, ускорение)
-servos.jointMode(DXL_ID1, 40, 40);
+servos.jointMode(DXL_ID1, 100, 40);
 servos.jointMode(DXL_ID2, 40, 40);
 servos.jointMode(DXL_ID3, 40, 40);
 servos.jointMode(DXL_ID4, 40, 40);
@@ -73,4 +81,10 @@ digitalWrite(BUZZ_PIN, HIGH);
 else
 digitalWrite(BUZZ_PIN, LOW);
 delay (100);
+
+Servo A(1, 200, 800);
+servos.goalPosition(DXL_ID1, (int)analogRead(A0));
+servos.goalPosition(DXL_ID2, (int)analogRead(A1));
+servos.goalPosition(DXL_ID3, (int)analogRead(A2));
+servos.goalPosition(DXL_ID4, (int)analogRead(A3));
 }
