@@ -1,27 +1,40 @@
-//
-// Created by artem-kondratew on 15.02.23.
-//
-
-#ifndef MANIPULATOR_SERVO_H
-#define MANIPULATOR_SERVO_H
+#include <stdint.h>
+#include <DynamixelWorkbench.h>
 
 
-#include <cstdint>
+DynamixelWorkbench servos;
 
 
 class Servo {
 private:
-    unsigned int min_angle;
-    unsigned int max_angle;
-    unsigned int angle;
-    unsigned int DXL_ID;
+    uint8_t DXL_ID;
+    uint16_t min_angle;
+    uint16_t max_angle;
+    uint16_t angle;
 public:
-    static const uint32_t SERVO_BAUDRATE = 1000000;
-    Servo(unsigned int dxl_id, unsigned int _min_angle, unsigned int _max_angle);
+    Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle);
     ~Servo() = default;
-    void setAngle(unsigned int _angle);
-    unsigned int getAngle() const;
+    void setAngle(uint16_t _angle);
 };
 
 
-#endif //MANIPULATOR_SERVO_H
+Servo::Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle) {
+    DXL_ID = _DXL_ID;
+    min_angle = _min_angle;
+    max_angle = _max_angle;
+    servos.ping(DXL_ID, 0, 0);
+}
+
+
+void Servo::setAngle(uint16_t _angle) {
+    if (_angle < min_angle) {
+        angle = min_angle;
+    }
+    if (_angle > max_angle) {
+        angle = max_angle;
+    }
+    if (min_angle <= _angle <= max_angle) {
+        angle = _angle;
+    }
+    servos.goalPosition(DXL_ID, angle);
+}
