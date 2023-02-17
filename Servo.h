@@ -11,17 +11,16 @@
 
 class Servo {
 private:
-
-    uint16_t min_angle;
-    uint16_t max_angle;
-    uint16_t angle;
-    uint8_t DXL_ID;
+    unsigned int min_angle;
+    unsigned int max_angle;
+    unsigned int angle;
+    unsigned int DXL_ID;
 public:
-    //static DynamixelWorkbench SERVOS;
-    Servo(uint8_t dxl_id, uint16_t _min_angle, uint16_t _max_angle);
+    static const uint32_t SERVO_BAUDRATE = 1000000;
+    Servo(unsigned int dxl_id, unsigned int _min_angle, unsigned int _max_angle);
     ~Servo() = default;
-    void setAngle(uint16_t _angle);
-    [[nodiscard]] uint16_t getAngle() const;
+    void setAngle(unsigned int _angle);
+    unsigned int getAngle() const;
 };
 
 

@@ -5,16 +5,16 @@
 #include "Servo.h"
 
 
-Servo::Servo(uint8_t dxl_id, uint16_t _min_angle, uint16_t _max_angle) {
+Servo::Servo(unsigned int dxl_id, unsigned int _min_angle, unsigned int _max_angle) {
     DXL_ID = dxl_id;
     min_angle = _min_angle;
     max_angle = _max_angle;
     angle = min_angle;
-    //SERVOS.ping(DXL_ID, nullptr, nullptr);
+    //SERVOS.ping(DXL_ID, 0, 0);
 }
 
 
-void Servo::setAngle(uint16_t _angle) {
+void Servo::setAngle(unsigned int _angle) {
     if (_angle < min_angle) {
         angle = min_angle;
     }
@@ -24,9 +24,8 @@ void Servo::setAngle(uint16_t _angle) {
     if (min_angle <= angle <= max_angle) {
         angle = _angle;
     }
-    //SERVOS.goalPosition(DXL_ID, angle);
 }
 
-uint16_t Servo::getAngle() const {
+unsigned int Servo::getAngle() const {
     return angle;
 }
