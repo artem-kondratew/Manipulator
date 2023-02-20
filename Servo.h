@@ -38,3 +38,6 @@ void Servo::setAngle(uint16_t _angle) {
     }
     servos.goalPosition(DXL_ID, angle);
 }
+
+
+//test_comment
