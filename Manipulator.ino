@@ -4,9 +4,9 @@
 
 
 Servo servo1(DXL_ID1, 150, 873);
-Servo servo2(DXL_ID2, 150, 873);
-Servo servo3(DXL_ID3, 150, 873);
-Servo servo4(DXL_ID4, 150, 873);
+Servo servo2(DXL_ID2, 0, 1023);
+Servo servo3(DXL_ID3, 0, 1023);
+Servo servo4(DXL_ID4, 0, 1023);
 
 
 void setup() {
