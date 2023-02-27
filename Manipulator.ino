@@ -1,15 +1,17 @@
+
 #include <DynamixelWorkbench.h>
-#include "Config.h"
 #include "Servo.h"
 
 
-Servo servo1(DXL_ID1, 150, 873);
-Servo servo2(DXL_ID2, 0, 1023);
-Servo servo3(DXL_ID3, 0, 1023);
-Servo servo4(DXL_ID4, 0, 1023);
+
 
 
 void setup() {
+    Servo servo1(DXL_ID1, 150, 873);
+    Servo servo2(DXL_ID2, 0, 1023);
+    Servo servo3(DXL_ID3, 0, 1023);
+    Servo servo4(DXL_ID4, 0, 1023);
+
     pinMode(ANALOG_PIN1, INPUT);
     pinMode(ANALOG_PIN2, INPUT);
     pinMode(ANALOG_PIN3, INPUT);
@@ -46,7 +48,7 @@ void loop() {
     Serial.println(analogRead(ANALOG_PIN4));
     Serial.print("\n");
 
-    servo1.setAngle((int)analogRead(ANALOG_PIN1));
+    //servo1.setAngle(map((int)analogRead(ANALOG_PIN1), 0, 1023, 150, 873));
     servos.goalPosition(DXL_ID2, map((int)analogRead(ANALOG_PIN2), 0, 1023, 400, 660));
     servos.goalPosition(DXL_ID3, map((int)analogRead(ANALOG_PIN3), 0, 1023, 200, 600));
     servos.goalPosition(DXL_ID4, map((int)analogRead(ANALOG_PIN4), 0, 1023, 500, 1000));

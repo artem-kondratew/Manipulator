@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <DynamixelWorkbench.h>
+#include "Config.h"
 
 
 DynamixelWorkbench servos;
