@@ -21,27 +21,27 @@ void setup() {
     servo2.pingServo();
     servo3.pingServo();
     servo4.pingServo();
-
-    servos.jointMode(DXL_ID1, 40, 40);
+    
+    servos.jointMode(DXL_ID1, 100, 40);
     servos.jointMode(DXL_ID2, 40, 40);
     servos.jointMode(DXL_ID3, 40, 40);
     servos.jointMode(DXL_ID4, 40, 40);
 
-    getStartPosition(servos);
+    // getStartPosition(servos);    
 }
 
 
 void loop() {
   
-    debugPrint();
+    anglePrint();
 
     Joystick::refresh();
-
+/*
     servo1.setAngle(joystick1.getValue());
     servo2.setAngle(joystick2.getValue());
     servo3.setAngle(joystick3.getValue());
     servo4.setAngle(joystick4.getValue());
-
-    Serial.print("checker: ");
-    Serial.println(Joystick::checkAngles());
+*/
+    
+    Servo::talk(Serial.parseInt());
 }
