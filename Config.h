@@ -16,11 +16,14 @@
 
 #define BUTTON_PIN 9
 
+#define SERVO1_MIN_ANGLE 150
+#define SERVO1_MAX_ANGLE 853
 
-void getStartPosition(DynamixelWorkbench servos) {
-    servos.goalPosition(DXL_ID1, 500);
-    servos.goalPosition(DXL_ID2, 500);
-    servos.goalPosition(DXL_ID3, 500);
-    servos.goalPosition(DXL_ID4, 500);
-    delay (5000);
-}
+#define SERVO2_MIN_ANGLE 0
+#define SERVO2_MAX_ANGLE 550
+
+#define SERVO3_MIN_ANGLE 250
+#define SERVO3_MAX_ANGLE 512
+
+#define SERVO4_MIN_ANGLE 512
+#define SERVO4_MAX_ANGLE 1023
