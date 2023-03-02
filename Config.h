@@ -1,4 +1,8 @@
 
+#ifndef Config_h
+#define Config_h
+
+
 #define DEVICE_NAME "3"
 
 #define BAUDRATE 1000000
@@ -16,14 +20,5 @@
 
 #define BUTTON_PIN 9
 
-#define SERVO1_MIN_ANGLE 150
-#define SERVO1_MAX_ANGLE 853
 
-#define SERVO2_MIN_ANGLE 0
-#define SERVO2_MAX_ANGLE 550
-
-#define SERVO3_MIN_ANGLE 250
-#define SERVO3_MAX_ANGLE 512
-
-#define SERVO4_MIN_ANGLE 512
-#define SERVO4_MAX_ANGLE 1023
+#endif

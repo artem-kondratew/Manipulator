@@ -1,8 +1,6 @@
 
 #include <DynamixelWorkbench.h>
 #include "Config.h"
-#include "Debug.h"
-#include "Joystick.h"
 #include "Servo.h"
 
 
@@ -27,21 +25,21 @@ void setup() {
     servos.jointMode(DXL_ID3, 40, 40);
     servos.jointMode(DXL_ID4, 40, 40);
 
-    // getStartPosition(servos);    
+    //Servo::getStartPosition(); 
+    servo2.setAngle(220);
+    servo3.setAngle(1023-600);
 }
 
 
 void loop() {
   
-    anglePrint();
-
-    Joystick::refresh();
+    //Joystick::refresh();
 /*
     servo1.setAngle(joystick1.getValue());
     servo2.setAngle(joystick2.getValue());
     servo3.setAngle(joystick3.getValue());
     servo4.setAngle(joystick4.getValue());
 */
-    
     Servo::talk(Serial.parseInt());
+    Servo::anglePrint();
 }

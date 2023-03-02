@@ -3,5 +3,5 @@
 
 
 class Math {
-    uint
+
 }
