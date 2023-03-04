@@ -38,6 +38,8 @@ private:
     uint16_t angle;
     bool inv;
     uint16_t new_angle;
+    uint16_t speed;
+    uint16_t boost;
 public:
     Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv=0);
     void pingServo();
@@ -48,6 +50,8 @@ public:
     static void anglePrint();
     static uint16_t checkMinGamma(uint16_t alpha, uint16_t beta);
     static void test(uint16_t msg);
+    void setSpeed(uint16_t _speed);
+    void setBoost(uint16_t _boost);
 };
 
 
@@ -141,7 +145,18 @@ void Servo::anglePrint() {
     Serial.println(servo3.getAngle());
     Serial.print("angle4: ");
     Serial.println(servo4.getAngle());
-}    
+}
+
+
+uint16_t reformatAngle(uint16_t angle, uint16_t min_angle, uint16_t max_angle) {
+    if (angle < min_angle) {
+        return min_angle;
+    }
+    if (angle > max_angle) {
+        return max_angle;
+    }
+    return angle;
+}
 
 
 void Servo::talk(uint16_t msg) {
@@ -151,7 +166,7 @@ void Servo::talk(uint16_t msg) {
     if (msg == 9) {
         //Tool::pull();
     }
-    if (msg == 0) {
+    if (msg < 10000) {
         return;
     }
     uint8_t id = msg / 10000;
@@ -159,20 +174,16 @@ void Servo::talk(uint16_t msg) {
     
     uint16_t msg_angle = msg % 10000;
     if (id == 2) {
-      Serial.print("msg angle ");
-        Serial.println(msg_angle);
-        //test(msg_angle);
-        servo2.new_angle = msg_angle;
-        servo3.new_angle = servo3.angle + checkMinGamma(msg_angle, servo3.angle);  //servo2.new_angle servo3.angle
-
+        
+        servo2.new_angle = reformatAngle(msg_angle, servo2.min_angle, servo2.max_angle);
+        
+        servo3.new_angle = servo3.angle + checkMinGamma(servo2.new_angle, servo3.angle);
         servo3.setAngle(servo3.new_angle);
         servo2.setAngle(servo2.new_angle);
         return;
     }
     if (id == 3) {
-        Serial.println("in talk id == 3");
         servo3.new_angle = msg_angle + checkMinGamma(servo2.angle, msg_angle);
-
         servo3.setAngle(servo3.new_angle);
         return;
     }
@@ -181,20 +192,25 @@ void Servo::talk(uint16_t msg) {
 
 
 uint16_t Servo::checkMinGamma(uint16_t alpha, uint16_t beta) {
-    Serial.println("func");
     beta = beta - BETA0;
     int16_t gamma = 1023 - alpha + beta;
-    Serial.println(gamma);
     if (gamma < MIN_GAMMA) {
-        Serial.println("return delta");
         return MIN_GAMMA - gamma;
     }
-    Serial.println("return 0");
     return 0;
 }
 
 
+void Servo::setSpeed(uint16_t _speed) {
+    speed = _speed;
+    servos.jointMode(DXL_ID2, speed, boost);
+}
 
+
+void Servo::setBoost(uint16_t _boost) {
+    boost = _boost;
+    servos.jointMode(DXL_ID2, speed, boost);
+}
 
 
 #endif

@@ -21,13 +21,11 @@ void setup() {
     servo4.pingServo();
     
     servos.jointMode(DXL_ID1, 100, 40);
-    servos.jointMode(DXL_ID2, 40, 40);
-    servos.jointMode(DXL_ID3, 40, 40);
-    servos.jointMode(DXL_ID4, 40, 40);
+    servos.jointMode(DXL_ID2, 100, 40);
+    servos.jointMode(DXL_ID3, 100, 40);
+    servos.jointMode(DXL_ID4, 100, 40);
 
-    //Servo::getStartPosition(); 
-    servo2.setAngle(220);
-    servo3.setAngle(1023-600);
+    Servo::getStartPosition();
 }
 
 
