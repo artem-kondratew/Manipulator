@@ -3,4 +3,4 @@ project(Manipulator)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Manipulator App.cpp App.h)
+add_executable(Manipulator main.cpp App.cpp App.h)
