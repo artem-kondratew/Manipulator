@@ -1,28 +1,32 @@
-
-#include <cstdio>
-#include <cstdlib>
+#include <chrono>
+#include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
-#include <termios.h>
+#include "Graphics.h"
+#include "Connect.h"
 
 
-int main () {
-    struct termios oldsettings, newsettings;
-    tcgetattr(fileno(stdin), &oldsettings);
-    newsettings = oldsettings;
+int main() {
 
-    newsettings.c_lflag &= ~(ECHO|ICANON|ISIG);
-    newsettings.c_cc[VMIN] = 1;
-    newsettings.c_cc[VTIME] = 1;
-    tcsetattr(fileno(stdin), TCSANOW, &newsettings);
+    //Connect::setConnection();
 
-    printf("press [q] to quit\n");
+    //initGraphics();
 
-    char rd_ch = '\0';
-    int fd_in = open ("/dev/tty", O_RDONLY);
-    while(rd_ch != 'q') {
-        read(fd_in, &rd_ch, 1);
+    Connect::command[0] = 64;
+    Connect::command[1] = 64;
+    Connect::command[2] = 43;
+    Connect::command[3] = 84;
+    Connect::command[4] = 89;
+    Connect::command[5] = 65;
+
+            auto start_timer = std::chrono::system_clock::now();
+    while (true) {
+        auto end_timer = std::chrono::system_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(200)) {
+            Connect::sendCommand();
+            Connect::receiveMessage();
+            start_timer = std::chrono::system_clock::now();
+        }
+
     }
-    tcsetattr(fileno(stdin), TCSANOW, &oldsettings);
-    return 0;
 }
