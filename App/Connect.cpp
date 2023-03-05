@@ -19,8 +19,8 @@ void Connect::clearCommand() {
     command[1] = START_BYTE;
     command[2] = CONNECT_DXL_ID;
     command[3] = CONNECT_TASK;
-    command[4] = CONNECT_MID;
-    command[5] = CONNECT_MID;
+    command[4] = CONNECT_VALUE;
+    command[5] = CONNECT_VALUE;
     calcCommandCheckSum();
 }
 
@@ -56,15 +56,22 @@ char Connect::calcMessageCheckSum() {
 
 
 void Connect::sendCommand() {
+    if (!openArduino()) {
+        return;
+    }
     calcCommandCheckSum();
-    write(Arduino, Connect::command, COMMAND_SIZE);
+    write(Arduino, command, COMMAND_SIZE);
 }
 
 
 void Connect::receiveMessage() {
-    read(Arduino, Connect::message, MESSAGE_SIZE);
-    std::cout << Connect::message << std::endl;
-    for (char i: Connect::message) {
+    if (!openArduino()) {
+        return;
+    }
+    read(Arduino, message, MESSAGE_SIZE);
+    std::cout << "MESSAGE" << std::endl;
+    std::cout << message << std::endl;
+    for (char i: message) {
         std::cout << int(i) << std::endl;
     }
     std::cout << "check: " << (int)calcMessageCheckSum() << std::endl;
