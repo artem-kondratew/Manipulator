@@ -1,14 +1,11 @@
 #include <chrono>
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
 #include "Graphics.h"
 #include "Connect.h"
 
 
 int main() {
 
-    //Connect::setConnection();
+    Connect::setConnection();
 
     //initGraphics();
 
@@ -19,14 +16,14 @@ int main() {
     Connect::command[4] = 89;
     Connect::command[5] = 65;
 
-            auto start_timer = std::chrono::system_clock::now();
+    auto start_timer = std::chrono::system_clock::now();
     while (true) {
+
         auto end_timer = std::chrono::system_clock::now();
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(200)) {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {
             Connect::sendCommand();
             Connect::receiveMessage();
             start_timer = std::chrono::system_clock::now();
         }
-
     }
 }
