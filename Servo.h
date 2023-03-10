@@ -2,29 +2,11 @@
 #ifndef Servo_h
 #define Servo_h
 
+
 #include <stdint.h>
 #include <string>
 #include <DynamixelWorkbench.h>
-#include "Tool.h"
-
-
-#define SERVO1_MIN_ANGLE 150
-#define SERVO1_MAX_ANGLE 853
-
-#define SERVO2_MIN_ANGLE 200
-#define SERVO2_MAX_ANGLE 550
-
-#define SERVO3_MIN_ANGLE 250//250
-#define SERVO3_MAX_ANGLE 1023//511
-
-#define SERVO4_MIN_ANGLE 511
-#define SERVO4_MAX_ANGLE 1023
-
-
-#define ALPHA0 SERVO2_MAX_ANGLE
-#define BETA0 660
-const uint16_t MIN_GAMMA = 324;//1023 - ALPHA0 + 511 - 660;
-const uint16_t MAX_GAMMA = 0;
+#include "Config.h"
 
 
 DynamixelWorkbench servos;
@@ -41,17 +23,31 @@ private:
     uint16_t speed;
     uint16_t boost;
 public:
-    Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv=0);
-    void pingServo();
+    Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv = 0);
+
+    static void pingServos();
+
     void setAngle(uint16_t _angle);
+
+    static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
+
     uint16_t getAngle();
+
     static void talk(uint16_t _angle);
+
     static void getStartPosition();
+
     static void anglePrint();
-    static uint16_t checkMinGamma(uint16_t alpha, uint16_t beta);
+
+    static uint16_t checkGamma(uint16_t alpha, uint16_t beta);
+
     static void test(uint16_t msg);
+
     void setSpeed(uint16_t _speed);
+
     void setBoost(uint16_t _boost);
+
+    void setMoveMode(uint16_t _speed, uint16_t _boost);
 };
 
 
@@ -71,8 +67,22 @@ Servo::Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _in
 }
 
 
-void Servo::pingServo() {
-    servos.ping(DXL_ID, 0, 0);
+void Servo::pingServos() {
+    servos.ping(DXL_ID1, 0, 0);
+    servos.ping(DXL_ID2, 0, 0);
+    servos.ping(DXL_ID3, 0, 0);
+    servos.ping(DXL_ID4, 0, 0);
+}
+
+
+uint16_t reformatAngle(uint16_t angle, uint16_t min_angle, uint16_t max_angle) {
+    if (angle < min_angle) {
+        return min_angle;
+    }
+    if (angle > max_angle) {
+        return max_angle;
+    }
+    return angle;
 }
 
 
@@ -104,23 +114,39 @@ void Servo::setAngle(uint16_t _angle) {
 }
 
 
+void Servo::setAngle(uint16_t _angle, uint8_t _DXL_ID) {
+    if (_DXL_ID == 1) {
+        servo1.setAngle(_angle);
+    }
+    if (_DXL_ID == 2) {
+        servo2.setAngle(_angle);
+    }
+    if (_DXL_ID == 3) {
+        servo3.setAngle(_angle);
+    }
+    if (_DXL_ID == 4) {
+        servo4.setAngle(_angle);
+    }
+}
+
+
 uint16_t Servo::getAngle() {
     return angle;
 }
 
 
-Servo* findServo(uint8_t id) {
+Servo *findServo(uint8_t id) {
     if (id == 1) {
-      return &servo1;
+        return &servo1;
     }
     if (id == 2) {
-      return &servo2;
+        return &servo2;
     }
     if (id == 3) {
-      return &servo3;
+        return &servo3;
     }
     if (id == 4) {
-      return &servo4;
+        return &servo4;
     }
 }
 
@@ -130,8 +156,7 @@ void Servo::getStartPosition() {
     servo2.setAngle(1023);
     servo3.setAngle(512);
     servo4.setAngle(512);
-    delay (5000);
-    Serial.println("Ready");
+    delay(5000);
 }
 
 
@@ -148,42 +173,23 @@ void Servo::anglePrint() {
 }
 
 
-uint16_t reformatAngle(uint16_t angle, uint16_t min_angle, uint16_t max_angle) {
-    if (angle < min_angle) {
-        return min_angle;
-    }
-    if (angle > max_angle) {
-        return max_angle;
-    }
-    return angle;
-}
-
-
 void Servo::talk(uint16_t msg) {
-    if (msg == 8) {
-        //Tool::push();
-    }
-    if (msg == 9) {
-        //Tool::pull();
-    }
     if (msg < 10000) {
         return;
     }
     uint8_t id = msg / 10000;
-    Servo* servo = findServo(id);
-    
+    Servo *servo = findServo(id);
+
     uint16_t msg_angle = msg % 10000;
     if (id == 2) {
-        
         servo2.new_angle = reformatAngle(msg_angle, servo2.min_angle, servo2.max_angle);
-        
-        servo3.new_angle = servo3.angle + checkMinGamma(servo2.new_angle, servo3.angle);
+        servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
         servo3.setAngle(servo3.new_angle);
         servo2.setAngle(servo2.new_angle);
         return;
     }
     if (id == 3) {
-        servo3.new_angle = msg_angle + checkMinGamma(servo2.angle, msg_angle);
+        servo3.new_angle = msg_angle + checkGamma(servo2.angle, msg_angle);
         servo3.setAngle(servo3.new_angle);
         return;
     }
@@ -191,11 +197,14 @@ void Servo::talk(uint16_t msg) {
 }
 
 
-uint16_t Servo::checkMinGamma(uint16_t alpha, uint16_t beta) {
+uint16_t Servo::checkGamma(uint16_t alpha, uint16_t beta) {
     beta = beta - BETA0;
     int16_t gamma = 1023 - alpha + beta;
     if (gamma < MIN_GAMMA) {
         return MIN_GAMMA - gamma;
+    }
+    if (gamma > MAX_GAMMA) {
+        return MAX_GAMMA - gamma;
     }
     return 0;
 }
@@ -203,13 +212,20 @@ uint16_t Servo::checkMinGamma(uint16_t alpha, uint16_t beta) {
 
 void Servo::setSpeed(uint16_t _speed) {
     speed = _speed;
-    servos.jointMode(DXL_ID2, speed, boost);
+    servos.jointMode(DXL_ID, speed, boost);
 }
 
 
 void Servo::setBoost(uint16_t _boost) {
     boost = _boost;
-    servos.jointMode(DXL_ID2, speed, boost);
+    servos.jointMode(DXL_ID, speed, boost);
+}
+
+
+void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
+    speed = _speed;
+    boost = _boost;
+    servos.jointMode(DXL_ID, speed, boost);
 }
 
 
