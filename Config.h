@@ -25,9 +25,12 @@
 
 
 #define START_BYTE 64
-#define CONNECT_MID 43
+#define CONNECT_DXL_ID 0
+#define CONNECT_TASK 0
+#define CONNECT_VALUE 43
 #define COMMAND_SIZE 7
 #define MESSAGE_SIZE 7
+#define TIMER 200
 
 
 #define SERVO1_MIN_ANGLE 150
