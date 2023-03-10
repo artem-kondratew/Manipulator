@@ -15,15 +15,13 @@ void setup() {
     Serial.begin(SERIAL_BAUDRATE);
     Serial.setTimeout(0);
 
-    servos.init(DEVICE_NAME, SERVO_BAUDRATE);
+    Servo::init();
     Servo::pingServos();
 
     servo1.setMoveMode(40, 40);
     servo2.setMoveMode(40, 40);
     servo3.setMoveMode(40, 40);
     servo4.setMoveMode(100, 40);
-
-    
 
     Servo::getStartPosition();
 }

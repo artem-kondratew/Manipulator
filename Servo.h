@@ -24,29 +24,22 @@ private:
     uint16_t boost;
 public:
     Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv = 0);
-
+    static void init();
     static void pingServos();
-
-    void setAngle(uint16_t _angle);
-
-    static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
-
-    uint16_t getAngle();
-
-    static void talk(uint16_t _angle);
-
     static void getStartPosition();
 
+    void setAngle(uint16_t _angle);
+    static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
+    uint16_t getAngle();
+    
+    static void talk(uint16_t _angle);
     static void anglePrint();
 
     static uint16_t checkGamma(uint16_t alpha, uint16_t beta);
-
     static void test(uint16_t msg);
 
     void setSpeed(uint16_t _speed);
-
     void setBoost(uint16_t _boost);
-
     void setMoveMode(uint16_t _speed, uint16_t _boost);
 };
 
@@ -64,6 +57,11 @@ Servo::Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _in
     angle = 0;
     new_angle = 0;
     inv = _inv;
+}
+
+
+void Servo::init() {
+    servos.init(DEVICE_NAME, SERVO_BAUDRATE);
 }
 
 

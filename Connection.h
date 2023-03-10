@@ -11,6 +11,7 @@ uint8_t id = 0;
 uint8_t command = 0;
 uint16_t value1 = 0;
 uint16_t value2 = 0;
+uint16_t value = 0;
 uint16_t checksum = 0;
 
 
@@ -19,6 +20,7 @@ public:
     static uint16_t calc();
     static void setData();
     static void getData();
+    static void findCommand();
 };
 
 
@@ -49,10 +51,22 @@ void Connection::getData() {
           value2 = Serial.read();
           checksum = Serial.read();
       if (calc() == checksum) {
+          findCommand();
           setData();
       }
     }
   }
+}
+
+
+void Connection::findCommand() {
+    value = value1 * 100 + value2;
+    if (command == 0) {
+        
+    }
+    if (command == 1) {
+        Servo::setAngle(value, id);
+    }
 }
 
 
