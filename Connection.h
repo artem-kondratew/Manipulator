@@ -1,74 +1,59 @@
 
-#define START_BYTE 64
-#define CONNECT_MID 43
-#define COMMAND_SIZE 7
-#define MESSAGE_SIZE 7
+#ifndef Connection_h
+#define Connection_h
 
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(9600);
-  Serial.setTimeout(0);
-  digitalWrite(LED_BUILTIN, LOW);
+#include "Config.h"
+#include "Servo.h"
+
+
+uint8_t id = 0;
+uint8_t command = 0;
+uint16_t value1 = 0;
+uint16_t value2 = 0;
+uint16_t checksum = 0;
+
+
+class Connection {
+public:
+    static uint16_t calc();
+    static void setData();
+    static void getData();
+};
+
+
+uint16_t Connection::calc() {
+    return (char(id) + char(command) + char(value1) + char(value2)) / 8;
 }
 
 
-int servo = 0;
-uint16_t command = 0;
-uint16_t value = 0;
-int checksum = 0;
-
-
-char calcCheckSum(char byte1, char byte2, char byte3, char byte4) {
-    return (byte1+byte2+byte3+byte4) / 8;
-}
-
-
-void setData(uint8_t DXL_ID, uint8_t command=0, uint16_t value=0) {
-    /*if (DXL_ID ==0 || DXL_ID > 4) {
-        return;
-    }
-    if (value > 1023) {
-        value = 1023;
-    }*/
-    if (DXL_ID == 0) {
-        DXL_ID = 43;
-    }
-    Serial.print(char(START_BYTE));
-    Serial.print(char(START_BYTE));
-    Serial.print(char(DXL_ID));
+void Connection::setData() {
+    Serial.print(char(64));
+    Serial.print(char(64));
+    Serial.print(char(id));
     Serial.print(char(command));
-    Serial.print(char(value / 100));
-    Serial.print(char(value % 100));
-    Serial.print(char(calcCheckSum(servo, command, value/100, value%100)));
-    //Serial.println((int)calcCheckSum(servo, command, value/100, value%100));
+    Serial.print(char(value1));
+    Serial.print(char(value2));
+    Serial.print(char(calc()));
 }
 
 
-void getData() {
-  byte b1 = 0;
-  byte b2 = 0;
+void Connection::getData() {
   if (Serial.available() >= 7) {
-      b1 = Serial.read();
-      b2 = Serial.read();
-      if (b1 + b2 == 128) {
-          servo = Serial.read();
+      byte start1 = Serial.read();
+      byte start2 = Serial.read();
+      if (start1 + start2 == 128) {
+          id = Serial.read();
           command = Serial.read();
-          value = Serial.read() * 100;
-          value += Serial.read();
+          value1 = Serial.read();
+          value2 = Serial.read();
           checksum = Serial.read();
-      
-      if (checksum == calcCheckSum(servo, command, value/100, value%100) && servo == 0 && command == 0) {
-          setData(0, CONNECT_MID, CONNECT_MID * 100 + CONNECT_MID);
-      }
-      if (calcCheckSum(servo, command, value/100, value%100) == checksum && servo != 0) { // 
-          setData(36, 33, 9442);
+      if (calc() == checksum) {
+          setData();
       }
     }
   }
 }
 
 
-void loop() {
-    getData();
-}
+#endif

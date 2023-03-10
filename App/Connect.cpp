@@ -7,8 +7,11 @@
 
 bool Connect::openArduino() {
     if (Arduino == -1) {
-        std::cout << "Unable to open /dev/ttyACM0" << std::endl;
-        return false;
+        Arduino = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NONBLOCK);
+        if (Arduino == -1) {
+            return false;
+        }
+        return true;
     }
     return true;
 }
@@ -25,23 +28,25 @@ void Connect::clearCommand() {
 }
 
 
-bool Connect::setConnection() {
+void Connect::setConnection() {
     if (!openArduino()) {
-        return false;
+        std::cout << "Unable to connect" << std::endl;
+        return;
     }
     clearCommand();
-    bool flag = false;
+    message_flag = false;
     std::cout << "connecting..." << std::endl;
-    while (!flag) {
-        sendCommand();
-        sleep(1);
-        receiveMessage();
-        if (message[0] == 64 && message[1] == 64 && message[MESSAGE_SIZE - 1] == calcMessageCheckSum()) {
-            sleep(1);
-            std::cout << "connected" << std::endl;
-            flag = true;
+    auto start_timer = std::chrono::system_clock::now();
+    while (!message_flag) {
+        auto end_timer = std::chrono::system_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {
+            sendCommand();
+            receiveMessage();
+            start_timer = std::chrono::system_clock::now();
         }
     }
+    sleep(2);
+    std::cout << "connected" << std::endl;
 }
 
 
@@ -50,8 +55,8 @@ void Connect::calcCommandCheckSum() {
 }
 
 
-char Connect::calcMessageCheckSum() {
-    return char((message[2] + message[3] + message[4] + message[5]) / 8);
+char Connect::calcMessageCheckSum(const char buffer[]) {
+    return char((buffer[2] + buffer[3] + buffer[4] + buffer[5]) / 8);
 }
 
 
@@ -65,25 +70,20 @@ void Connect::sendCommand() {
 
 
 void Connect::receiveMessage() {
+    message_flag = false;
     if (!openArduino()) {
         return;
     }
-    read(Arduino, message, MESSAGE_SIZE);
-    std::cout << "MESSAGE" << std::endl;
-    std::cout << message << std::endl;
-    for (char i: message) {
-        std::cout << int(i) << std::endl;
-    }
-    std::cout << "check: " << (int)calcMessageCheckSum() << std::endl;
-    if (checkMessage()) {
-        std::cout << "pocket: ok" << std::endl;
-    }
-    else {
-        std::cout << "pocket: fail" << std::endl;
-    }
-}
 
+    char buffer[MESSAGE_SIZE];
+    read(Arduino, buffer, MESSAGE_SIZE);
 
-bool Connect::checkMessage() {
-    return message[MESSAGE_SIZE-1] == calcMessageCheckSum();
+    if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_SIZE - 1] == calcMessageCheckSum(buffer)) {
+        std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
+        message_flag = true;
+        std::cout << "pocket: ok " << message << std::endl;
+        return;
+    }
+    std::cout << "pocket: fail " << (int) buffer[MESSAGE_SIZE - 1] << " ";
+    std::cout << (int) calcMessageCheckSum(buffer) << std::endl;
 }
