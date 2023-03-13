@@ -24,6 +24,10 @@ void setup() {
 
 void loop() {
     Connection::getData();
-    //Servo::talk(Serial.parseInt());
+    /*
+    if (Servo::talk(Serial.parseInt())) {
+        Connection::setData();
+    }
+    */
     //Servo::anglePrint();
 }

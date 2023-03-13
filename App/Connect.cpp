@@ -51,7 +51,7 @@ void Connect::setConnection() {
 
 
 void Connect::calcCommandCheckSum() {
-    command[6] = char((command[2] + command[3] + command[4] + command[5]) / 8);
+    command[CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
 }
 
 
@@ -105,7 +105,7 @@ void Connect::setValue(uint16_t value) {
 }
 
 
-void Connect::decodeCommand(uint64_t com) {
+void Connect::encodeCommand(uint64_t com) {
     char id = char(com / 100000);
     setId(id);
 

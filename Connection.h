@@ -7,10 +7,10 @@
 #include "Servo.h"
 
 
-uint8_t id = 0;
-uint8_t command = 0;
-uint16_t value1 = 0;
-uint16_t value2 = 0;
+uint8_t id = 43;
+uint8_t command = 43;
+uint16_t value1 = 43;
+uint16_t value2 = 43;
 uint16_t value = 0;
 uint16_t checksum = 0;
 

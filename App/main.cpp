@@ -18,10 +18,10 @@ int main() {
 
     auto start_timer = std::chrono::system_clock::now();
     while (true) {
+
         uint64_t com;
         std::cin >> com;
-
-        Connect::decodeCommand(com);
+        Connect::encodeCommand(com);
 
         auto end_timer = std::chrono::system_clock::now();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {

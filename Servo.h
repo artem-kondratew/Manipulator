@@ -32,7 +32,7 @@ public:
     static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
     uint16_t getAngle();
     
-    static void talk(uint16_t _angle);
+    static bool talk(uint16_t _angle);
     static void anglePrint();
 
     static uint16_t checkGamma(uint16_t alpha, uint16_t beta);
@@ -171,9 +171,9 @@ void Servo::anglePrint() {
 }
 
 
-void Servo::talk(uint16_t msg) {
+bool Servo::talk(uint16_t msg) {
     if (msg < 10000) {
-        return;
+        return false;
     }
     uint8_t id = msg / 10000;
     Servo *servo = findServo(id);
@@ -184,14 +184,15 @@ void Servo::talk(uint16_t msg) {
         servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
         servo3.setAngle(servo3.new_angle);
         servo2.setAngle(servo2.new_angle);
-        return;
+        return true;;
     }
     if (id == 3) {
         servo3.new_angle = msg_angle + checkGamma(servo2.angle, msg_angle);
         servo3.setAngle(servo3.new_angle);
-        return;
+        return true;;
     }
     servo->setAngle(msg_angle);
+    return true;
 }
 
 
@@ -200,10 +201,10 @@ uint16_t Servo::checkGamma(uint16_t alpha, uint16_t beta) {
     int16_t gamma = 1023 - alpha + beta;
     if (gamma < MIN_GAMMA) {
         return MIN_GAMMA - gamma;
-    }
+    }/*
     if (gamma > MAX_GAMMA) {
         return MAX_GAMMA - gamma;
-    }
+    }*/
     return 0;
 }
 

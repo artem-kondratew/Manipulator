@@ -51,7 +51,7 @@ public:
 
     static void setValue(uint16_t value);
 
-    static void decodeCommand(uint64_t com);
+    static void encodeCommand(uint64_t com);
 };
 
 

@@ -54,7 +54,7 @@
 
 #define ALPHA0 SERVO2_MAX_ANGLE
 #define BETA0 660
-const uint16_t MIN_GAMMA = 1023 - ALPHA0 + SERVO4_MIN_ANGLE - BETA0; // pos 512 instead of 1023
+const uint16_t MIN_GAMMA = 1023 + BETA0 - ALPHA0;//1023 - ALPHA0 + SERVO4_MIN_ANGLE - BETA0; // pos 512 instead of 1023
 const uint16_t MAX_GAMMA = 2 ^ 16;
 
 
