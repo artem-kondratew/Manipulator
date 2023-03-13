@@ -87,3 +87,31 @@ void Connect::receiveMessage() {
     std::cout << "pocket: fail " << (int) buffer[MESSAGE_SIZE - 1] << " ";
     std::cout << (int) calcMessageCheckSum(buffer) << std::endl;
 }
+
+
+void Connect::setId(char id) {
+    command[ID_CELL] = id;
+}
+
+
+void Connect::setTask(char task) {
+    command[TASK_CELL] = task;
+}
+
+
+void Connect::setValue(uint16_t value) {
+    command[VALUE1_CELL] = char(value / 100);
+    command[VALUE2_CELL] = char(value % 100);
+}
+
+
+void Connect::decodeCommand(uint64_t com) {
+    char id = char(com / 100000);
+    setId(id);
+
+    char task = char((com % 100000) / 10000);
+    setTask(task);
+
+    uint16_t value = com % 10000;
+    setValue(value);
+}

@@ -32,6 +32,12 @@
 #define MESSAGE_SIZE 7
 #define TIMER 200
 
+#define ID_CELL 2
+#define TASK_CELL 3
+#define VALUE1_CELL 4
+#define VALUE2_CELL 5
+#define CHECKSUM_CELL 6
+
 
 #define SERVO1_MIN_ANGLE 150
 #define SERVO1_MAX_ANGLE 853

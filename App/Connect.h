@@ -44,6 +44,14 @@ public:
     static void sendCommand();
 
     static void receiveMessage();
+
+    static void setId(char id);
+
+    static void setTask(char task);
+
+    static void setValue(uint16_t value);
+
+    static void decodeCommand(uint64_t com);
 };
 
 
