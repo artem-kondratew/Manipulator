@@ -13,15 +13,6 @@
 #include <cstring>
 #include "../Config.h"
 
-/*
-#define START_BYTE 64
-#define CONNECT_DXL_ID 43
-#define CONNECT_TASK 0
-#define CONNECT_VALUE 43
-#define COMMAND_SIZE 7
-#define MESSAGE_SIZE 7
-#define TIMER 200
-*/
 
 class Connect {
 private:
