@@ -105,13 +105,13 @@ void Connect::setValue(uint16_t value) {
 }
 
 
-void Connect::encodeCommand(uint64_t com) {
-    char id = char(com / 100000);
+void Connect::encodeCommand(uint64_t cmd) {
+    char id = char(cmd / 100000);
     setId(id);
 
-    char task = char((com % 100000) / 10000);
+    char task = char((cmd % 100000) / 10000);
     setTask(task);
 
-    uint16_t value = com % 10000;
+    uint16_t value = cmd % 10000;
     setValue(value);
 }
