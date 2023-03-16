@@ -19,11 +19,19 @@ void setup() {
     servo4.setMoveMode(100, 40);
 
     Servo::getStartPosition();
+    Servo::Calibration_setup();
+    Servo::getStartPosition();
 }
 
 
 void loop() {
-    Connection::getData();
+
+    // Serial.print(servo2.getLoad());
+    // Serial.print(",");
+    // Serial.print(servo3.getLoad());
+    // Serial.println();
+    // delay(20);
+
     //Servo::talk(Serial.parseInt());
     //Servo::anglePrint();
 }
