@@ -7,8 +7,19 @@
 
 
 #include <csignal>
+#include <sys/ioctl.h>
 #include "ncurses.h"
 #include "Connect.h"
+
+
+#define KEY_RETURN 10
+
+
+int get_columns() {
+    struct winsize window{};
+    ioctl(0, TIOCGWINSZ, &window);
+    return window.ws_col;
+}
 
 
 void finish() {
@@ -27,7 +38,7 @@ void sigHandler(int sig) {
 }
 
 
-void printTable() {
+void print_table() {
     for (int i = 1; i < 5; i++) {
         move(i + 1, 0);
         printw("servo%d", i);
@@ -59,6 +70,16 @@ void printTable() {
 }
 
 
+void clear_command_line() {
+    move(8, 0);
+    for (int i = 0; i < get_columns(); i++) {
+        printw(" ");
+    }
+    move(8, 0);
+    refresh();
+}
+
+
 void print_id() {
     for (int i = 1; i < 5; i++) {
         move(i + 1, 9);
@@ -75,22 +96,37 @@ void initGraphics() {
     //nonl();  //  deny going to the new line
 
     //cbreak();  //  буфер передается без нажатия enter
-    //echo();  //  не отображается печать символов
+    echo();  //  отображается печать символов
     //timeout(0); //  буфер передается без нажатия enter
 
     //leaveok(stdscr, TRUE);  //  сдвиг курсора - нормально
     //curs_set(0);  //  hide cursor
-    //keypad(stdscr, TRUE);
+    keypad(stdscr, TRUE);
 
     signal(SIGINT, sigHandler);
 
     clear();
-    printTable();
+    print_table();
     print_id();
-    move(7, 13);
+    move(8, 0);
     refresh();
 
-    while (true) {}
+    std::string command;
+
+    while (true) {
+        char symbol = (char) getch();
+        if (symbol == KEY_RETURN) {
+            clear_command_line();
+            //go commands
+            command = "";
+            continue;
+        }
+        else {
+            command += symbol;
+            printw("%c", symbol);
+        }
+        refresh();
+    }
 }
 
 
