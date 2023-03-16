@@ -41,6 +41,14 @@ public:
     void setSpeed(uint16_t _speed);
     void setBoost(uint16_t _boost);
     void setMoveMode(uint16_t _speed, uint16_t _boost);
+
+    uint32_t getLoad();
+    uint32_t isMoving();
+
+    void Calibration_min();
+    void Calibration_max();
+    static void Calibration_setup();
+
 };
 
 
@@ -129,7 +137,9 @@ void Servo::setAngle(uint16_t _angle, uint8_t _DXL_ID) {
 
 
 uint16_t Servo::getAngle() {
-    return angle;
+    int32_t data;
+    servos.readRegister(DXL_ID, "Present_Position", &data);
+    return data;
 }
 
 
@@ -151,7 +161,7 @@ Servo *findServo(uint8_t id) {
 
 void Servo::getStartPosition() {
     servo1.setAngle(512);
-    servo2.setAngle(1023);
+    servo2.setAngle(512);
     servo3.setAngle(512);
     servo4.setAngle(512);
     delay(5000);
@@ -184,12 +194,12 @@ bool Servo::talk(uint16_t msg) {
         servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
         servo3.setAngle(servo3.new_angle);
         servo2.setAngle(servo2.new_angle);
-        return true;;
+        return true;
     }
     if (id == 3) {
         servo3.new_angle = msg_angle + checkGamma(servo2.angle, msg_angle);
         servo3.setAngle(servo3.new_angle);
-        return true;;
+        return true;
     }
     servo->setAngle(msg_angle);
     return true;
@@ -227,5 +237,79 @@ void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
     servos.jointMode(DXL_ID, speed, boost);
 }
 
+
+uint32_t Servo::getLoad(){
+    int32_t data;
+    servos.readRegister(DXL_ID, "Present_Load", &data);
+    if (data > 1023) data -= 1023;
+    return data;
+}
+
+uint32_t Servo::isMoving(){
+    int32_t data;
+    servos.readRegister(DXL_ID, "Moving", &data);
+    return data;
+}
+
+void Servo::Calibration_max(){
+  uint16_t servo_max_angle = 512;
+  setSpeed(80);
+
+    while(true){
+      // Serial.println(getLoad());  // DEBUG
+      // Serial.println(servo_max_angle);
+      // Serial.println(getAngle());
+      // Serial.println(" ");
+
+      setAngle(servo_max_angle, DXL_ID);
+      delay(100);
+      if(isMoving() == 0) servo_max_angle += 50;
+      else if (getLoad() > 750) {
+        servo_max_angle -= 50;
+        setAngle(servo_max_angle, DXL_ID);
+        break;
+      }
+    }
+
+    max_angle = servo_max_angle;
+
+    Serial.println(" ");
+    Serial.println(servo_max_angle);
+}
+
+void Servo::Calibration_min(){
+  uint16_t servo_min_angle = 512;
+  setSpeed(80);
+    while(true){
+      // Serial.println(getLoad());  // DEBUG
+      // Serial.println(servo_min_angle);
+      // Serial.println(getAngle());
+      // Serial.println(" ");
+
+      setAngle(servo_min_angle, DXL_ID);
+      delay(100);
+      if(isMoving() == 0) servo_min_angle -= 50;
+      else if (getLoad() > 750) {
+        servo_min_angle += 50;
+        setAngle(servo_min_angle, DXL_ID);
+        break;
+      }
+    }
+
+    min_angle = servo_min_angle;
+
+    Serial.println(" ");
+    Serial.println(servo_min_angle);
+}
+
+
+void Servo::Calibration_setup() {
+  servo2.Calibration_max();
+  servo2.Calibration_min();
+  servo2.setAngle(servo2.min_angle + (servo2.max_angle - servo2.min_angle) / 2);
+  delay(2000);
+  servo3.Calibration_max();
+  servo3.Calibration_min();
+}
 
 #endif
