@@ -253,6 +253,13 @@ uint16_t Servo::getGoal() {
 }
 
 
+uint16_t Servo::getAngle() {
+    int32_t data;
+    servos.readRegister(DXL_ID, "Present_Position", &data);
+    return data;
+}
+
+
 uint16_t Servo::getSpeed() {
     return speed;
 }
