@@ -29,7 +29,7 @@
 #define CONNECT_TASK 0
 #define CONNECT_VALUE 43
 #define COMMAND_SIZE 7
-#define MESSAGE_SIZE 7
+#define MESSAGE_SIZE 10
 #define TIMER 200
 
 #define ID_CELL 2
