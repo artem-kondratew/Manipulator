@@ -30,10 +30,9 @@ public:
 
     void setAngle(uint16_t _angle);
     static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
-    uint16_t getAngle();
     
+    uint8_t getDXL_ID();
     static bool talk(uint16_t _angle);
-    static void anglePrint();
 
     static uint16_t checkGamma(uint16_t alpha, uint16_t beta);
     static void test(uint16_t msg);
@@ -42,13 +41,17 @@ public:
     void setBoost(uint16_t _boost);
     void setMoveMode(uint16_t _speed, uint16_t _boost);
 
-    uint32_t getLoad();
-    uint32_t isMoving();
+    int32_t readRegister(char* command);
+    uint16_t getAngle();
+    uint16_t getGoal();
+    int32_t getLoad();
+    int32_t isMoving();
+    uint16_t getSpeed();
+    uint16_t getBoost();
 
     void Calibration_min();
     void Calibration_max();
     static void Calibration_setup();
-
 };
 
 
@@ -136,13 +139,6 @@ void Servo::setAngle(uint16_t _angle, uint8_t _DXL_ID) {
 }
 
 
-uint16_t Servo::getAngle() {
-    int32_t data;
-    servos.readRegister(DXL_ID, "Present_Position", &data);
-    return data;
-}
-
-
 Servo *findServo(uint8_t id) {
     if (id == 1) {
         return &servo1;
@@ -168,16 +164,8 @@ void Servo::getStartPosition() {
 }
 
 
-void Servo::anglePrint() {
-    Serial.println();
-    Serial.print("angle1: ");
-    Serial.println(servo1.getAngle());
-    Serial.print("angle2: ");
-    Serial.println(servo2.getAngle());
-    Serial.print("angle3: ");
-    Serial.println(servo3.getAngle());
-    Serial.print("angle4: ");
-    Serial.println(servo4.getAngle());
+uint8_t Servo::getDXL_ID() {
+    return DXL_ID;
 }
 
 
@@ -238,18 +226,42 @@ void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
 }
 
 
-uint32_t Servo::getLoad(){
+int32_t Servo::readRegister(char* command) {
+    int32_t data;
+    servos.readRegister(DXL_ID, command, &data);
+    return data;
+}
+
+
+int32_t Servo::getLoad(){
     int32_t data;
     servos.readRegister(DXL_ID, "Present_Load", &data);
     if (data > 1023) data -= 1023;
     return data;
 }
 
-uint32_t Servo::isMoving(){
+
+int32_t Servo::isMoving(){
     int32_t data;
     servos.readRegister(DXL_ID, "Moving", &data);
     return data;
 }
+
+
+uint16_t Servo::getGoal() {
+    return angle;
+}
+
+
+uint16_t Servo::getSpeed() {
+    return speed;
+}
+
+
+uint16_t Servo::getBoost() {
+    return boost;
+}
+
 
 void Servo::Calibration_max(){
   uint16_t servo_max_angle = 512;
@@ -276,6 +288,7 @@ void Servo::Calibration_max(){
     Serial.println(" ");
     Serial.println(servo_max_angle);
 }
+
 
 void Servo::Calibration_min(){
   uint16_t servo_min_angle = 512;
@@ -311,5 +324,6 @@ void Servo::Calibration_setup() {
   servo3.Calibration_max();
   servo3.Calibration_min();
 }
+
 
 #endif

@@ -19,6 +19,8 @@ void setup() {
     servo4.setMoveMode(100, 40);
 
     Servo::getStartPosition();
+    //Servo::Calibration_setup();
+    //Servo::getStartPosition();
 }
 
 
