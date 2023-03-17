@@ -170,6 +170,7 @@ void print_torque(uint8_t servo, uint16_t torque) {
     printw("%d", torque);
 }
 
+
 void print_is_moving(uint8_t servo, uint16_t is_moving) {
     move(1 + servo, IS_MOVING_X);
     printw("%d", is_moving);

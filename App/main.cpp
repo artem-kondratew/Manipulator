@@ -68,6 +68,9 @@ int main() {
         }
         if (key == KEY_RIGHT) {
             getsyx(CURS_Y, CURS_X);
+            if (CURS_X == Connect::key_cmd.size()) {
+                continue;
+            }
             move(CURS_Y, CURS_X + 1);
             continue;
         }
@@ -77,5 +80,5 @@ int main() {
         print_command_line();
         move(CURS_Y, Connect::key_cmd.getCurs() + 1);
         refresh();
-    }
+    } // КУРСОР УЛЕТАЕТ ВПРАВО
 }
