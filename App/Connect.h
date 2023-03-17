@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstring>
 #include "../Config.h"
+#include "str.h"
 
 
 class Connect {
@@ -21,6 +22,7 @@ private:
 public:
     inline static char command[COMMAND_SIZE];
     inline static char message[MESSAGE_SIZE];
+    inline static str key_cmd;
 
     static void clearCommand();
 
@@ -43,6 +45,8 @@ public:
     static void setValue(uint16_t value);
 
     static void encodeCommand(uint64_t cmd);
+
+    static void decodeKeyInput(const std::string& cmd);
 };
 
 

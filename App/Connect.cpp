@@ -45,8 +45,8 @@ void Connect::setConnection() {
             start_timer = std::chrono::system_clock::now();
         }
     }
-    sleep(2);
     std::cout << "connected" << std::endl;
+    sleep(1);
 }
 
 
@@ -114,4 +114,9 @@ void Connect::encodeCommand(uint64_t cmd) {
 
     uint16_t value = cmd % 10000;
     setValue(value);
+}
+
+
+void Connect::decodeKeyInput(const std::string& cmd) {
+    encodeCommand(stoi(cmd));
 }

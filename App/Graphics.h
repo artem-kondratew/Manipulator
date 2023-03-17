@@ -15,6 +15,10 @@
 #define KEY_RETURN 10
 
 
+int CURS_Y = 0;
+int CURS_X = 0;
+
+
 int get_columns() {
     struct winsize window{};
     ioctl(0, TIOCGWINSZ, &window);
@@ -70,16 +74,6 @@ void print_table() {
 }
 
 
-void clear_command_line() {
-    move(8, 0);
-    for (int i = 0; i < get_columns(); i++) {
-        printw(" ");
-    }
-    move(8, 0);
-    refresh();
-}
-
-
 void print_id() {
     for (int i = 1; i < 5; i++) {
         move(i + 1, 9);
@@ -95,7 +89,7 @@ void initGraphics() {
 
     //nonl();  //  deny going to the new line
 
-    //cbreak();  //  буфер передается без нажатия enter
+    cbreak();  //  буфер передается после нажатия enter
     echo();  //  отображается печать символов
     //timeout(0); //  буфер передается без нажатия enter
 
@@ -110,23 +104,32 @@ void initGraphics() {
     print_id();
     move(8, 0);
     refresh();
+}
 
-    std::string command;
 
-    while (true) {
-        char symbol = (char) getch();
-        if (symbol == KEY_RETURN) {
-            clear_command_line();
-            //go commands
-            command = "";
-            continue;
-        }
-        else {
-            command += symbol;
-            printw("%c", symbol);
-        }
-        refresh();
+void clear_command_line() {
+    move(8, 0);
+    for (int i = 0; i < get_columns(); i++) {
+        printw(" ");
     }
+    move(8, 0);
+    refresh();
+}
+
+
+void print_last_command() {
+    move(9, 0);
+    for (int i = 0; i < get_columns(); i++) {
+        printw(" ");
+    }
+    move(9, 0);
+    printw("%s", Connect::key_cmd.get());
+}
+
+
+void print_command_line() {
+    move(8, 0);
+    printw("%s", Connect::key_cmd.get());
 }
 
 
