@@ -12,7 +12,15 @@
 #include "Connect.h"
 
 
-#define KEY_RETURN 10
+#define KEY_RETURN  10
+
+#define ID_X         9
+#define GOAL_X      17
+#define ANGLE_X     23
+#define SPEED_X     34
+#define BOOST_X     41
+#define TORQUE_X    52
+#define IS_MOVING_X 62
 
 
 int CURS_Y = 0;
@@ -48,23 +56,23 @@ void print_table() {
         printw("servo%d", i);
     }
 
-    move(0, 9);
+    move(0, ID_X);
     printw("id");
 
-    move(0, 17);
+    move(0, GOAL_X);
     printw("goal");
-    move(0, 23);
+    move(0, ANGLE_X);
     printw("angle");
 
-    move(0, 34);
+    move(0, SPEED_X);
     printw("speed");
-    move(0, 41);
+    move(0, BOOST_X);
     printw("boost");
 
-    move(0, 52);
+    move(0, TORQUE_X);
     printw("torque");
 
-    move(0, 62);
+    move(0, IS_MOVING_X);
     printw("is_moving");
 
     move(7, 0);
@@ -130,6 +138,41 @@ void print_last_command() {
 void print_command_line() {
     move(8, 0);
     printw("%s", Connect::key_cmd.get());
+}
+
+
+void print_goal(uint8_t servo, uint16_t goal) {
+    move(1 + servo, GOAL_X);
+    printw("%d", goal);
+}
+
+
+void print_angle(uint8_t servo, uint16_t angle) {
+    move(1 + servo, ANGLE_X);
+    printw("%d", angle);
+}
+
+
+void print_speed(uint8_t servo, uint16_t speed) {
+    move(1 + servo, SPEED_X);
+    printw("%d", speed);
+}
+
+
+void print_boost(uint8_t servo, uint16_t boost) {
+    move(1 + servo, BOOST_X);
+    printw("%d", boost);
+}
+
+
+void print_torque(uint8_t servo, uint16_t torque) {
+    move(1 + servo, TORQUE_X);
+    printw("%d", torque);
+}
+
+void print_is_moving(uint8_t servo, uint16_t is_moving) {
+    move(1 + servo, IS_MOVING_X);
+    printw("%d", is_moving);
 }
 
 
