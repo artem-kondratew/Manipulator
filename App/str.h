@@ -9,7 +9,6 @@
 #include <iostream>
 #include <utility>
 #include <cstring>
-#include "ncurses.h"
 
 
 class str {
