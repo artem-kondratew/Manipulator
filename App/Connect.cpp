@@ -34,14 +34,14 @@ void Connect::setConnection() {
         return;
     }
     clearCommand();
-    message_flag = false;
+    bool message_flag = false;
     std::cout << "connecting..." << std::endl;
     auto start_timer = std::chrono::system_clock::now();
     while (!message_flag) {
         auto end_timer = std::chrono::system_clock::now();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {
             sendCommand();
-            receiveMessage();
+            message_flag = receiveMessage();
             start_timer = std::chrono::system_clock::now();
         }
     }
@@ -56,12 +56,16 @@ void Connect::disconnectArduino() {
 
 
 void Connect::calcCommandCheckSum() {
-    command[CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
+    command[COMMAND_CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
 }
 
 
 char Connect::calcMessageCheckSum(const char buffer[]) {
-    return char((buffer[2] + buffer[3] + buffer[4] + buffer[5]) / 8);
+    uint64_t sum = 0;
+    for (int i = 2; i < MESSAGE_SIZE - 1; i++) {
+        sum += buffer[i];
+    }
+    return char(sum / 8);
 }
 
 
@@ -74,39 +78,19 @@ void Connect::sendCommand() {
 }
 
 
-void Connect::receiveMessage() {
-    message_flag = false;
-    if (!openArduino()) {
-        return;
-    }
-
-    char buffer[MESSAGE_SIZE];
-    read(Arduino, buffer, MESSAGE_SIZE);
-
-    if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_SIZE - 1] == calcMessageCheckSum(buffer)) {
-        std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
-        message_flag = true;
-        std::cout << "pocket: ok " << message << std::endl;
-        return;
-    }
-    std::cout << "pocket: fail " << (int) buffer[MESSAGE_SIZE - 1] << " ";
-    std::cout << (int) calcMessageCheckSum(buffer) << std::endl;
-}
-
-
 void Connect::setId(char id) {
-    command[ID_CELL] = id;
+    command[COMMAND_ID_CELL] = id;
 }
 
 
 void Connect::setTask(char task) {
-    command[TASK_CELL] = task;
+    command[COMMAND_TASK_CELL] = task;
 }
 
 
 void Connect::setValue(uint16_t value) {
-    command[VALUE1_CELL] = char(value / 100);
-    command[VALUE2_CELL] = char(value % 100);
+    command[COMMAND_VALUE1_CELL] = char(value / 100);
+    command[COMMAND_VALUE2_CELL] = char(value % 100);
 }
 
 
@@ -119,6 +103,52 @@ void Connect::encodeCommand(uint64_t cmd) {
 
     uint16_t value = cmd % 10000;
     setValue(value);
+}
+
+
+bool Connect::receiveMessage() {
+    if (!openArduino()) {
+        return false;
+    }
+
+    char buffer[MESSAGE_SIZE];
+    read(Arduino, buffer, MESSAGE_SIZE);
+
+    if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buffer)) {
+        std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
+        //std::cout << "pocket: ok " << message << std::endl;
+        return true;
+    }
+    return false;
+    //std::cout << "pocket: fail " << (int) buffer[MESSAGE_SIZE - 1] << " ";
+    //std::cout << (int) calcMessageCheckSum(buffer) << std::endl;
+}
+
+
+Gservo* findGservo(uint8_t id) {
+    if (id == 1) {
+        return &gservo1;
+    }
+    if (id == 2) {
+        return &gservo2;
+    }
+    if (id == 3) {
+        return &gservo3;
+    }
+    if (id == 4) {
+        return &gservo4;
+    }
+}
+
+
+void Connect::decodeMessage() {
+    Gservo* gservo = findGservo(message[MESSAGE_ID_CELL]);
+    gservo->setGoal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
+    gservo->setAngle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
+    gservo->setSpeed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
+    gservo->setBoost(message[MESSAGE_BOOST1_CELL], message[MESSAGE_BOOST2_CELL]);
+    gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
+    gservo->setIsMoving(message[MESSAGE_IS_MOVING1_CELL], message[MESSAGE_IS_MOVING2_CELL]);
 }
 
 

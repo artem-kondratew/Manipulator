@@ -39,8 +39,6 @@ int get_columns() {
 
 void finish() {
     Connect::disconnectArduino();
-    clear();
-    refresh();
     resetty();
     endwin();
     exit(0);
@@ -103,7 +101,7 @@ void init_graphics() {
 
     cbreak();  //  send buffer after pressing enter
     echo();  //  visible printing
-    //timeout(0);
+    timeout(0);
 
     //leaveok(stdscr, TRUE);
     //curs_set(0);  //  hide cursor
@@ -210,6 +208,9 @@ void key_proc(int key) {
     if (key == KEY_DOWN) {
         return;
     }
+    if (key == ERR) {
+        return;
+    }
 
     getsyx(CURS_Y, CURS_X);
     Connect::key_cmd.push(symbol, CURS_X - 1);
@@ -220,39 +221,59 @@ void key_proc(int key) {
 }
 
 
-void print_goal(uint8_t servo, uint16_t goal) {
-    move(1 + servo, GOAL_X);
+void print_goal(uint8_t gservo_id, uint16_t goal) {
+    move(1 + gservo_id, GOAL_X);
     printw("%d", goal);
 }
 
 
-void print_angle(uint8_t servo, uint16_t angle) {
-    move(1 + servo, ANGLE_X);
+void print_angle(uint8_t gservo_id, uint16_t angle) {
+    move(1 + gservo_id, ANGLE_X);
     printw("%d", angle);
 }
 
 
-void print_speed(uint8_t servo, uint16_t speed) {
-    move(1 + servo, SPEED_X);
+void print_speed(uint8_t gservo_id, uint16_t speed) {
+    move(1 + gservo_id, SPEED_X);
     printw("%d", speed);
 }
 
 
-void print_boost(uint8_t servo, uint16_t boost) {
-    move(1 + servo, BOOST_X);
+void print_boost(uint8_t gservo_id, uint16_t boost) {
+    move(1 + gservo_id, BOOST_X);
     printw("%d", boost);
 }
 
 
-void print_torque(uint8_t servo, uint16_t torque) {
-    move(1 + servo, TORQUE_X);
+void print_torque(uint8_t gservo_id, uint16_t torque) {
+    move(1 + gservo_id, TORQUE_X);
     printw("%d", torque);
 }
 
 
-void print_is_moving(uint8_t servo, uint16_t is_moving) {
-    move(1 + servo, IS_MOVING_X);
+void print_is_moving(uint8_t gservo_id, uint16_t is_moving) {
+    move(1 + gservo_id, IS_MOVING_X);
     printw("%d", is_moving);
+}
+
+
+void print_params_from_servo(Gservo gservo) {
+    print_goal(gservo.id, gservo.getGoal());
+    print_angle(gservo.id, gservo.getAngle());
+    print_speed(gservo.id, gservo.getSpeed());
+    print_boost(gservo.id, gservo.getBoost());
+    print_torque(gservo.id, gservo.getTorque());
+    print_is_moving(gservo.id, gservo.getIsMoving());
+}
+
+
+void print_params() {
+    getsyx(CURS_Y, CURS_X);
+    print_params_from_servo(gservo1);
+    print_params_from_servo(gservo2);
+    print_params_from_servo(gservo3);
+    print_params_from_servo(gservo4);
+    move(CURS_Y, CURS_X);
 }
 
 

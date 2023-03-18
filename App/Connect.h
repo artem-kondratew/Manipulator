@@ -13,11 +13,12 @@
 #include <cstring>
 #include "../Arduino/Config.h"
 #include "str.h"
+#include "Gservo.h"
 
 
 class Connect {
 private:
-    inline static bool message_flag = false;
+    //inline static bool message_flag = false;
     inline static int Arduino = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
 public:
     inline static char command[COMMAND_SIZE];
@@ -38,8 +39,6 @@ public:
 
     static void sendCommand();
 
-    static void receiveMessage();
-
     static void setId(char id);
 
     static void setTask(char task);
@@ -47,6 +46,10 @@ public:
     static void setValue(uint16_t value);
 
     static void encodeCommand(uint64_t cmd);
+
+    static bool receiveMessage();
+
+    static void decodeMessage();
 
     static void decodeKeyInput(const std::string& cmd);
 };
