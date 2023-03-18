@@ -17,13 +17,14 @@
 #define DXL_ID4                  4
 
 
-#define START_BYTE              64
-#define CONNECT_DXL_ID           0
-#define CONNECT_TASK             0
-#define CONNECT_VALUE           43
 #define COMMAND_SIZE             7
 #define MESSAGE_SIZE            16
-#define TIMER                  200
+#define TIMER                  100
+#define START_BYTE              64
+
+#define PING_DXL_ID              0
+#define PING_TASK                0
+#define PING_VALUE               0
 
 #define COMMAND_ID_CELL          2
 #define COMMAND_TASK_CELL        3
@@ -46,6 +47,7 @@
 #define MESSAGE_IS_MOVING2_CELL 14
 #define MESSAGE_CHECKSUM_CELL   15
 
+
 #define SERVO1_MIN_ANGLE       150
 #define SERVO1_MAX_ANGLE       853
 
@@ -57,7 +59,6 @@
 
 #define SERVO4_MIN_ANGLE       511
 #define SERVO4_MAX_ANGLE      1023
-
 
 #define ALPHA0 SERVO2_MAX_ANGLE
 #define BETA0 660

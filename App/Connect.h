@@ -18,7 +18,6 @@
 
 class Connect {
 private:
-    //inline static bool message_flag = false;
     inline static int Arduino = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
 public:
     inline static char command[COMMAND_SIZE];

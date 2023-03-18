@@ -20,10 +20,10 @@ bool Connect::openArduino() {
 void Connect::clearCommand() {
     command[0] = START_BYTE;
     command[1] = START_BYTE;
-    command[2] = CONNECT_DXL_ID;
-    command[3] = CONNECT_TASK;
-    command[4] = CONNECT_VALUE;
-    command[5] = CONNECT_VALUE;
+    command[2] = PING_DXL_ID;
+    command[3] = PING_TASK;
+    command[4] = PING_VALUE;
+    command[5] = PING_VALUE;
     calcCommandCheckSum();
 }
 
@@ -75,6 +75,7 @@ void Connect::sendCommand() {
     }
     calcCommandCheckSum();
     write(Arduino, command, COMMAND_SIZE);
+    clearCommand();
 }
 
 
@@ -116,12 +117,10 @@ bool Connect::receiveMessage() {
 
     if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buffer)) {
         std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
-        //std::cout << "pocket: ok " << message << std::endl;
+        Connect::decodeMessage();
         return true;
     }
     return false;
-    //std::cout << "pocket: fail " << (int) buffer[MESSAGE_SIZE - 1] << " ";
-    //std::cout << (int) calcMessageCheckSum(buffer) << std::endl;
 }
 
 

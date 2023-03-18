@@ -37,6 +37,13 @@ int get_columns() {
 }
 
 
+int get_rows() {
+    struct winsize window{};
+    ioctl(0, TIOCGWINSZ, &window);
+    return window.ws_row;
+}
+
+
 void finish() {
     Connect::disconnectArduino();
     resetty();
@@ -77,7 +84,7 @@ void print_table() {
     move(0, IS_MOVING_X);
     printw("is_moving");
 
-    move(7, 0);
+    move(COMMAND_Y - 1, 0);
     printw("Set command:");
 
     refresh();
@@ -89,6 +96,13 @@ void print_id() {
         move(i + 1, ID_X + 1);
         printw("%d", i);
     }
+    refresh();
+}
+
+
+void print_exit_option() {
+    move(get_rows() - 1, 0);
+    printw("Press 'Ctrl+C' to exit");
     refresh();
 }
 
@@ -112,7 +126,8 @@ void init_graphics() {
     clear();
     print_table();
     print_id();
-    move(8, 0);
+    print_exit_option();
+    move(COMMAND_Y, 0);
     refresh();
 }
 
@@ -228,25 +243,25 @@ void print_goal(uint8_t gservo_id, uint16_t goal) {
 
 
 void print_angle(uint8_t gservo_id, uint16_t angle) {
-    move(1 + gservo_id, ANGLE_X);
+    move(1 + gservo_id, ANGLE_X + 1);
     printw("%d", angle);
 }
 
 
 void print_speed(uint8_t gservo_id, uint16_t speed) {
-    move(1 + gservo_id, SPEED_X);
+    move(1 + gservo_id, SPEED_X + 1);
     printw("%d", speed);
 }
 
 
 void print_boost(uint8_t gservo_id, uint16_t boost) {
-    move(1 + gservo_id, BOOST_X);
+    move(1 + gservo_id, BOOST_X + 1);
     printw("%d", boost);
 }
 
 
 void print_torque(uint8_t gservo_id, uint16_t torque) {
-    move(1 + gservo_id, TORQUE_X);
+    move(1 + gservo_id, TORQUE_X + 1);
     printw("%d", torque);
 }
 
