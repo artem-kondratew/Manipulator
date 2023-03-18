@@ -12,15 +12,18 @@
 #include "Connect.h"
 
 
-#define KEY_RETURN  10
+#define KEY_RETURN     10
 
-#define ID_X         9
-#define GOAL_X      17
-#define ANGLE_X     23
-#define SPEED_X     34
-#define BOOST_X     41
-#define TORQUE_X    52
-#define IS_MOVING_X 62
+#define ID_X            9
+#define GOAL_X         17
+#define ANGLE_X        23
+#define SPEED_X        34
+#define BOOST_X        41
+#define TORQUE_X       52
+#define IS_MOVING_X    62
+
+#define COMMAND_Y       8
+#define LAST_COMMAND_Y  9
 
 
 int CURS_Y = 0;
@@ -44,7 +47,7 @@ void finish() {
 }
 
 
-void sigHandler(int sig) {
+void sighandler(int sig) {
     if (sig == SIGINT) {
         finish();
     }
@@ -92,7 +95,7 @@ void print_id() {
 }
 
 
-void initGraphics() {
+void init_graphics() {
     initscr();
     savetty();  //  save terminal settings
 
@@ -106,7 +109,7 @@ void initGraphics() {
     //curs_set(0);  //  hide cursor
     keypad(stdscr, TRUE);
 
-    signal(SIGINT, sigHandler);
+    signal(SIGINT, sighandler);
 
     clear();
     print_table();
@@ -117,27 +120,27 @@ void initGraphics() {
 
 
 void clear_command_line() {
-    move(8, 0);
+    move(COMMAND_Y, 0);
     for (int i = 0; i < get_columns(); i++) {
         printw(" ");
     }
-    move(8, 0);
+    move(COMMAND_Y, 0);
     refresh();
 }
 
 
 void print_last_command() {
-    move(9, 0);
+    move(LAST_COMMAND_Y, 0);
     for (int i = 0; i < get_columns(); i++) {
         printw(" ");
     }
-    move(9, 0);
+    move(LAST_COMMAND_Y, 0);
     printw("%s", Connect::key_cmd.get());
 }
 
 
 void print_command_line() {
-    move(8, 0);
+    move(COMMAND_Y, 0);
     printw("%s", Connect::key_cmd.get());
 }
 
