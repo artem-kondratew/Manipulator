@@ -85,7 +85,7 @@ void print_table() {
 
 void print_id() {
     for (int i = 1; i < 5; i++) {
-        move(i + 1, 9);
+        move(i + 1, ID_X + 1);
         printw("%d", i);
     }
     refresh();
@@ -98,11 +98,11 @@ void initGraphics() {
 
     //nonl();  //  deny going to the new line
 
-    cbreak();  //  буфер передается после нажатия enter
-    echo();  //  отображается печать символов
-    //timeout(0); //  буфер передается без нажатия enter
+    cbreak();  //  send buffer after pressing enter
+    echo();  //  visible printing
+    //timeout(0);
 
-    //leaveok(stdscr, TRUE);  //  сдвиг курсора - нормально
+    //leaveok(stdscr, TRUE);
     //curs_set(0);  //  hide cursor
     keypad(stdscr, TRUE);
 

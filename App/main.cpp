@@ -32,7 +32,6 @@ int main() {
     }
 */
 
-
     while (true) {
         int key = getch();
         key_proc(key);
