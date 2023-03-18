@@ -1,5 +1,5 @@
 #include <chrono>
-#include "Graphics.h"
+#include "graphics.h"
 #include "Connect.h"
 
 
@@ -35,50 +35,6 @@ int main() {
 
     while (true) {
         int key = getch();
-        char symbol = (char)key;
-        if (key == KEY_RETURN) {
-            //Connect::decodeKeyInput(command);
-            print_last_command();
-            clear_command_line();
-            Connect::key_cmd.reset();
-            continue;
-        }
-        if (key == KEY_BACKSPACE) {
-            getsyx(CURS_Y, CURS_X);
-            Connect::key_cmd.setCurs(CURS_X + 1);
-            Connect::key_cmd.keyBackspace();
-            clear_command_line();
-            print_command_line();
-            move(CURS_Y, CURS_X);
-            continue;
-        }
-        if (key == KEY_DC) {
-            getsyx(CURS_Y, CURS_X);
-            Connect::key_cmd.setCurs(CURS_X);
-            Connect::key_cmd.keyDelete();
-            clear_command_line();
-            print_command_line();
-            move(CURS_Y, CURS_X);
-            continue;
-        }
-        if (key == KEY_LEFT) {
-            getsyx(CURS_Y, CURS_X);
-            move(CURS_Y, CURS_X - 1);
-            continue;
-        }
-        if (key == KEY_RIGHT) {
-            getsyx(CURS_Y, CURS_X);
-            if (CURS_X == Connect::key_cmd.size()) {
-                continue;
-            }
-            move(CURS_Y, CURS_X + 1);
-            continue;
-        }
-        getsyx(CURS_Y, CURS_X);
-        Connect::key_cmd.push(symbol, CURS_X - 1);
-        clear_command_line();
-        print_command_line();
-        move(CURS_Y, Connect::key_cmd.getCurs() + 1);
-        refresh();
-    } // КУРСОР УЛЕТАЕТ ВПРАВО
+        key_proc(key);
+    }
 }

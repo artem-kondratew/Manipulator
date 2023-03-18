@@ -142,6 +142,81 @@ void print_command_line() {
 }
 
 
+void key_return_proc() {
+    //Connect::decodeKeyInput(command);
+    print_last_command();
+    clear_command_line();
+    Connect::key_cmd.reset();
+}
+
+
+void key_backspace_proc() {
+    getsyx(CURS_Y, CURS_X);
+    Connect::key_cmd.setCurs(CURS_X + 1);
+    Connect::key_cmd.keyBackspace();
+    clear_command_line();
+    print_command_line();
+    move(CURS_Y, CURS_X);
+}
+
+
+void key_delete_proc() {
+    getsyx(CURS_Y, CURS_X);
+    Connect::key_cmd.setCurs(CURS_X);
+    Connect::key_cmd.keyDelete();
+    clear_command_line();
+    print_command_line();
+    move(CURS_Y, CURS_X);
+}
+
+
+void key_left_proc() {
+    getsyx(CURS_Y, CURS_X);
+    move(CURS_Y, CURS_X - 1);
+}
+
+
+void key_right_proc() {
+    getsyx(CURS_Y, CURS_X);
+    if (CURS_X == Connect::key_cmd.size()) {
+        return;
+    }
+    move(CURS_Y, CURS_X + 1);
+}
+
+void key_proc(int key) {
+    char symbol = (char)key;
+    if (key == KEY_RETURN) {
+        return key_return_proc();
+    }
+    if (key == KEY_BACKSPACE) {
+        return key_backspace_proc();
+    }
+    if (key == KEY_DC) {
+        return key_delete_proc();
+    }
+    if (key == KEY_LEFT) {
+        return key_left_proc();
+    }
+    if (key == KEY_RIGHT) {
+        return key_right_proc();
+    }
+    if (key == KEY_UP) {
+        return;
+    }
+    if (key == KEY_DOWN) {
+        return;
+    }
+
+    getsyx(CURS_Y, CURS_X);
+    Connect::key_cmd.push(symbol, CURS_X - 1);
+    clear_command_line();
+    print_command_line();
+    move(CURS_Y, Connect::key_cmd.getCurs() + 1);
+    refresh();
+}
+
+
 void print_goal(uint8_t servo, uint16_t goal) {
     move(1 + servo, GOAL_X);
     printw("%d", goal);
