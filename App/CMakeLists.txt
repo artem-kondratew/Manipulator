@@ -3,6 +3,6 @@ project(Manipulator)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Manipulator main.cpp ../Config.h Graphics.h Connect.h Connect.cpp str.h str.cpp)
+add_executable(Manipulator main.cpp ../Arduino/Config.h Graphics.h Connect.h Connect.cpp str.h str.cpp)
 
 set(CMAKE_CXX_FLAGS "-lncurses")
