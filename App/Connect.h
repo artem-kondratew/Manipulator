@@ -26,9 +26,11 @@ public:
 
     static void clearCommand();
 
+    static bool openArduino();
+
     static void setConnection();
 
-    static bool openArduino();
+    static void disconnectArduino();
 
     static void calcCommandCheckSum();
 

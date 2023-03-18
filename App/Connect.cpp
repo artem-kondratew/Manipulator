@@ -50,6 +50,11 @@ void Connect::setConnection() {
 }
 
 
+void Connect::disconnectArduino() {
+    close(Arduino);
+}
+
+
 void Connect::calcCommandCheckSum() {
     command[CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
 }

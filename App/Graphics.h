@@ -35,6 +35,7 @@ int get_columns() {
 
 
 void finish() {
+    Connect::disconnectArduino();
     clear();
     refresh();
     resetty();
