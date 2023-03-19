@@ -19,7 +19,7 @@ private:
     uint16_t is_moving;
 
 public:
-    Gservo(uint8_t _id);
+    explicit Gservo(uint8_t _id);
 
     uint8_t id;
     uint16_t getGoal() const;
