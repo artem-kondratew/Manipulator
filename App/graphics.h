@@ -273,12 +273,12 @@ void print_is_moving(uint8_t gservo_id, uint16_t is_moving) {
 
 
 void print_params_from_servo(Gservo gservo) {
-    print_goal(gservo.id, gservo.getGoal());
-    print_angle(gservo.id, gservo.getAngle());
-    print_speed(gservo.id, gservo.getSpeed());
-    print_boost(gservo.id, gservo.getBoost());
-    print_torque(gservo.id, gservo.getTorque());
-    print_is_moving(gservo.id, gservo.getIsMoving());
+    print_goal(gservo.getId(), gservo.getGoal());
+    print_angle(gservo.getId(), gservo.getAngle());
+    print_speed(gservo.getId(), gservo.getSpeed());
+    print_boost(gservo.getId(), gservo.getBoost());
+    print_torque(gservo.getId(), gservo.getTorque());
+    print_is_moving(gservo.getId(), gservo.getIsMoving());
 }
 
 

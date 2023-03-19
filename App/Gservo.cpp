@@ -16,6 +16,11 @@ Gservo::Gservo(uint8_t _id) {
 }
 
 
+uint8_t Gservo::getId() const {
+    return id;
+}
+
+
 uint16_t Gservo::getGoal() const {
     return goal;
 }

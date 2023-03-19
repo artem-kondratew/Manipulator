@@ -11,6 +11,7 @@
 
 class Gservo {
 private:
+    uint8_t id;
     uint16_t goal;
     uint16_t angle;
     uint16_t speed;
@@ -21,7 +22,7 @@ private:
 public:
     explicit Gservo(uint8_t _id);
 
-    uint8_t id;
+    uint8_t getId() const;
     uint16_t getGoal() const;
     uint16_t getAngle() const;
     uint16_t getSpeed() const;
