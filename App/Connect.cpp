@@ -11,8 +11,10 @@ bool Connect::openArduino() {
         if (Arduino == -1) {
             return false;
         }
-        return true;
     }
+    tcgetattr(Arduino, &SerialPortSettings);
+    cfsetispeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
+    cfsetospeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
     return true;
 }
 
@@ -62,9 +64,11 @@ void Connect::calcCommandCheckSum() {
 
 char Connect::calcMessageCheckSum(const char buffer[]) {
     uint64_t sum = 0;
-    for (int i = 2; i < MESSAGE_SIZE - 1; i++) {
+    for (int i = 2; i < MESSAGE_CHECKSUM_CELL; i++) {
+        //std::cout << int(buffer[i]) << " ";
         sum += buffer[i];
     }
+    //std::cout << std::endl;
     return char(sum / 8);
 }
 

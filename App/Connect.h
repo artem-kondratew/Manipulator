@@ -6,11 +6,12 @@
 #define MANIPULATOR_CONNECT_H
 
 
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
 #include <chrono>
 #include <cstring>
+#include <fcntl.h>
+#include <iostream>
+#include <termios.h>
+#include <unistd.h>
 #include "../Arduino/Config.h"
 #include "str.h"
 #include "Gservo.h"
@@ -52,6 +53,9 @@ public:
 
     static void decodeKeyInput(const std::string& cmd);
 };
+
+
+inline struct termios SerialPortSettings;
 
 
 #endif //MANIPULATOR_CONNECT_H
