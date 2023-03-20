@@ -6,17 +6,15 @@
 #define MANIPULATOR_CONNECT_H
 
 
-#include <iostream>
+#include <chrono>
+#include <cstring>
 #include <fcntl.h>
+#include <iostream>
+#include <termios.h>
 #include <unistd.h>
-
-
-#define START_BYTE 64
-#define CONNECT_DXL_ID 0
-#define CONNECT_TASK 0
-#define CONNECT_VALUE 43
-#define COMMAND_SIZE 7
-#define MESSAGE_SIZE 7
+#include "../Arduino/Config.h"
+#include "str.h"
+#include "Gservo.h"
 
 
 class Connect {
@@ -25,22 +23,39 @@ private:
 public:
     inline static char command[COMMAND_SIZE];
     inline static char message[MESSAGE_SIZE];
+    inline static str key_cmd;
 
     static void clearCommand();
 
-    static bool setConnection();
-
     static bool openArduino();
 
+    static void setConnection();
+
+    static void disconnectArduino();
+
     static void calcCommandCheckSum();
-    static char calcMessageCheckSum();
+
+    static char calcMessageCheckSum(const char buffer[]);
 
     static void sendCommand();
 
-    static void receiveMessage();
+    static void setId(char id);
 
-    static bool checkMessage();
+    static void setTask(char task);
+
+    static void setValue(uint16_t value);
+
+    static void encodeCommand(uint64_t cmd);
+
+    static bool receiveMessage();
+
+    static void decodeMessage();
+
+    static void decodeKeyInput(const std::string& cmd);
 };
+
+
+inline struct termios SerialPortSettings;
 
 
 #endif //MANIPULATOR_CONNECT_H

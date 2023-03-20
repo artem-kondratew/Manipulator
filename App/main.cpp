@@ -1,32 +1,27 @@
 #include <chrono>
-#include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
-#include "Graphics.h"
-#include "Connect.h"
+#include "graphics.h"
 
 
 int main() {
 
-    //Connect::setConnection();
+    Connect::setConnection();
 
-    //initGraphics();
+    init_graphics();
 
-    Connect::command[0] = 64;
-    Connect::command[1] = 64;
-    Connect::command[2] = 43;
-    Connect::command[3] = 84;
-    Connect::command[4] = 89;
-    Connect::command[5] = 65;
-
-            auto start_timer = std::chrono::system_clock::now();
+    auto start_timer = std::chrono::system_clock::now();
     while (true) {
+
+        key_proc(getch());
+
         auto end_timer = std::chrono::system_clock::now();
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(200)) {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {
             Connect::sendCommand();
-            Connect::receiveMessage();
+            for (int i = 0; i < 4; i++) {
+                if (Connect::receiveMessage()) {
+                    print_params();
+                }
+            }
             start_timer = std::chrono::system_clock::now();
         }
-
     }
 }

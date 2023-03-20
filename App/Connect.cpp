@@ -7,9 +7,14 @@
 
 bool Connect::openArduino() {
     if (Arduino == -1) {
-        std::cout << "Unable to open /dev/ttyACM0" << std::endl;
-        return false;
+        Arduino = open("/dev/ttyACM1", O_RDWR | O_NOCTTY | O_NONBLOCK);
+        if (Arduino == -1) {
+            return false;
+        }
     }
+    tcgetattr(Arduino, &SerialPortSettings);
+    cfsetispeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
+    cfsetospeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
     return true;
 }
 
@@ -17,41 +22,54 @@ bool Connect::openArduino() {
 void Connect::clearCommand() {
     command[0] = START_BYTE;
     command[1] = START_BYTE;
-    command[2] = CONNECT_DXL_ID;
-    command[3] = CONNECT_TASK;
-    command[4] = CONNECT_VALUE;
-    command[5] = CONNECT_VALUE;
+    command[2] = PING_DXL_ID;
+    command[3] = PING_TASK;
+    command[4] = PING_VALUE;
+    command[5] = PING_VALUE;
     calcCommandCheckSum();
 }
 
 
-bool Connect::setConnection() {
+void Connect::setConnection() {
     if (!openArduino()) {
-        return false;
+        std::cout << "Unable to connect" << std::endl;
+        return;
     }
     clearCommand();
-    bool flag = false;
+    bool message_flag = false;
     std::cout << "connecting..." << std::endl;
-    while (!flag) {
-        sendCommand();
-        sleep(1);
-        receiveMessage();
-        if (message[0] == 64 && message[1] == 64 && message[MESSAGE_SIZE - 1] == calcMessageCheckSum()) {
-            sleep(1);
-            std::cout << "connected" << std::endl;
-            flag = true;
+    auto start_timer = std::chrono::system_clock::now();
+    while (!message_flag) {
+        auto end_timer = std::chrono::system_clock::now();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(end_timer - start_timer).count() > int(TIMER)) {
+            sendCommand();
+            message_flag = receiveMessage();
+            start_timer = std::chrono::system_clock::now();
         }
     }
+    std::cout << "connected" << std::endl;
+    sleep(1);
+}
+
+
+void Connect::disconnectArduino() {
+    close(Arduino);
 }
 
 
 void Connect::calcCommandCheckSum() {
-    command[6] = char((command[2] + command[3] + command[4] + command[5]) / 8);
+    command[COMMAND_CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
 }
 
 
-char Connect::calcMessageCheckSum() {
-    return char((message[2] + message[3] + message[4] + message[5]) / 8);
+char Connect::calcMessageCheckSum(const char buffer[]) {
+    uint64_t sum = 0;
+    for (int i = 2; i < MESSAGE_CHECKSUM_CELL; i++) {
+        //std::cout << int(buffer[i]) << " ";
+        sum += buffer[i];
+    }
+    //std::cout << std::endl;
+    return char(sum / 8);
 }
 
 
@@ -61,29 +79,82 @@ void Connect::sendCommand() {
     }
     calcCommandCheckSum();
     write(Arduino, command, COMMAND_SIZE);
+    clearCommand();
 }
 
 
-void Connect::receiveMessage() {
+void Connect::setId(char id) {
+    command[COMMAND_ID_CELL] = id;
+}
+
+
+void Connect::setTask(char task) {
+    command[COMMAND_TASK_CELL] = task;
+}
+
+
+void Connect::setValue(uint16_t value) {
+    command[COMMAND_VALUE1_CELL] = char(value / 100);
+    command[COMMAND_VALUE2_CELL] = char(value % 100);
+}
+
+
+void Connect::encodeCommand(uint64_t cmd) {
+    char id = char(cmd / 100000);
+    setId(id);
+
+    char task = char((cmd % 100000) / 10000);
+    setTask(task);
+
+    uint16_t value = cmd % 10000;
+    setValue(value);
+}
+
+
+bool Connect::receiveMessage() {
     if (!openArduino()) {
-        return;
+        return false;
     }
-    read(Arduino, message, MESSAGE_SIZE);
-    std::cout << "MESSAGE" << std::endl;
-    std::cout << message << std::endl;
-    for (char i: message) {
-        std::cout << int(i) << std::endl;
+
+    char buffer[MESSAGE_SIZE];
+    read(Arduino, buffer, MESSAGE_SIZE);
+
+    if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buffer)) {
+        std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
+        Connect::decodeMessage();
+        return true;
     }
-    std::cout << "check: " << (int)calcMessageCheckSum() << std::endl;
-    if (checkMessage()) {
-        std::cout << "pocket: ok" << std::endl;
+    return false;
+}
+
+
+Gservo* findGservo(uint8_t id) {
+    if (id == 1) {
+        return &gservo1;
     }
-    else {
-        std::cout << "pocket: fail" << std::endl;
+    if (id == 2) {
+        return &gservo2;
+    }
+    if (id == 3) {
+        return &gservo3;
+    }
+    if (id == 4) {
+        return &gservo4;
     }
 }
 
 
-bool Connect::checkMessage() {
-    return message[MESSAGE_SIZE-1] == calcMessageCheckSum();
+void Connect::decodeMessage() {
+    Gservo* gservo = findGservo(message[MESSAGE_ID_CELL]);
+    gservo->setGoal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
+    gservo->setAngle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
+    gservo->setSpeed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
+    gservo->setBoost(message[MESSAGE_BOOST1_CELL], message[MESSAGE_BOOST2_CELL]);
+    gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
+    gservo->setIsMoving(message[MESSAGE_IS_MOVING1_CELL], message[MESSAGE_IS_MOVING2_CELL]);
+}
+
+
+void Connect::decodeKeyInput(const std::string& cmd) {
+    encodeCommand(stoi(cmd));
 }

@@ -1,7 +1,0 @@
-
-#include <cstdint>
-
-
-class Math {
-
-}
