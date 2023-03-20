@@ -1,5 +1,7 @@
+
 #include <cstdint>
 #include <cmath>
+#include "Servo.h"
 
 
 class Joint {
@@ -14,23 +16,33 @@ public:
     ~Joint() = default;
     void GoTo(int32_t my_x, int32_t my_y, int32_t my_z);
     void getCoordinates();
+    static void getAngles();
     
 };
 
 
-Joint:Joint(uint8_t _DXL_ID) {
+    Joint joint1(1);
+    Joint joint2(2);
+    Joint joint3(3);
+    Joint joint4(4);
+
+
+Joint::Joint(uint8_t _DXL_ID) {
     DXL_ID = _DXL_ID;
 
     // Lengths of links in mm:
     const uint8_t x0 = -25;
-    const uint8_t z0 = 100
+    const uint8_t z0 = 100;
     const uint8_t len1 = 103;
     const uint8_t len2 = 150;
-    const uint8_t len3 = len2;
+    const uint8_t len3 = 150;
     const uint8_t len4 = 120;
-    int8_t q0 = map(servo1.getAngle(), 0, 1023, 0, 360);
-    int8_t q1 = map(servo2.getAngle(), 0, 1023, 0, 360);
-    int8_t q2 = map(servo3.getAngle(), 0, 1023, 0, 360);
+    int8_t q0 = map(servo1.getAngle(), 0, 1023, -179, 180);
+    int8_t q1 = map(servo2.getAngle(), 0, 1023, -240, -88);
+    int8_t q2 = map(servo3.getAngle(), 0, 1023, -233, 126);
+    double q0_rad = map(q0, -179, 180, 0, 6.28319);
+    double q1_rad = map(q1, -240, -88, 0, 6.28319);
+    double q2_rad = map(q2, -233, 126, 0, 6.28319);
     
     switch (DXL_ID) {
         case 1: {
@@ -47,14 +59,14 @@ Joint:Joint(uint8_t _DXL_ID) {
         }
         case 3: {
             x = (x0 + len2 * cos(q1) + len3 * cos(q2)) * cos(q0);
-            y = (x0 + len2 * cos(q1) + len3 * cos(q2))) * sin(q0);
+            y = (x0 + len2 * cos(q1) + len3 * cos(q2)) * sin(q0);
             z = z0 + len1 * sin(q1) + len3 * sin(q2);
             break;  
         }
         case 4: {
-            x = (x0 + len2 * cos(q1) + len3 * cos(q2) + len4) * cos(q0);
-            y = (x0 + len2 * cos(q1) + len3 * cos(q2) + len4) * sin(q0);
-            z = z0 + len1 * sin(q1) + len3 * sin(q2);
+            x = (x0 + len2 * cos(q1_rad) + len3 * cos(q2_rad) + len4) * cos(q0_rad);
+            y = (x0 + len2 * cos(q1_rad) + len3 * cos(q2_rad) + len4) * sin(q0_rad);
+            z = z0 + len2 * sin(q1_rad) + len3 * sin(q2_rad);
             break;  
         }
         default:
@@ -73,5 +85,23 @@ void Joint::getCoordinates() {
     Serial.print("Coordinate y: ");
     Serial.println(y);  
     Serial.print("Coordinate z: ");
-    Serial.println(z);    
+    Serial.println(z);
+    Serial.println();
+}
+
+
+void Joint::getAngles() {
+    int8_t q0 = map(servo1.getAngle(), 0, 1023, -179, 180);
+    int8_t q1 = map(servo2.getAngle(), 0, 1023, -240, -88);
+    int8_t q2 = map(servo3.getAngle(), 0, 1023, -233, 126);
+    double q0_rad = map(q0, -179, 180, -3.12414, 3.14159);
+    double q1_rad = map(q1, -240, -88, -4.18879, -1.53589);
+    double q2_rad = map(q2, -233, 126, -4.06662, 2.19911);
+    
+    Serial.print("Angle q0: ");
+    Serial.print(q0); Serial.print(" "); Serial.println(q0_rad);
+    Serial.print("Angle q1: ");
+    Serial.print(q1); Serial.print(" "); Serial.println(q1_rad); 
+    Serial.print("Angle q2: ");
+    Serial.print(q2); Serial.print(" "); Serial.println(q2_rad);
 }
