@@ -2,6 +2,7 @@
 #include <DynamixelWorkbench.h>
 #include "Config.h"
 #include "Servo.h"
+#include "Node.h"
 
 
 void setup() {
@@ -24,7 +25,7 @@ void setup() {
     servos.jointMode(DXL_ID2, 100, 40);
     servos.jointMode(DXL_ID3, 100, 40);
     servos.jointMode(DXL_ID4, 100, 40);
-
+    
     Servo::getStartPosition();
 }
 
@@ -40,4 +41,7 @@ void loop() {
 */
     Servo::talk(Serial.parseInt());
     Servo::anglePrint();
+
+    Joint::getAngles();
+    
 }
