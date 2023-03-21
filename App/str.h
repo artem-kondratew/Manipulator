@@ -18,6 +18,7 @@ private:
 
 public:
     str();
+    explicit str(std::string _string);
 
     void push(char symbol, int index);
     void pop(int index);
@@ -29,6 +30,7 @@ public:
     void keyDelete();
     void setCurs(int CURS_X);
     int getCurs() const;
+    void set(std::string _string);
 };
 
 

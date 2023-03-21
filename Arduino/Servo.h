@@ -180,8 +180,8 @@ bool Servo::talk(uint16_t msg) {
     Servo *servo = findServo(id);
 
     uint16_t msg_angle = msg % 10000;
-    test(msg_angle);
-    /*
+    //test(msg_angle);
+    
     if (id == 2) {
         servo2.new_angle = reformatAngle(msg_angle, servo2.min_angle, servo2.max_angle);
         servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
@@ -196,7 +196,7 @@ bool Servo::talk(uint16_t msg) {
     }
     servo->setAngle(msg_angle);
     return true;
-    */
+    
 }
 
 
