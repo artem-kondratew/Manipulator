@@ -19,7 +19,7 @@ void Servo::test(uint16_t msg) {
         uint16_t num;
         uint16_t angle3 = 1023 - servo3.angle;
 
-        if (angle3 < 450) {
+        if (angle3 < 450) {uint16_t angle3 = 1023 - servo3.angle;
             num = 640;
             if (msg > (640 - angle3)) {
                 servo2.setAngle(msg);

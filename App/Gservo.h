@@ -17,7 +17,7 @@ private:
     uint16_t speed;
     uint16_t boost;
     uint16_t torque;
-    uint16_t is_moving;
+    uint8_t is_moving;
 
 public:
     explicit Gservo(uint8_t _id);
@@ -35,7 +35,7 @@ public:
     void setSpeed(uint8_t _speed1, uint8_t _speed2);
     void setBoost(uint8_t _boost1, uint8_t _boost2);
     void setTorque(uint8_t _torque1, uint8_t _torque2);
-    void setIsMoving(uint8_t _is_moving1, uint8_t _is_moving2);
+    void setIsMoving(uint8_t _is_moving);
 };
 
 

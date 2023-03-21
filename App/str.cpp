@@ -56,6 +56,11 @@ const char* str::get() {
 }
 
 
+std::string str::getStr() {
+    return string;
+}
+
+
 void str::keyBackspace() {
     pop(curs);
 }

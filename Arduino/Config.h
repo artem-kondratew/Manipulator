@@ -18,7 +18,7 @@
 
 
 #define COMMAND_SIZE             7
-#define MESSAGE_SIZE            16
+#define MESSAGE_SIZE            15
 #define TIMER                  100
 #define START_BYTE              64
 
@@ -43,9 +43,14 @@
 #define MESSAGE_BOOST2_CELL     10
 #define MESSAGE_TORQUE1_CELL    11
 #define MESSAGE_TORQUE2_CELL    12
-#define MESSAGE_IS_MOVING1_CELL 13
-#define MESSAGE_IS_MOVING2_CELL 14
-#define MESSAGE_CHECKSUM_CELL   15
+#define MESSAGE_IS_MOVING_CELL  13
+#define MESSAGE_CHECKSUM_CELL   14
+
+#define SET_ANGLE_TASK           1
+#define SET_SPEED_TASK           2
+#define SET_BOOST_TASK           3
+#define REBOOT_TASK              8
+#define GET_ERROR_TASK           9
 
 
 #define SERVO1_MIN_ANGLE       150

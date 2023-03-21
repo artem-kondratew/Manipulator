@@ -10,6 +10,7 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
+#include <string>
 #include <termios.h>
 #include <unistd.h>
 #include "../Arduino/Config.h"
@@ -51,7 +52,7 @@ public:
 
     static void decodeMessage();
 
-    static void decodeKeyInput(const std::string& cmd);
+    static void decodeKeyInput();
 };
 
 

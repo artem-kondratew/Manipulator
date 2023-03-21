@@ -159,7 +159,7 @@ void print_command_line() {
 
 
 void key_return_proc() {
-    //Connect::decodeKeyInput(command);
+    Connect::decodeKeyInput();
     print_last_command();
     clear_command_line();
     Connect::key_cmd.reset();
