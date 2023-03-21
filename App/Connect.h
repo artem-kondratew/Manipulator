@@ -18,6 +18,16 @@
 #include "Gservo.h"
 
 
+class Exception: std::exception {
+private:
+    std::string message;
+public:
+    explicit Exception(std::string _message) {message = std::move(_message);};
+
+    std::string getMessage() const {return message;};
+};
+
+
 class Connect {
 private:
     inline static int Arduino = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
