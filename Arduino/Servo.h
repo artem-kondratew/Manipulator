@@ -28,6 +28,10 @@ public:
     static void pingServos();
     static void getStartPosition();
 
+    static Servo* findServo(uint8_t id);
+
+    void setMoveMode(uint16_t _speed, uint16_t _boost);
+
     void setAngle(uint16_t _angle);
     static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
     
@@ -38,8 +42,10 @@ public:
     static void test(uint16_t msg);
 
     void setSpeed(uint16_t _speed);
+    static void setSpeed(uint16_t _speed, uint8_t _DXL_ID);
+    
     void setBoost(uint16_t _boost);
-    void setMoveMode(uint16_t _speed, uint16_t _boost);
+    static void setBoost(uint16_t _boost, uint8_t _DXL_ID);
 
     int32_t readRegister(char* command);
     uint16_t getAngle();
@@ -95,6 +101,29 @@ uint16_t reformatAngle(uint16_t angle, uint16_t min_angle, uint16_t max_angle) {
 }
 
 
+Servo* Servo::findServo(uint8_t id) {
+    if (id == 1) {
+        return &servo1;
+    }
+    if (id == 2) {
+        return &servo2;
+    }
+    if (id == 3) {
+        return &servo3;
+    }
+    if (id == 4) {
+        return &servo4;
+    }
+}
+
+
+void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
+    speed = _speed;
+    boost = _boost;
+    servos.jointMode(DXL_ID, speed, boost);
+}
+
+
 void Servo::setAngle(uint16_t _angle) {
     if (inv == 1) {
         _angle = 1023 - _angle;
@@ -124,34 +153,8 @@ void Servo::setAngle(uint16_t _angle) {
 
 
 void Servo::setAngle(uint16_t _angle, uint8_t _DXL_ID) {
-    if (_DXL_ID == 1) {
-        servo1.setAngle(_angle);
-    }
-    if (_DXL_ID == 2) {
-        servo2.setAngle(_angle);
-    }
-    if (_DXL_ID == 3) {
-        servo3.setAngle(_angle);
-    }
-    if (_DXL_ID == 4) {
-        servo4.setAngle(_angle);
-    }
-}
-
-
-Servo *findServo(uint8_t id) {
-    if (id == 1) {
-        return &servo1;
-    }
-    if (id == 2) {
-        return &servo2;
-    }
-    if (id == 3) {
-        return &servo3;
-    }
-    if (id == 4) {
-        return &servo4;
-    }
+    Servo *servo = findServo(_DXL_ID);
+    servo->setAngle(_angle);
 }
 
 
@@ -177,6 +180,8 @@ bool Servo::talk(uint16_t msg) {
     Servo *servo = findServo(id);
 
     uint16_t msg_angle = msg % 10000;
+    test(msg_angle);
+    /*
     if (id == 2) {
         servo2.new_angle = reformatAngle(msg_angle, servo2.min_angle, servo2.max_angle);
         servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
@@ -191,6 +196,7 @@ bool Servo::talk(uint16_t msg) {
     }
     servo->setAngle(msg_angle);
     return true;
+    */
 }
 
 
@@ -213,16 +219,21 @@ void Servo::setSpeed(uint16_t _speed) {
 }
 
 
+void Servo::setSpeed(uint16_t _speed, uint8_t _DXL_ID) {
+    Servo *servo = findServo(_DXL_ID);
+    servo->setSpeed(_speed);
+}
+
+
 void Servo::setBoost(uint16_t _boost) {
     boost = _boost;
     servos.jointMode(DXL_ID, speed, boost);
 }
 
 
-void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
-    speed = _speed;
-    boost = _boost;
-    servos.jointMode(DXL_ID, speed, boost);
+void Servo::setBoost(uint16_t _boost, uint8_t _DXL_ID) {
+    Servo *servo = findServo(_DXL_ID);
+    servo->setBoost(_boost);
 }
 
 

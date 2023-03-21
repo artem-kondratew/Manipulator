@@ -76,6 +76,6 @@ void Gservo::setTorque(uint8_t _torque1, uint8_t _torque2) {
 }
 
 
-void Gservo::setIsMoving(uint8_t _is_moving1, uint8_t _is_moving2) {
-    is_moving = _is_moving1 * 100 + _is_moving2;
+void Gservo::setIsMoving(uint8_t _is_moving1) {
+    is_moving = _is_moving1;
 }

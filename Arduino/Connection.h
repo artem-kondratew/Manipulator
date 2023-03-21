@@ -7,66 +7,94 @@
 #include "Servo.h"
 
 
-uint8_t id = 0;
-uint8_t command = 0;
-uint16_t value1 = 0;
-uint16_t value2 = 0;
-uint16_t value = 0;
-uint16_t checksum = 0;
+typedef struct Command {
+    uint8_t id = 0;
+    uint8_t command = 0;
+    uint16_t value1 = 0;
+    uint16_t value2 = 0;
+    uint16_t value = 0;
+    uint16_t checksum = 0;
+} Command;
 
-uint16_t goal = 0;
-uint16_t angle = 0;
-uint16_t speed = 0;
-uint16_t boost = 0;
-uint16_t torque = 0;
-uint16_t is_moving = 0;
+
+typedef struct Message {
+    uint8_t id = 0;
+    uint16_t goal1 = 0;
+    uint16_t goal2 = 0;
+    uint16_t angle1 = 0;
+    uint16_t angle2 = 0;
+    uint16_t speed1 = 0;
+    uint16_t speed2 = 0;
+    uint16_t boost1 = 0;
+    uint16_t boost2 = 0;
+    uint16_t torque1 = 0;
+    uint16_t torque2 = 0;
+    uint8_t is_moving = 0;
+} Message;
+
+Command Cmd;
+Message Msg;
 
 
 class Connection {
 public:
-    static uint16_t calc();
-    static void setData(Servo servo);
-    static void setData();
+    static uint16_t getCalc();
+    static uint16_t setCalc();
+    static void setMsgValues(uint8_t id);
+    static void setData(uint8_t id);
     static void getData();
     static void findCommand();
 };
 
 
-uint16_t Connection::calc() {
-    return (char(id) + char(command) + char(value1) + char(value2)) / 8;
+uint16_t Connection::getCalc() {
+    return (char(Cmd.id) + char(Cmd.command) + char(Cmd.value1) + char(Cmd.value2)) / 8;
 }
 
 
-void Connection::setData(Servo servo) {
-    id = servo.getDXL_ID();
-    goal = servo.getGoal();
-    angle = servo.getAngle();
-    speed = servo.getSpeed();
-    boost = servo.getBoost();
-    torque = servo.getLoad();
-    is_moving = servo.isMoving();
+uint16_t Connection::setCalc() {
+    return (char(Msg.id) + char(Msg.goal1) + char(Msg.goal2) + char(Msg.angle1) + char(Msg.angle2) + char(Msg.speed1) + char(Msg.speed2) +
+    char(Msg.boost1) + char(Msg.boost2) + char(Msg.torque1) + char(Msg.torque2) + char(Msg.is_moving)) / 8;
+}
+
+
+void Connection::setMsgValues(uint8_t id) {
+    Servo* servo = Servo::findServo(id);
+    Msg.id = servo->getDXL_ID();
+    Msg.goal1 = servo->getGoal() / 100;
+    Msg.goal2 = servo->getGoal() % 100;
+    Msg.angle1 = servo->getAngle() / 100;
+    Msg.angle2 = servo->getAngle() % 100;
+    Msg.speed1 = servo->getSpeed() / 100;
+    Msg.speed2 = servo->getSpeed() % 100;
+    Msg.boost1 = servo->getBoost() / 100;
+    Msg.boost2 = servo->getBoost() % 100;
+    Msg.torque1 = servo->getLoad() / 100;
+    Msg.torque2 = servo->getLoad() % 100;
+    Msg.is_moving = servo->isMoving();
+}
+
+
+void Connection::setData(uint8_t id) {
+    setMsgValues(id);
     
     Serial.print(char(64));
     Serial.print(char(64));
     
-    Serial.print(char(id));
-    Serial.print(char(goal));
-    Serial.print(char(angle));
-    Serial.print(char(speed));
-    Serial.print(char(boost));
-    Serial.print(char(torque));
-    Serial.print(char(is_moving));
+    Serial.print(char(Msg.id));
+    Serial.print(char(Msg.goal1));
+    Serial.print(char(Msg.goal2));
+    Serial.print(char(Msg.angle1));
+    Serial.print(char(Msg.angle2));
+    Serial.print(char(Msg.speed1));
+    Serial.print(char(Msg.speed2));
+    Serial.print(char(Msg.boost1));
+    Serial.print(char(Msg.boost2));
+    Serial.print(char(Msg.torque1));
+    Serial.print(char(Msg.torque2));
+    Serial.print(char(Msg.is_moving));
 
-    Serial.print(char(calc()));
-}
-
-
-void Connection::setData() {
-    //add change flag
-    setData(servo1);
-    //setData(servo2);
-    //setData(servo3);
-    //setData(servo4);
+    Serial.print(char(setCalc()));
 }
 
 
@@ -75,14 +103,17 @@ void Connection::getData() {
       byte start1 = Serial.read();
       byte start2 = Serial.read();
       if (start1 + start2 == 128) {
-          id = Serial.read();
-          command = Serial.read();
-          value1 = Serial.read();
-          value2 = Serial.read();
-          checksum = Serial.read();
-      if (calc() == checksum) {
+          Cmd.id = Serial.read();
+          Cmd.command = Serial.read();
+          Cmd.value1 = Serial.read();
+          Cmd.value2 = Serial.read();
+          Cmd.checksum = Serial.read();
+      if (getCalc() == Cmd.checksum) {
           findCommand();
-          setData();
+          setData(DXL_ID1);    
+          setData(DXL_ID2);
+          setData(DXL_ID3);
+          setData(DXL_ID4);
       }
     }
   }
@@ -90,12 +121,29 @@ void Connection::getData() {
 
 
 void Connection::findCommand() {
-    value = value1 * 100 + value2;
-    if (command == 0) {
-        
+    Cmd.value = Cmd.value1 * 100 + Cmd.value2;
+    if (Cmd.command == 0) {
+        return;
     }
-    if (command == 1) {
-        Servo::setAngle(value, id);
+    if (Cmd.command == SET_ANGLE_TASK) {
+        Servo::setAngle(Cmd.value, Cmd.id);
+        return;
+    }
+    if (Cmd.command == SET_SPEED_TASK) {
+        Servo::setSpeed(Cmd.value, Cmd.id);
+        return;
+    }
+    if (Cmd.command == SET_BOOST_TASK) {
+        Servo::setBoost(Cmd.value, Cmd.id);
+        return;
+    }
+    if (Cmd.command == REBOOT_TASK) {
+        
+        return;
+    }
+    if (Cmd.command == GET_ERROR_TASK) {
+        
+        return;
     }
 }
 

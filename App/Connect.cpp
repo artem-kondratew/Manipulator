@@ -13,8 +13,8 @@ bool Connect::openArduino() {
         }
     }
     tcgetattr(Arduino, &SerialPortSettings);
-    cfsetispeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
-    cfsetospeed(&SerialPortSettings, 9600); //SERIAL_BAUDRATE
+    cfsetispeed(&SerialPortSettings, SERIAL_BAUDRATE);
+    cfsetospeed(&SerialPortSettings, SERIAL_BAUDRATE);
     return true;
 }
 
@@ -151,10 +151,12 @@ void Connect::decodeMessage() {
     gservo->setSpeed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
     gservo->setBoost(message[MESSAGE_BOOST1_CELL], message[MESSAGE_BOOST2_CELL]);
     gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
-    gservo->setIsMoving(message[MESSAGE_IS_MOVING1_CELL], message[MESSAGE_IS_MOVING2_CELL]);
+    gservo->setIsMoving(message[MESSAGE_IS_MOVING_CELL]);
 }
 
 
-void Connect::decodeKeyInput(const std::string& cmd) {
-    encodeCommand(stoi(cmd));
+void Connect::decodeKeyInput() {
+
+
+    encodeCommand(stoi(key_cmd.getStr()));
 }
