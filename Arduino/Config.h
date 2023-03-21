@@ -51,6 +51,7 @@
 #define SET_BOOST_TASK           3
 #define REBOOT_TASK              8
 #define GET_ERROR_TASK           9
+#define CALIBRATION_TASK         7
 
 
 #define SERVO1_MIN_ANGLE       150
