@@ -156,7 +156,18 @@ void Connect::decodeMessage() {
 
 
 void Connect::decodeKeyInput() {
-
-
-    encodeCommand(stoi(key_cmd.getStr()));
+    char numbers[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int flag = 0;
+    for (int i = 0; i < key_cmd.size(); i++) {
+        for (char number : numbers) {
+            if (key_cmd.getStr()[i] == number) {
+                flag++;
+                break;
+            }
+        }
+    }
+    if (flag == key_cmd.size()) {
+        Connect::encodeCommand(stoi(key_cmd.getStr()));
+        return;
+    }
 }
