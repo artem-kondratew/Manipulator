@@ -9,17 +9,8 @@
 #include <cstdint>
 #include <iostream>
 #include <utility>
+#include "Exception.h"
 #include "str.h"
-
-
-class Exception: std::exception {
-private:
-    std::string message;
-public:
-    explicit Exception(std::string _message) {message = std::move(_message);};
-
-    std::string getMessage() const {return message;};
-};
 
 
 class List;
