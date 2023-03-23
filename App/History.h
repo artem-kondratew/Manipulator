@@ -23,6 +23,7 @@ public:
     static void append(const str& command);
     static uint64_t getIndex();
     static void setCurrentCommand(std::string command);
+    static void resetIndex();
 };
 
 
@@ -62,6 +63,11 @@ uint64_t History::getIndex() {
 
 void History::setCurrentCommand(std::string command) {
     current_command.set(std::move(command));
+}
+
+
+void History::resetIndex() {
+    index = 0;
 }
 
 
