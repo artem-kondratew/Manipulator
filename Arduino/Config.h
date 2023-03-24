@@ -57,17 +57,17 @@
 #define SERVO1_MIN_ANGLE       150
 #define SERVO1_MAX_ANGLE       853
 
-#define SERVO2_MIN_ANGLE         0 //200
-#define SERVO2_MAX_ANGLE      1023 //550
+#define SERVO2_MIN_ANGLE         212 //200
+#define SERVO2_MAX_ANGLE      612 //550
 
-#define SERVO3_MIN_ANGLE         0 //250
-#define SERVO3_MAX_ANGLE      1023 //1023
+#define SERVO3_MIN_ANGLE        390  
+#define SERVO3_MAX_ANGLE        790
 
 #define SERVO4_MIN_ANGLE       511
 #define SERVO4_MAX_ANGLE      1023
 
 #define ALPHA0 SERVO2_MAX_ANGLE
-#define BETA0 660
+#define BETA0 760
 const uint16_t MIN_GAMMA = 1023 + BETA0 - ALPHA0;//1023 - ALPHA0 + SERVO4_MIN_ANGLE - BETA0; // pos 512 instead of 1023
 const uint16_t MAX_GAMMA = 2 ^ 16;
 

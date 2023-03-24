@@ -14,8 +14,8 @@ void setup() {
     Servo::pingServos();
 
     servo1.setMoveMode(100, 40);
-    servo2.setMoveMode(40, 40);
-    servo3.setMoveMode(40, 40);
+    servo2.setMoveMode(60, 40);
+    servo3.setMoveMode(60, 40);
     servo4.setMoveMode(100, 40);
 
     Servo::getStartPosition();
@@ -25,8 +25,8 @@ void setup() {
 
 
 void loop() {
-    Connection::getData();
-    //Servo::talk(Serial.parseInt());
+    //Connection::getData();
+    Servo::talk(Serial.parseInt());
     
     //Servo::anglePrint();
 }

@@ -24,39 +24,59 @@ private:
     uint16_t boost;
 public:
     Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv = 0);
+
     static void init();
+
     static void pingServos();
+
     static void getStartPosition();
 
-    static Servo* findServo(uint8_t id);
+    static Servo *findServo(uint8_t id);
+
+    uint16_t reformatAngle(uint16_t _angle);
 
     void setMoveMode(uint16_t _speed, uint16_t _boost);
 
+    void setTorque(bool status);
+
     void setAngle(uint16_t _angle);
+
     static void setAngle(uint16_t _angle, uint8_t _DXL_ID);
-    
+
     uint8_t getDXL_ID();
+
     static bool talk(uint16_t _angle);
 
     static uint16_t checkGamma(uint16_t alpha, uint16_t beta);
+
     static void test(uint16_t msg);
 
     void setSpeed(uint16_t _speed);
+
     static void setSpeed(uint16_t _speed, uint8_t _DXL_ID);
-    
+
     void setBoost(uint16_t _boost);
+
     static void setBoost(uint16_t _boost, uint8_t _DXL_ID);
 
-    int32_t readRegister(char* command);
+    int32_t readRegister(char *command);
+
     uint16_t getAngle();
+
     uint16_t getGoal();
+
     int32_t getLoad();
+
     int32_t isMoving();
+
     uint16_t getSpeed();
+
     uint16_t getBoost();
 
     void Calibration_min();
+
     void Calibration_max();
+
     static void Calibration_setup();
 };
 
@@ -90,18 +110,18 @@ void Servo::pingServos() {
 }
 
 
-uint16_t reformatAngle(uint16_t angle, uint16_t min_angle, uint16_t max_angle) {
-    if (angle < min_angle) {
+uint16_t Servo::reformatAngle(uint16_t _angle) {
+    if (_angle < min_angle) {
         return min_angle;
     }
-    if (angle > max_angle) {
+    if (_angle > max_angle) {
         return max_angle;
     }
-    return angle;
+    return _angle;
 }
 
 
-Servo* Servo::findServo(uint8_t id) {
+Servo *Servo::findServo(uint8_t id) {
     if (id == 1) {
         return &servo1;
     }
@@ -125,25 +145,33 @@ void Servo::setMoveMode(uint16_t _speed, uint16_t _boost) {
 
 
 void Servo::setAngle(uint16_t _angle) {
+    uint16_t _min_angle = min_angle;;
+    uint16_t _max_angle = max_angle;
+
     if (inv == 1) {
-        _angle = 1023 - _angle;
+        _angle = 1023 - _angle; // 800 -> 223
+        _max_angle = 1023 - min_angle;  //  790 -> 633
+        _min_angle = 1023 - max_angle;  //  390 -> 233
     }
-    if (_angle < min_angle) {
-        angle = min_angle;
+
+    if (_angle < _min_angle) {
+        angle = _min_angle;
         servos.goalPosition(DXL_ID, angle);
         if (inv == 1) {
             angle = 1023 - angle;
         }
         return;
     }
-    if (_angle > max_angle) {
-        angle = max_angle;
+
+    if (_angle > _max_angle) {
+        angle = _max_angle;
         servos.goalPosition(DXL_ID, angle);
         if (inv == 1) {
             angle = 1023 - angle;
         }
         return;
     }
+
     angle = _angle;
     servos.goalPosition(DXL_ID, angle);
     if (inv == 1) {
@@ -163,7 +191,7 @@ void Servo::getStartPosition() {
     servo2.setAngle(512);
     servo3.setAngle(512);
     servo4.setAngle(512);
-    delay(5000);
+    delay(3000);
 }
 
 
@@ -172,31 +200,213 @@ uint8_t Servo::getDXL_ID() {
 }
 
 
+void Servo::test(uint16_t msg) {
+
+    uint16_t neutral_angle_2 = (servo2.max_angle + servo2.min_angle) / 2 - 20;
+    uint16_t neutral_angle_3 = (servo3.max_angle + servo3.min_angle) / 2 + 20;
+
+    uint16_t num2 = servo3.max_angle - neutral_angle_2;
+    uint16_t num3 = neutral_angle_2 + servo3.min_angle;
+    uint16_t num4 = neutral_angle_2 - servo3.min_angle;
+
+    uint16_t angle_3 = 1023 - servo3.getAngle();
+    uint16_t angle_2 = servo2.getAngle();
+
+    uint8_t id = msg / 10000;
+    uint16_t msg_angle = msg % 10000;
+
+
+    if (id == 2) {
+
+        uint8_t quart;
+        uint16_t correct_angle_3;
+
+        msg_angle = servo2.reformatAngle(msg_angle);
+
+        if (angle_3 > neutral_angle_3) {
+            if (msg_angle > neutral_angle_2) quart = 1;            // Определяем четверть
+            else quart = 2;
+        } else {
+            if (msg_angle <= neutral_angle_2) quart = 3;
+            else quart = 4;
+        }
+
+        switch (quart) {                                   // Действия для каждой четверти
+            case 1:
+                servo2.setAngle(msg_angle);
+                break;
+
+            case 2:
+                correct_angle_3 = num2 + msg_angle;
+                if (angle_3 > correct_angle_3) servo3.setAngle(correct_angle_3);
+                servo2.setAngle(msg_angle);
+                break;
+
+            case 3:
+                correct_angle_3 = num3 - msg_angle;
+                if (angle_3 < correct_angle_3 && msg_angle < 320)
+                    servo3.setAngle(correct_angle_3 + (320 - msg_angle) / 6);
+                servo2.setAngle(msg_angle);
+                break;
+
+            case 4:
+                correct_angle_3 = msg_angle - num4;
+                if (angle_3 < correct_angle_3) servo3.setAngle(correct_angle_3);
+                servo2.setAngle(msg_angle);
+                break;
+
+            default:
+                servo2.setAngle(msg_angle);
+                break;
+        }
+        return;
+    }
+
+    if (id == 3) {
+
+        uint8_t place;
+        uint16_t correct_angle_2;
+
+        msg_angle = servo3.reformatAngle(msg_angle);
+
+
+        if (msg_angle < neutral_angle_3 - 200) {
+            if (angle_2 > neutral_angle_2) {
+                place = 7;
+            } else {
+                place = 8;
+            }
+        } else if (msg_angle < neutral_angle_3 - 100 && msg_angle >= neutral_angle_3 - 200) {
+            if (angle_2 > neutral_angle_2) {
+                place = 5;
+            } else {
+                place = 6;
+            }
+        } else if (msg_angle < neutral_angle_3 && msg_angle >= neutral_angle_3 - 100) {
+            if (angle_2 > neutral_angle_2) {
+                place = 3;
+            } else {
+                place = 4;
+            }
+        } else {
+            if (angle_2 > neutral_angle_2) {
+                place = 1;
+            } else {
+                place = 2;
+            }
+        }
+
+
+        switch (place) {                                   // Действия для каждой четверти
+            case 1:
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 1");
+                break;
+
+            case 2:
+                correct_angle_2 = msg_angle - num2;
+                if (angle_2 < correct_angle_2) {
+                    servo2.setAngle(correct_angle_2);
+                    Serial.print("Case 2, Angle_2 is ");
+                    Serial.println(correct_angle_2);
+                }
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 2");
+                break;
+
+            case 3:
+            case 7:
+                correct_angle_2 = servo2.max_angle - (neutral_angle_3 - msg_angle) / 2;
+                if (angle_2 > correct_angle_2) {
+                    servo2.setAngle(correct_angle_2);
+                    Serial.print("Case 3 or 7, Angle_2 is ");
+                    Serial.println(correct_angle_2);
+                }
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 3 or 7");
+                break;
+
+            case 4:
+            case 6:
+                correct_angle_2 = servo2.min_angle + (neutral_angle_3 - msg_angle) / 2;
+                if (angle_2 < correct_angle_2) {
+                    servo2.setAngle(correct_angle_2);
+                    Serial.print("Case 4 or 6, Angle_2 is ");
+                    Serial.println(correct_angle_2);
+                }
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 4 or 6");
+                break;
+
+            case 5:
+                correct_angle_2 = msg_angle + 50;
+                if (angle_2 > correct_angle_2) {
+                    servo2.setAngle(correct_angle_2);
+                    Serial.print("Case 5, Angle_2 is ");
+                    Serial.println(correct_angle_2);
+                }
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 5");
+                break;
+
+            case 8:
+                correct_angle_2 = 300;
+                if (angle_2 < correct_angle_2) {
+                    servo2.setAngle(correct_angle_2);
+                    Serial.print("Case 8, Angle_2 is ");
+                    Serial.println(correct_angle_2);
+                }
+                servo3.setAngle(msg_angle);
+                Serial.println("Case 8");
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+
 bool Servo::talk(uint16_t msg) {
-    if (msg < 10000) {
+    if (msg < 1) {
         return false;
     }
+    if (msg == 1) {
+        servo1.setTorque(0);
+        Serial.println(servo1.getAngle());
+        return true;
+    }
+    if (msg == 2) {
+        servo2.setTorque(0);
+        Serial.println(servo2.getAngle());
+        return true;
+    }
+    if (msg == 3) {
+        servo3.setTorque(0);
+        Serial.println(1023 - servo3.getAngle());
+        return true;
+    }
+    if (msg == 4) {
+        servo4.setTorque(0);
+        Serial.println(servo4.getAngle());
+        return true;
+    }
+
     uint8_t id = msg / 10000;
     Servo *servo = findServo(id);
 
     uint16_t msg_angle = msg % 10000;
-    //test(msg_angle);
-    
-    if (id == 2) {
-        servo2.new_angle = reformatAngle(msg_angle, servo2.min_angle, servo2.max_angle);
-        servo3.new_angle = servo3.angle + checkGamma(servo2.new_angle, servo3.angle);
-        servo3.setAngle(servo3.new_angle);
-        servo2.setAngle(servo2.new_angle);
-        return true;
-    }
+
+
+    if (id == 2 || id == 3) test(msg);
     if (id == 3) {
-        servo3.new_angle = msg_angle + checkGamma(servo2.angle, msg_angle);
-        servo3.setAngle(servo3.new_angle);
+        //servo3.new_angle = msg_angle + checkGamma(servo2.angle, msg_angle);
+        servo3.setAngle(msg_angle);
         return true;
     }
-    servo->setAngle(msg_angle);
-    return true;
-    
+    // servo->setAngle(msg_angle);
+    // return true;
+
 }
 
 
@@ -237,14 +447,21 @@ void Servo::setBoost(uint16_t _boost, uint8_t _DXL_ID) {
 }
 
 
-int32_t Servo::readRegister(char* command) {
+void Servo::setTorque(bool status) {
+    if (status == 1) servos.torqueOn(DXL_ID);
+    if (status == 0) servos.torqueOff(DXL_ID);
+
+}
+
+
+int32_t Servo::readRegister(char *command) {
     int32_t data;
     servos.readRegister(DXL_ID, command, &data);
     return data;
 }
 
 
-int32_t Servo::getLoad(){
+int32_t Servo::getLoad() {
     int32_t data;
     servos.readRegister(DXL_ID, "Present_Load", &data);
     if (data > 1023) data -= 1023;
@@ -252,7 +469,7 @@ int32_t Servo::getLoad(){
 }
 
 
-int32_t Servo::isMoving(){
+int32_t Servo::isMoving() {
     int32_t data;
     servos.readRegister(DXL_ID, "Moving", &data);
     return data;
@@ -281,24 +498,24 @@ uint16_t Servo::getBoost() {
 }
 
 
-void Servo::Calibration_max(){
-  uint16_t servo_max_angle = 512;
-  setSpeed(80);
+void Servo::Calibration_max() {
+    uint16_t servo_max_angle = 512;
+    setSpeed(100);
 
-    while(true){
-      // Serial.println(getLoad());  // DEBUG
-      // Serial.println(servo_max_angle);
-      // Serial.println(getAngle());
-      // Serial.println(" ");
+    while (true) {
+        // Serial.println(getLoad());  // DEBUG
+        // Serial.println(servo_max_angle);
+        // Serial.println(getAngle());
+        // Serial.println(" ");
 
-      setAngle(servo_max_angle, DXL_ID);
-      delay(100);
-      if(isMoving() == 0) servo_max_angle += 50;
-      else if (getLoad() > 750) {
-        servo_max_angle -= 50;
         setAngle(servo_max_angle, DXL_ID);
-        break;
-      }
+        delay(100);
+        if (isMoving() == 0) servo_max_angle += 50;
+        else if (getLoad() > 670) {
+            servo_max_angle -= 50;
+            setAngle(servo_max_angle, DXL_ID);
+            break;
+        }
     }
 
     max_angle = servo_max_angle;
@@ -308,23 +525,23 @@ void Servo::Calibration_max(){
 }
 
 
-void Servo::Calibration_min(){
-  uint16_t servo_min_angle = 512;
-  setSpeed(80);
-    while(true){
-      // Serial.println(getLoad());  // DEBUG
-      // Serial.println(servo_min_angle);
-      // Serial.println(getAngle());
-      // Serial.println(" ");
+void Servo::Calibration_min() {
+    uint16_t servo_min_angle = 512;
+    setSpeed(100);
+    while (true) {
+        // Serial.println(getLoad());  // DEBUG
+        // Serial.println(servo_min_angle);
+        // Serial.println(getAngle());
+        // Serial.println(" ");
 
-      setAngle(servo_min_angle, DXL_ID);
-      delay(100);
-      if(isMoving() == 0) servo_min_angle -= 50;
-      else if (getLoad() > 750) {
-        servo_min_angle += 50;
         setAngle(servo_min_angle, DXL_ID);
-        break;
-      }
+        delay(100);
+        if (isMoving() == 0) servo_min_angle -= 50;
+        else if (getLoad() > 670) {
+            servo_min_angle += 50;
+            setAngle(servo_min_angle, DXL_ID);
+            break;
+        }
     }
 
     min_angle = servo_min_angle;
@@ -335,12 +552,12 @@ void Servo::Calibration_min(){
 
 
 void Servo::Calibration_setup() {
-  servo2.Calibration_max();
-  servo2.Calibration_min();
-  servo2.setAngle(servo2.min_angle + (servo2.max_angle - servo2.min_angle) / 2);
-  delay(2000);
-  servo3.Calibration_max();
-  servo3.Calibration_min();
+    servo2.Calibration_max();
+    servo2.Calibration_min();
+    servo2.setAngle(servo2.min_angle + (servo2.max_angle - servo2.min_angle) / 2);
+    delay(2000);
+    servo3.Calibration_max();
+    servo3.Calibration_min();
 }
 
 
