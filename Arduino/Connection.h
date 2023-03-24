@@ -126,23 +126,25 @@ void Connection::findCommand() {
         return;
     }
     if (Cmd.command == SET_ANGLE_TASK) {
-        Servo::setAngle(Cmd.value, Cmd.id);
-        return;
+        return Servo::setAngle(Cmd.value, Cmd.id);
     }
     if (Cmd.command == SET_SPEED_TASK) {
-        Servo::setSpeed(Cmd.value, Cmd.id);
-        return;
+        return Servo::setSpeed(Cmd.value, Cmd.id);
     }
     if (Cmd.command == SET_BOOST_TASK) {
-        Servo::setBoost(Cmd.value, Cmd.id);
-        return;
+        return Servo::setBoost(Cmd.value, Cmd.id);
     }
+    if (Cmd.command == TOOL_PUSH_TASK) {
+        return Servo::toolPush();
+    }
+    if (Cmd.command == TOOL_POP_TASK) {
+        return Servo::toolPop();
+    }
+    
     if (Cmd.command == REBOOT_TASK) {
-        
         return;
     }
     if (Cmd.command == GET_ERROR_TASK) {
-        
         return;
     }
 }

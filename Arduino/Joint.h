@@ -1,6 +1,7 @@
 
 #include <cstdint>
 #include <cmath>
+#include "print.h"
 
 
 class Joint {
@@ -59,7 +60,7 @@ Joint:Joint(uint8_t _DXL_ID) {
             break;  
         }
         default:
-            Serial.print("Wrong DXL_ID!");
+            print("Wrong DXL_ID!");
             break;
     }
 }
@@ -69,10 +70,10 @@ void GoTo(int32_t x, int32_t y, int32_t z);
 
 
 void Joint::getCoordinates() {
-    Serial.print("Coordinate x: ");
-    Serial.println(x);
-    Serial.print("Coordinate y: ");
-    Serial.println(y);  
-    Serial.print("Coordinate z: ");
-    Serial.println(z);    
+    print("Coordinate x: ");
+    println(x);
+    print("Coordinate y: ");
+    println(y);  
+    print("Coordinate z: ");
+    println(z);    
 }
