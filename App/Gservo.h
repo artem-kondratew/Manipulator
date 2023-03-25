@@ -36,6 +36,12 @@ public:
     void setBoost(uint8_t _boost1, uint8_t _boost2);
     void setTorque(uint8_t _torque1, uint8_t _torque2);
     void setIsMoving(uint8_t _is_moving);
+
+    void setGoal(uint16_t _goal);
+    void setAngle(uint16_t _angle);
+    void setSpeed(uint16_t _speed);
+    void setBoost(uint16_t _boost);
+    void setTorque(uint16_t _torque);
 };
 
 
@@ -43,6 +49,11 @@ inline Gservo gservo1(1);
 inline Gservo gservo2(2);
 inline Gservo gservo3(3);
 inline Gservo gservo4(4);
+
+inline Gservo internal_servo1(1);
+inline Gservo internal_servo2(2);
+inline Gservo internal_servo3(3);
+inline Gservo internal_servo4(4);
 
 
 #endif //MANIPULATOR_GSERVO_H
