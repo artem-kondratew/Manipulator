@@ -10,7 +10,7 @@
 #include "Config.h"
 
 
-template <typename T>
+template<typename T>
 void print(T text) {
     if (!PRINT_FLAG) {
         return;
@@ -19,7 +19,7 @@ void print(T text) {
 }
 
 
-template <typename T>
+template<typename T>
 void println(T text) {
     if (!PRINT_FLAG) {
         return;

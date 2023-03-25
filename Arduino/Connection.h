@@ -32,17 +32,20 @@ typedef struct Message {
     uint8_t is_moving = 0;
 } Message;
 
+
 Command Cmd;
 Message Msg;
 
 
 class Connection {
-public:
+private:
     static uint16_t getCalc();
     static uint16_t setCalc();
     static void setMsgValues(uint8_t id);
     static void setData(uint8_t id);
+public:
     static void getData();
+private:
     static void findCommand();
 };
 
@@ -53,8 +56,9 @@ uint16_t Connection::getCalc() {
 
 
 uint16_t Connection::setCalc() {
-    return (char(Msg.id) + char(Msg.goal1) + char(Msg.goal2) + char(Msg.angle1) + char(Msg.angle2) + char(Msg.speed1) + char(Msg.speed2) +
-    char(Msg.boost1) + char(Msg.boost2) + char(Msg.torque1) + char(Msg.torque2) + char(Msg.is_moving)) / 8;
+    return (char(Msg.id) + char(Msg.goal1) + char(Msg.goal2) + char(Msg.angle1) + char(Msg.angle2) + char(Msg.speed1) +
+            char(Msg.speed2) +
+            char(Msg.boost1) + char(Msg.boost2) + char(Msg.torque1) + char(Msg.torque2) + char(Msg.is_moving)) / 8;
 }
 
 
@@ -77,10 +81,10 @@ void Connection::setMsgValues(uint8_t id) {
 
 void Connection::setData(uint8_t id) {
     setMsgValues(id);
-    
+
     Serial.print(char(64));
     Serial.print(char(64));
-    
+
     Serial.print(char(Msg.id));
     Serial.print(char(Msg.goal1));
     Serial.print(char(Msg.goal2));
@@ -99,24 +103,24 @@ void Connection::setData(uint8_t id) {
 
 
 void Connection::getData() {
-  if (Serial.available() >= 7) {
-      byte start1 = Serial.read();
-      byte start2 = Serial.read();
-      if (start1 + start2 == 128) {
-          Cmd.id = Serial.read();
-          Cmd.command = Serial.read();
-          Cmd.value1 = Serial.read();
-          Cmd.value2 = Serial.read();
-          Cmd.checksum = Serial.read();
-      if (getCalc() == Cmd.checksum) {
-          findCommand();
-          setData(DXL_ID1);    
-          setData(DXL_ID2);
-          setData(DXL_ID3);
-          setData(DXL_ID4);
-      }
+    if (Serial.available() >= 7) {
+        byte start1 = Serial.read();
+        byte start2 = Serial.read();
+        if (start1 + start2 == 128) {
+            Cmd.id = Serial.read();
+            Cmd.command = Serial.read();
+            Cmd.value1 = Serial.read();
+            Cmd.value2 = Serial.read();
+            Cmd.checksum = Serial.read();
+            if (getCalc() == Cmd.checksum) {
+                findCommand();
+                setData(DXL_ID1);
+                setData(DXL_ID2);
+                setData(DXL_ID3);
+                setData(DXL_ID4);
+            }
+        }
     }
-  }
 }
 
 
@@ -140,7 +144,7 @@ void Connection::findCommand() {
     if (Cmd.command == TOOL_POP_TASK) {
         return Servo::toolPop();
     }
-    
+
     if (Cmd.command == REBOOT_TASK) {
         return;
     }
