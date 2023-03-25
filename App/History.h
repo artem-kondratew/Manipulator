@@ -20,7 +20,7 @@ public:
     static void moveUp();
     static void moveDown();
     static std::string get();
-    static void append(const str& command);
+    static void append(const str &command);
     static uint64_t getIndex();
     static void setCurrentCommand(std::string command);
     static void resetIndex();
@@ -47,11 +47,12 @@ std::string History::get() {
     if (index == 0) {
         return current_command.get();
     }
-    return list[index-1]->get().get();
+    //return list[index - 1]->get().get();
+    list.getData(index - 1);
 }
 
 
-void History::append(const str& command) {
+void History::append(const str &command) {
     list.pushHead(command);
 }
 
