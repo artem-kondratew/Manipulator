@@ -9,7 +9,7 @@
 #include <string>
 
 
-class Exception: std::exception {
+class Exception : std::exception {
 private:
     std::string message;
 public:
