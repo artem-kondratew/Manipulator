@@ -14,8 +14,19 @@
 #include <termios.h>
 #include <unistd.h>
 #include "../Arduino/Config.h"
-#include "str.h"
+#include "Exception.h"
 #include "Gservo.h"
+#include "str.h"
+
+/*
+class Exception: std::exception {
+private:
+    std::string message;
+public:
+    explicit Exception(std::string _message) {message = std::move(_message);};
+
+    std::string getMessage() const {return message;};
+};*/
 
 
 class Connect {

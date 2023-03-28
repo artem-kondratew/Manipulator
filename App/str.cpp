@@ -4,10 +4,18 @@
 
 #include "str.h"
 
+#include <utility>
+
 
 str::str() {
     string = "";
     curs = -1;
+}
+
+
+str::str(std::string _string) {
+    string = std::move(_string);
+    curs = (int)string.size();
 }
 
 
@@ -82,4 +90,9 @@ void str::setCurs(int CURS_X) {
 
 int str::getCurs() const {
     return curs;
+}
+
+
+void str::set(std::string _string) {
+    string = std::move(_string);
 }

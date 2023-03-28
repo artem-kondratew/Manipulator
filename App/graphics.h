@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include "ncurses.h"
 #include "Connect.h"
+#include "History.h"
 
 
 #define KEY_RETURN     10
@@ -159,6 +160,7 @@ void print_command_line() {
 
 
 void key_return_proc() {
+    History::append(Connect::key_cmd);
     Connect::decodeKeyInput();
     print_last_command();
     clear_command_line();
@@ -200,6 +202,26 @@ void key_right_proc() {
     move(CURS_Y, CURS_X + 1);
 }
 
+
+void key_up_proc() {
+    if (History::getIndex() == 0) {
+        History::setCurrentCommand(Connect::key_cmd.get());
+    }
+    History::moveUp();
+    Connect::key_cmd.set(History::get());
+    clear_command_line();
+    print_command_line();
+}
+
+
+void key_down_proc() {
+    History::moveDown();
+    Connect::key_cmd.set(History::get());
+    clear_command_line();
+    print_command_line();
+}
+
+
 void key_proc(int key) {
     char symbol = (char)key;
     if (key == KEY_RETURN) {
@@ -218,10 +240,10 @@ void key_proc(int key) {
         return key_right_proc();
     }
     if (key == KEY_UP) {
-        return;
+        return key_up_proc();
     }
     if (key == KEY_DOWN) {
-        return;
+        return key_down_proc();
     }
     if (key == ERR) {
         return;
