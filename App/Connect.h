@@ -18,50 +18,51 @@
 #include "Gservo.h"
 #include "str.h"
 
-/*
-class Exception: std::exception {
-private:
-    std::string message;
-public:
-    explicit Exception(std::string _message) {message = std::move(_message);};
-
-    std::string getMessage() const {return message;};
-};*/
-
 
 class Connect {
 private:
     inline static int Arduino = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
-public:
     inline static char command[COMMAND_SIZE];
     inline static char message[MESSAGE_SIZE];
-    inline static str key_cmd;
 
+public:
+    inline static str key_cmd;
+    inline static bool manipulate_flag = false;
+
+private:
     static void clearCommand();
 
     static bool openArduino();
 
+public:
     static void setConnection();
-
     static void disconnectArduino();
 
+private:
     static void calcCommandCheckSum();
-
     static char calcMessageCheckSum(const char buffer[]);
 
+public:
     static void sendCommand();
 
+private:
     static void setId(char id);
-
     static void setTask(char task);
-
     static void setValue(uint16_t value);
-
     static void encodeCommand(uint64_t cmd);
 
+    static void decodeMessage();
+    static Gservo* findGservo(uint8_t id);
+
+public:
     static bool receiveMessage();
 
-    static void decodeMessage();
+private:
+    static uint64_t checkNumberCommand();
+
+public:
+    static void toolPush();
+    static void toolPop();
 
     static void decodeKeyInput();
 };

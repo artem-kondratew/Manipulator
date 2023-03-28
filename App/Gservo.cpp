@@ -10,7 +10,6 @@ Gservo::Gservo(uint8_t _id) {
     goal = 0;
     angle = 0;
     speed = 0;
-    boost = 0;
     torque = 0;
     is_moving = 0;
 }
@@ -33,11 +32,6 @@ uint16_t Gservo::getAngle() const {
 
 uint16_t Gservo::getSpeed() const {
     return speed;
-}
-
-
-uint16_t Gservo::getBoost() const {
-    return boost;
 }
 
 
@@ -66,11 +60,6 @@ void Gservo::setSpeed(uint8_t _speed1, uint8_t _speed2) {
 }
 
 
-void Gservo::setBoost(uint8_t _boost1, uint8_t _boost2) {
-    boost = _boost1 * 100 + _boost2;
-}
-
-
 void Gservo::setTorque(uint8_t _torque1, uint8_t _torque2) {
     torque = _torque1 * 100 + _torque2;
 }
@@ -93,11 +82,6 @@ void Gservo::setAngle(uint16_t _angle) {
 
 void Gservo::setSpeed(uint16_t _speed) {
     speed = _speed;
-}
-
-
-void Gservo::setBoost(uint16_t _boost) {
-    boost = _boost;
 }
 
 

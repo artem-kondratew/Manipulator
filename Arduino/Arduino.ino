@@ -14,10 +14,10 @@ void setup() {
     Servo::init();
     Servo::pingServos();
 
-    servo1.setMoveMode(DEFAULT_SPEED, DEFAULT_BOOST);
-    servo2.setMoveMode(DEFAULT_SPEED, DEFAULT_BOOST);
-    servo3.setMoveMode(DEFAULT_SPEED, DEFAULT_BOOST);
-    servo4.setMoveMode(DEFAULT_SPEED, DEFAULT_BOOST);
+    servo1.setSpeed(DEFAULT_SPEED);
+    servo2.setSpeed(DEFAULT_SPEED);
+    servo3.setSpeed(DEFAULT_SPEED);
+    servo4.setSpeed(DEFAULT_SPEED);
 
     Servo::getStartPosition();
     //Servo::Calibration_setup();

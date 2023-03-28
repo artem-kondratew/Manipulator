@@ -4,6 +4,7 @@
 
 
 #include "Config.h"
+#include "Joint.h"
 #include "Servo.h"
 
 
@@ -25,8 +26,6 @@ typedef struct Message {
     uint16_t angle2 = 0;
     uint16_t speed1 = 0;
     uint16_t speed2 = 0;
-    uint16_t boost1 = 0;
-    uint16_t boost2 = 0;
     uint16_t torque1 = 0;
     uint16_t torque2 = 0;
     uint8_t is_moving = 0;
@@ -58,7 +57,7 @@ uint16_t Connection::getCalc() {
 uint16_t Connection::setCalc() {
     return (char(Msg.id) + char(Msg.goal1) + char(Msg.goal2) + char(Msg.angle1) + char(Msg.angle2) + char(Msg.speed1) +
             char(Msg.speed2) +
-            char(Msg.boost1) + char(Msg.boost2) + char(Msg.torque1) + char(Msg.torque2) + char(Msg.is_moving)) / 8;
+            + char(Msg.torque1) + char(Msg.torque2) + char(Msg.is_moving)) / 8;
 }
 
 
@@ -71,8 +70,6 @@ void Connection::setMsgValues(uint8_t id) {
     Msg.angle2 = servo->getAngle() % 100;
     Msg.speed1 = servo->getSpeed() / 100;
     Msg.speed2 = servo->getSpeed() % 100;
-    Msg.boost1 = servo->getBoost() / 100;
-    Msg.boost2 = servo->getBoost() % 100;
     Msg.torque1 = servo->getLoad() / 100;
     Msg.torque2 = servo->getLoad() % 100;
     Msg.is_moving = servo->isMoving();
@@ -92,8 +89,6 @@ void Connection::setData(uint8_t id) {
     Serial.print(char(Msg.angle2));
     Serial.print(char(Msg.speed1));
     Serial.print(char(Msg.speed2));
-    Serial.print(char(Msg.boost1));
-    Serial.print(char(Msg.boost2));
     Serial.print(char(Msg.torque1));
     Serial.print(char(Msg.torque2));
     Serial.print(char(Msg.is_moving));
@@ -135,21 +130,29 @@ void Connection::findCommand() {
     if (Cmd.command == SET_SPEED_TASK) {
         return Servo::setSpeed(Cmd.value, Cmd.id);
     }
-    if (Cmd.command == SET_BOOST_TASK) {
-        return Servo::setBoost(Cmd.value, Cmd.id);
-    }
     if (Cmd.command == TOOL_PUSH_TASK) {
         return Servo::toolPush();
     }
     if (Cmd.command == TOOL_POP_TASK) {
         return Servo::toolPop();
     }
-
+    if (Cmd.command == CALIBRATION_TASK) {
+        return;
+    }
     if (Cmd.command == REBOOT_TASK) {
         return;
     }
     if (Cmd.command == GET_ERROR_TASK) {
         return;
+    }
+    if (Cmd.command == SET_X_TASK) {
+        return Joint::setX(Cmd.value);
+    }
+    if (Cmd.command == SET_Y_TASK) {
+        return Joint::setY(Cmd.value);
+    }
+    if (Cmd.command == SET_Z_TASK) {
+        return Joint::setZ(Cmd.value);
     }
 }
 

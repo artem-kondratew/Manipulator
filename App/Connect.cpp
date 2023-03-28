@@ -111,24 +111,7 @@ void Connect::encodeCommand(uint64_t cmd) {
 }
 
 
-bool Connect::receiveMessage() {
-    if (!openArduino()) {
-        return false;
-    }
-
-    char buffer[MESSAGE_SIZE];
-    read(Arduino, buffer, MESSAGE_SIZE);
-
-    if (buffer[0] == 64 && buffer[1] == 64 && buffer[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buffer)) {
-        std::memcpy(message, buffer, sizeof(char) * MESSAGE_SIZE);
-        Connect::decodeMessage();
-        return true;
-    }
-    return false;
-}
-
-
-Gservo* findGservo(uint8_t id) {
+Gservo* Connect::findGservo(uint8_t id) {
     if (id == 1) {
         return &gservo1;
     }
@@ -149,25 +132,71 @@ void Connect::decodeMessage() {
     gservo->setGoal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
     gservo->setAngle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
     gservo->setSpeed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
-    gservo->setBoost(message[MESSAGE_BOOST1_CELL], message[MESSAGE_BOOST2_CELL]);
     gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
     gservo->setIsMoving(message[MESSAGE_IS_MOVING_CELL]);
 }
 
 
-void Connect::decodeKeyInput() {
+bool Connect::receiveMessage() {
+    if (!openArduino()) {
+        return false;
+    }
+
+    char buf[MESSAGE_SIZE];
+    read(Arduino, buf, MESSAGE_SIZE);
+
+    if (buf[0] == START_BYTE && buf[1] == START_BYTE && buf[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buf)) {
+        std::memcpy(message, buf, sizeof(char) * MESSAGE_SIZE);
+        Connect::decodeMessage();
+        return true;
+    }
+    return false;
+}
+
+
+uint64_t Connect::checkNumberCommand() {
     char numbers[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    int flag = 0;
+    uint64_t flag = 0;
     for (int i = 0; i < key_cmd.size(); i++) {
-        for (char number : numbers) {
+        for (char number: numbers) {
             if (key_cmd.getStr()[i] == number) {
                 flag++;
                 break;
             }
         }
     }
-    if (flag == key_cmd.size()) {
+    return flag;
+}
+
+
+void Connect::toolPush() {
+    clearCommand();
+    command[COMMAND_ID_CELL] = DXL_ID4;
+    command[COMMAND_TASK_CELL] = TOOL_PUSH_TASK;
+}
+
+
+void Connect::toolPop() {
+    clearCommand();
+    command[COMMAND_ID_CELL] = DXL_ID4;
+    command[COMMAND_TASK_CELL] = TOOL_POP_TASK;
+}
+
+
+void Connect::decodeKeyInput() {
+
+    if (checkNumberCommand() == key_cmd.size()) {
         Connect::encodeCommand(stoi(key_cmd.getStr()));
         return;
+    }
+    if (key_cmd.getStr() == "manipulate") {
+        manipulate_flag = true;
+        return;
+    }
+    if (key_cmd.getStr() == "push") {
+        return toolPush();
+    }
+    if (key_cmd.getStr() == "pop") {
+        return toolPop();
     }
 }

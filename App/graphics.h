@@ -19,16 +19,26 @@
 #define GOAL_X         17
 #define ANGLE_X        23
 #define SPEED_X        34
-#define BOOST_X        41
 #define TORQUE_X       52
 #define IS_MOVING_X    62
 
 #define COMMAND_Y       8
 #define LAST_COMMAND_Y  9
 
+#define KEY_A          97
+#define KEY_D         100
+#define KEY_K         107
+#define KEY_L         108
+#define KEY_O         111
+#define KEY_P         112
+
 
 int CURS_Y = 0;
 int CURS_X = 0;
+
+
+uint64_t delta = 0;
+int pressed_key = 0;
 
 
 int get_columns() {
@@ -76,8 +86,6 @@ void print_table() {
 
     move(0, SPEED_X);
     printw("speed");
-    move(0, BOOST_X);
-    printw("boost");
 
     move(0, TORQUE_X);
     printw("torque");
@@ -160,11 +168,15 @@ void print_command_line() {
 
 
 void key_return_proc() {
+    if (Connect::key_cmd.getStr().empty()) {
+        return;
+    }
     History::append(Connect::key_cmd);
     Connect::decodeKeyInput();
     print_last_command();
     clear_command_line();
     Connect::key_cmd.reset();
+    History::resetIndex();
 }
 
 
@@ -222,8 +234,54 @@ void key_down_proc() {
 }
 
 
+/*
+void move_servo1_via_buttons(uint64_t input_delta) {
+    Connect::setId(DXL_ID1);
+    Connect::setTask(SET_ANGLE_TASK);
+    Connect::setValue(gservo1.getGoal() + input_delta);
+}
+
+
+void key_a_proc() {
+    move_servo1_via_buttons(delta);
+}
+
+
+void key_d_proc() {
+    move_servo1_via_buttons(-delta);
+}
+
+
+void manipulate_proc() {
+    getsyx(CURS_Y, CURS_X);
+    clear_command_line();
+    int key;
+    if (pressed_key == key && delta < 100) {
+        delta += 20;
+    }
+    else {
+        delta = 10;
+    }
+    pressed_key = key;
+    if (key == KEY_A) {
+        return key_a_proc();
+    }
+    if (key == KEY_D) {
+        return key_d_proc();
+    }
+
+    print_command_line();
+    move(CURS_Y, Connect::key_cmd.getCurs() + 1);
+    refresh();
+}
+*/
+
 void key_proc(int key) {
-    char symbol = (char)key;
+    char symbol = (char) key;
+    /*if (Connect::manipulate_flag) {
+        manipulate_proc();
+    }*/
+
     if (key == KEY_RETURN) {
         return key_return_proc();
     }
@@ -258,39 +316,36 @@ void key_proc(int key) {
 }
 
 
+void print_param(uint8_t gservo_id, int x, uint16_t param) {
+    move(1 + gservo_id, x);
+    printw("    ");
+    move(1 + gservo_id, x);
+    printw("%d", param);
+}
+
+
 void print_goal(uint8_t gservo_id, uint16_t goal) {
-    move(1 + gservo_id, GOAL_X);
-    printw("%d", goal);
+    print_param(gservo_id, GOAL_X, goal);
 }
 
 
 void print_angle(uint8_t gservo_id, uint16_t angle) {
-    move(1 + gservo_id, ANGLE_X + 1);
-    printw("%d", angle);
+    print_param(gservo_id, ANGLE_X + 1, angle);
 }
 
 
 void print_speed(uint8_t gservo_id, uint16_t speed) {
-    move(1 + gservo_id, SPEED_X + 1);
-    printw("%d", speed);
-}
-
-
-void print_boost(uint8_t gservo_id, uint16_t boost) {
-    move(1 + gservo_id, BOOST_X + 1);
-    printw("%d", boost);
+    print_param(gservo_id, SPEED_X + 1, speed);
 }
 
 
 void print_torque(uint8_t gservo_id, uint16_t torque) {
-    move(1 + gservo_id, TORQUE_X + 1);
-    printw("%d", torque);
+    print_param(gservo_id, TORQUE_X + 1, torque);
 }
 
 
 void print_is_moving(uint8_t gservo_id, uint16_t is_moving) {
-    move(1 + gservo_id, IS_MOVING_X);
-    printw("%d", is_moving);
+    print_param(gservo_id, IS_MOVING_X, is_moving);
 }
 
 
@@ -298,7 +353,6 @@ void print_params_from_servo(Gservo gservo) {
     print_goal(gservo.getId(), gservo.getGoal());
     print_angle(gservo.getId(), gservo.getAngle());
     print_speed(gservo.getId(), gservo.getSpeed());
-    print_boost(gservo.getId(), gservo.getBoost());
     print_torque(gservo.getId(), gservo.getTorque());
     print_is_moving(gservo.getId(), gservo.getIsMoving());
 }
