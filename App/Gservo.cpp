@@ -45,6 +45,21 @@ uint16_t Gservo::getIsMoving() const {
 }
 
 
+uint16_t Gservo::getX() const {
+    return x;
+}
+
+
+uint16_t Gservo::getY() const {
+    return y;
+}
+
+
+uint16_t Gservo::getZ() const {
+    return z;
+}
+
+
 void Gservo::setGoal(uint8_t _goal1, uint8_t _goal2) {
     goal = _goal1 * 100 + _goal2;
 }
@@ -70,6 +85,21 @@ void Gservo::setIsMoving(uint8_t _is_moving1) {
 }
 
 
+void Gservo::setX(uint8_t _x1, uint8_t _x2) {
+    x = _x1 * 100 + _x2;
+}
+
+
+void Gservo::setY(uint8_t _y1, uint8_t _y2) {
+    y = _y1 * 100 + _y2;
+}
+
+
+void Gservo::setZ(uint8_t _z1, uint8_t _z2) {
+    z = _z1 * 100 + _z2;
+}
+
+
 void Gservo::setGoal(uint16_t _goal) {
     goal = _goal;
 }
@@ -87,4 +117,19 @@ void Gservo::setSpeed(uint16_t _speed) {
 
 void Gservo::setTorque(uint16_t _torque) {
     torque = _torque;
+}
+
+
+void Gservo::setX(uint16_t _x) {
+    x = _x;
+}
+
+
+void Gservo::setY(uint16_t _y) {
+    y = _y;
+}
+
+
+void Gservo::setZ(uint16_t _z) {
+    z = _z;
 }

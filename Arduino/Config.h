@@ -29,7 +29,8 @@
 
 
 #define COMMAND_SIZE             7
-#define MESSAGE_SIZE            13
+#define MESSAGE_SIZE            19
+
 #define TIMER                  100
 #define START_BYTE              64
 
@@ -37,12 +38,16 @@
 #define PING_TASK                0
 #define PING_VALUE               0
 
+#define COMMAND_START_BYTE1_CELL 0
+#define COMMAND_START_BYTE2_CELL 1
 #define COMMAND_ID_CELL          2
 #define COMMAND_TASK_CELL        3
 #define COMMAND_VALUE1_CELL      4
 #define COMMAND_VALUE2_CELL      5
 #define COMMAND_CHECKSUM_CELL    6
 
+#define MESSAGE_START_BYTE1_CELL 0
+#define MESSAGE_START_BYTE2_CELL 1
 #define MESSAGE_ID_CELL          2
 #define MESSAGE_GOAL1_CELL       3
 #define MESSAGE_GOAL2_CELL       4
@@ -53,9 +58,18 @@
 #define MESSAGE_TORQUE1_CELL     9
 #define MESSAGE_TORQUE2_CELL    10
 #define MESSAGE_IS_MOVING_CELL  11
-#define MESSAGE_CHECKSUM_CELL   12
+#define MESSAGE_X1_CELL         12
+#define MESSAGE_X2_CELL         13
+#define MESSAGE_Y1_CELL         14
+#define MESSAGE_Y2_CELL         15
+#define MESSAGE_Z1_CELL         16
+#define MESSAGE_Z2_CELL         17
+#define MESSAGE_CHECKSUM_CELL   18
 
 
+#define TASK_NUMBER             12         
+
+#define PING_TASK                0
 #define SET_ANGLE_TASK           1
 #define SET_SPEED_TASK           2
 #define TOOL_PUSH_TASK           3

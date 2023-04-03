@@ -11,6 +11,8 @@ void setup() {
     Serial.begin(SERIAL_BAUDRATE);
     Serial.setTimeout(0);
 
+    //Connection::initFSM();
+
     Servo::init();
     Servo::pingServos();
 

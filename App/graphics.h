@@ -18,9 +18,12 @@
 #define ID_X            9
 #define GOAL_X         17
 #define ANGLE_X        23
-#define SPEED_X        34
-#define TORQUE_X       52
-#define IS_MOVING_X    62
+#define SPEED_X        30
+#define TORQUE_X       37
+#define IS_MOVING_X    45
+#define X_X            58
+#define Y_X            63
+#define Z_X            68
 
 #define COMMAND_Y       8
 #define LAST_COMMAND_Y  9
@@ -92,6 +95,15 @@ void print_table() {
 
     move(0, IS_MOVING_X);
     printw("is_moving");
+
+    move(0, X_X);
+    printw("x");
+
+    move(0, Y_X);
+    printw("y");
+
+    move(0, Z_X);
+    printw("z");
 
     move(COMMAND_Y - 1, 0);
     printw("Set command:");
@@ -349,12 +361,30 @@ void print_is_moving(uint8_t gservo_id, uint16_t is_moving) {
 }
 
 
+void printX(uint8_t gservo_id, uint16_t x) {
+    print_param(gservo_id, X_X, x);
+}
+
+
+void printY(uint8_t gservo_id, uint16_t y) {
+    print_param(gservo_id, Y_X, y);
+}
+
+
+void printZ(uint8_t gservo_id, uint16_t z) {
+    print_param(gservo_id, Z_X, z);
+}
+
+
 void print_params_from_servo(Gservo gservo) {
     print_goal(gservo.getId(), gservo.getGoal());
     print_angle(gservo.getId(), gservo.getAngle());
     print_speed(gservo.getId(), gservo.getSpeed());
     print_torque(gservo.getId(), gservo.getTorque());
     print_is_moving(gservo.getId(), gservo.getIsMoving());
+    printX(gservo.getId(), gservo.getX());
+    printY(gservo.getId(), gservo.getY());
+    printZ(gservo.getId(), gservo.getZ());
 }
 
 

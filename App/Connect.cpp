@@ -59,7 +59,7 @@ void Connect::disconnectArduino() {
 
 void Connect::calcCommandCheckSum() {
     uint64_t sum = 0;
-    for (int i = 2; i < COMMAND_CHECKSUM_CELL; i++) {
+    for (int i = COMMAND_START_BYTE1_CELL; i < COMMAND_CHECKSUM_CELL; i++) {
         sum += command[i];
     }
     command[COMMAND_CHECKSUM_CELL] = char(sum / 8);
@@ -69,7 +69,7 @@ void Connect::calcCommandCheckSum() {
 
 char Connect::calcMessageCheckSum(const char buffer[]) {
     uint64_t sum = 0;
-    for (int i = 2; i < MESSAGE_CHECKSUM_CELL; i++) {
+    for (int i = MESSAGE_START_BYTE1_CELL; i < MESSAGE_CHECKSUM_CELL; i++) {
         sum += buffer[i];
     }
     return char(sum / 8);
