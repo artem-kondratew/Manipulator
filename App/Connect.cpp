@@ -63,7 +63,6 @@ void Connect::calcCommandCheckSum() {
         sum += command[i];
     }
     command[COMMAND_CHECKSUM_CELL] = char(sum / 8);
-    //command[COMMAND_CHECKSUM_CELL] = char((command[2] + command[3] + command[4] + command[5]) / 8);
 }
 
 
