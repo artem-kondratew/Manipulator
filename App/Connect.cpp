@@ -159,6 +159,7 @@ Gservo* Connect::findGservo(uint8_t id) {
     if (id == 4) {
         return &gservo4;
     }
+    return nullptr;
 }
 
 
