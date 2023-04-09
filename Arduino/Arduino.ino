@@ -11,8 +11,6 @@ void setup() {
     Serial.begin(SERIAL_BAUDRATE);
     Serial.setTimeout(0);
 
-    //Connection::initFSM();
-
     Servo::init();
     Servo::pingServos();
 
@@ -28,7 +26,7 @@ void setup() {
 
 
 void loop() {
-    Connection::getData();
+    Connection::receiveCommand();
     //Servo::talk(Serial.parseInt());
     //Servo::anglePrint();
 }
