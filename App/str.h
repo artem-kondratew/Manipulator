@@ -18,9 +18,8 @@ private:
 
 public:
     str();
-    explicit str(std::string _string);
 
-    void push(char symbol, int index);
+    void push(uint8_t symbol, int index);
     void pop(int index);
     void reset();
     uint64_t size();

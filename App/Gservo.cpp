@@ -12,6 +12,9 @@ Gservo::Gservo(uint8_t _id) {
     speed = 0;
     torque = 0;
     is_moving = 0;
+    x = 0;
+    y = 0;
+    z = 0;
 }
 
 

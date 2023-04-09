@@ -289,7 +289,7 @@ void manipulate_proc() {
 */
 
 void key_proc(int key) {
-    char symbol = (char) key;
+    auto symbol = static_cast<uint8_t>(key);
     /*if (Connect::manipulate_flag) {
         manipulate_proc();
     }*/

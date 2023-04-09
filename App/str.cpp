@@ -13,16 +13,10 @@ str::str() {
 }
 
 
-str::str(std::string _string) {
-    string = std::move(_string);
-    curs = (int)string.size();
-}
-
-
-void str::push(char symbol, int index) {
+void str::push(uint8_t symbol, int index) {
     curs = index;
     if (index >= string.size()) {
-        string += symbol;
+        string += static_cast<char>(symbol);
         return;
     }
     std::string buffer = string;
@@ -30,7 +24,7 @@ void str::push(char symbol, int index) {
     for (int i = 0; i < index; i++) {
         string += buffer[i];
     }
-    string += symbol;
+    string += static_cast<char>(symbol);
     for (int i = index; i < buffer.size(); i++) {
         string += buffer[i];
     }
