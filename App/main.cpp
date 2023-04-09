@@ -3,7 +3,9 @@
 
 
 int main() {
-    Connect::setConnection();
+    if (!Connect::setConnection()) {
+        finish();
+    }
 
     init_graphics();
 

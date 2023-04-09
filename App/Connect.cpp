@@ -43,10 +43,10 @@ void Connect::resetCommand() {
 }
 
 
-void Connect::setConnection() {
+bool Connect::setConnection() {
     if (!openArduino()) {
         std::cout << "Unable to connect" << std::endl;
-        return;
+        return false;
     }
 
     resetCommand();
@@ -62,6 +62,7 @@ void Connect::setConnection() {
     }
     std::cout << "connected" << std::endl;
     sleep(1);
+    return true;
 }
 
 

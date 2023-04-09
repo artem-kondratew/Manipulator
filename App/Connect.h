@@ -34,7 +34,7 @@ private:
     static bool openArduino();
 
 public:
-    static void setConnection();
+    static bool setConnection();
     static void disconnectArduino();
 
 private:
