@@ -15,7 +15,7 @@ private:
 public:
     explicit Exception(std::string _message) {message = std::move(_message);};
 
-    std::string getMessage() const {return message;};
+    [[maybe_unused]] std::string getMessage() const {return message;};
 };
 
 

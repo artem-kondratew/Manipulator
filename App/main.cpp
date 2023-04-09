@@ -3,7 +3,6 @@
 
 
 int main() {
-
     Connect::setConnection();
 
     init_graphics();

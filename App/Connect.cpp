@@ -13,19 +13,32 @@ bool Connect::openArduino() {
         }
     }
     tcgetattr(Arduino, &SerialPortSettings);
-    cfsetispeed(&SerialPortSettings, SERIAL_BAUDRATE);
-    cfsetospeed(&SerialPortSettings, SERIAL_BAUDRATE);
+
+    SerialPortSettings.c_cflag |= (CLOCAL | CREAD);    // Ignore modem controls
+    SerialPortSettings.c_cflag &= ~CSIZE;
+    SerialPortSettings.c_cflag |= CS8;     // 8 bit chars
+    SerialPortSettings.c_cflag &= ~(PARENB | PARODD);  // shut off parody
+    SerialPortSettings.c_cflag &= ~CSTOPB; //no scts stop
+    SerialPortSettings.c_iflag &= ~IGNBRK; //disable break processing
+    SerialPortSettings.c_iflag = 0;        // no echo
+    SerialPortSettings.c_iflag &= ~(IXON | IXOFF | IXANY); // no software flow control
+    SerialPortSettings.c_oflag = 0;        // no remapping
+    SerialPortSettings.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG |IEXTEN);
+    SerialPortSettings.c_cc[VMIN] = 0;     // read doesn't block
+    SerialPortSettings.c_cc[VTIME] = 0;    // 0s read timeout
+    tcsetattr(Arduino,TCSANOW,&SerialPortSettings);
+
     return true;
 }
 
 
-void Connect::clearCommand() {
-    command[0] = START_BYTE;
-    command[1] = START_BYTE;
-    command[2] = PING_DXL_ID;
-    command[3] = PING_TASK;
-    command[4] = PING_VALUE;
-    command[5] = PING_VALUE;
+void Connect::resetCommand() {
+    command[COMMAND_START_BYTE1_CELL] = START_BYTE;
+    command[COMMAND_START_BYTE2_CELL] = START_BYTE;
+    command[COMMAND_ID_CELL] = PING_DXL_ID;
+    command[COMMAND_TASK_CELL] = PING_TASK;
+    command[COMMAND_VALUE1_CELL] = PING_VALUE1;
+    command[COMMAND_VALUE2_CELL] = PING_VALUE2;
     calcCommandCheckSum();
 }
 
@@ -35,9 +48,9 @@ void Connect::setConnection() {
         std::cout << "Unable to connect" << std::endl;
         return;
     }
-    clearCommand();
+
+    resetCommand();
     bool message_flag = false;
-    std::cout << "connecting..." << std::endl;
     auto start_timer = std::chrono::system_clock::now();
     while (!message_flag) {
         auto end_timer = std::chrono::system_clock::now();
@@ -57,21 +70,39 @@ void Connect::disconnectArduino() {
 }
 
 
-void Connect::calcCommandCheckSum() {
-    uint64_t sum = 0;
-    for (int i = COMMAND_START_BYTE1_CELL; i < COMMAND_CHECKSUM_CELL; i++) {
-        sum += command[i];
+uint8_t Connect::crc8(const uint8_t pocket[], uint64_t size) {
+    uint8_t BYTE_SIZE = 8;
+    uint8_t MSB_MASK = 0x80;
+    uint8_t byte;
+    uint8_t POLY = 0x7;
+    uint8_t crc8 = 0xFF;
+
+    for (int cell = 0; cell < size; cell++) {
+
+        byte = pocket[cell];
+        crc8 = crc8 ^ byte;
+
+        for (int byte_number = 0; byte_number < BYTE_SIZE; byte_number++) {
+
+            if (crc8 & MSB_MASK) {
+                crc8 = (crc8 << 1) ^ POLY;
+            }
+            else {
+                crc8 = crc8 << 1;
+            }
+        }
     }
-    command[COMMAND_CHECKSUM_CELL] = char(sum / 8);
+    return crc8;
 }
 
 
-char Connect::calcMessageCheckSum(const char buffer[]) {
-    uint64_t sum = 0;
-    for (int i = MESSAGE_START_BYTE1_CELL; i < MESSAGE_CHECKSUM_CELL; i++) {
-        sum += buffer[i];
-    }
-    return char(sum / 8);
+void Connect::calcCommandCheckSum() {
+    command[COMMAND_CHECKSUM_CELL] = crc8(command, COMMAND_SIZE - 1);
+}
+
+
+uint8_t Connect::calcMessageCheckSum(uint8_t buffer[]) {
+    return crc8(buffer, MESSAGE_SIZE);
 }
 
 
@@ -79,33 +110,34 @@ void Connect::sendCommand() {
     if (!openArduino()) {
         return;
     }
+
     calcCommandCheckSum();
     write(Arduino, command, COMMAND_SIZE);
-    clearCommand();
+    resetCommand();
 }
 
 
-void Connect::setId(char id) {
+void Connect::setId(uint8_t id) {
     command[COMMAND_ID_CELL] = id;
 }
 
 
-void Connect::setTask(char task) {
+void Connect::setTask(uint8_t task) {
     command[COMMAND_TASK_CELL] = task;
 }
 
 
 void Connect::setValue(uint16_t value) {
-    command[COMMAND_VALUE1_CELL] = char(value / 100);
-    command[COMMAND_VALUE2_CELL] = char(value % 100);
+    command[COMMAND_VALUE1_CELL] = uint8_t(value / 100);
+    command[COMMAND_VALUE2_CELL] = uint8_t(value % 100);
 }
 
 
 void Connect::encodeCommand(uint64_t cmd) {
-    char id = char(cmd / 100000);
+    auto id = static_cast<uint8_t>(cmd / 100000);
     setId(id);
 
-    char task = char((cmd % 100000) / 10000);
+    auto task = static_cast<uint8_t>((cmd % 100000) / 10000);
     setTask(task);
 
     uint16_t value = cmd % 10000;
@@ -137,8 +169,8 @@ void Connect::decodeMessage() {
     gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
     gservo->setIsMoving(message[MESSAGE_IS_MOVING_CELL]);
     gservo->setX(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL]);
-    gservo->setX(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL]);
-    gservo->setX(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL]);
+    gservo->setY(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL]);
+    gservo->setZ(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL]);
 }
 
 
@@ -147,23 +179,26 @@ bool Connect::receiveMessage() {
         return false;
     }
 
-    char buf[MESSAGE_SIZE];
+    uint8_t buf[MESSAGE_SIZE];
     read(Arduino, buf, MESSAGE_SIZE);
 
-    if (buf[0] == START_BYTE && buf[1] == START_BYTE && buf[MESSAGE_CHECKSUM_CELL] == calcMessageCheckSum(buf)) {
-        std::memcpy(message, buf, sizeof(char) * MESSAGE_SIZE);
-        Connect::decodeMessage();
-        return true;
+    if (buf[MESSAGE_START_BYTE1_CELL] == START_BYTE && buf[MESSAGE_START_BYTE2_CELL] == START_BYTE) {
+        if (!calcMessageCheckSum(buf)) {
+            std::memcpy(message, buf, sizeof(uint8_t) * MESSAGE_SIZE);
+            Connect::decodeMessage();
+            memset(buf,0,MESSAGE_SIZE);
+            return true;
+        }
     }
     return false;
 }
 
 
 uint64_t Connect::checkNumberCommand() {
-    char numbers[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    uint8_t numbers[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     uint64_t flag = 0;
     for (int i = 0; i < key_cmd.size(); i++) {
-        for (char number: numbers) {
+        for (uint8_t number: numbers) {
             if (key_cmd.getStr()[i] == number) {
                 flag++;
                 break;
@@ -175,14 +210,14 @@ uint64_t Connect::checkNumberCommand() {
 
 
 void Connect::toolPush() {
-    clearCommand();
+    resetCommand();
     command[COMMAND_ID_CELL] = DXL_ID4;
     command[COMMAND_TASK_CELL] = TOOL_PUSH_TASK;
 }
 
 
 void Connect::toolPop() {
-    clearCommand();
+    resetCommand();
     command[COMMAND_ID_CELL] = DXL_ID4;
     command[COMMAND_TASK_CELL] = TOOL_POP_TASK;
 }
@@ -192,10 +227,6 @@ void Connect::decodeKeyInput() {
 
     if (checkNumberCommand() == key_cmd.size()) {
         Connect::encodeCommand(stoi(key_cmd.getStr()));
-        return;
-    }
-    if (key_cmd.getStr() == "manipulate") {
-        manipulate_flag = true;
         return;
     }
     if (key_cmd.getStr() == "push") {

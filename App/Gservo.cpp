@@ -101,38 +101,3 @@ void Gservo::setY(uint8_t _y1, uint8_t _y2) {
 void Gservo::setZ(uint8_t _z1, uint8_t _z2) {
     z = _z1 * 100 + _z2;
 }
-
-
-void Gservo::setGoal(uint16_t _goal) {
-    goal = _goal;
-}
-
-
-void Gservo::setAngle(uint16_t _angle) {
-    angle = _angle;
-}
-
-
-void Gservo::setSpeed(uint16_t _speed) {
-    speed = _speed;
-}
-
-
-void Gservo::setTorque(uint16_t _torque) {
-    torque = _torque;
-}
-
-
-void Gservo::setX(uint16_t _x) {
-    x = _x;
-}
-
-
-void Gservo::setY(uint16_t _y) {
-    y = _y;
-}
-
-
-void Gservo::setZ(uint16_t _z) {
-    z = _z;
-}

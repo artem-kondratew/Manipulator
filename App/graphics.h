@@ -28,20 +28,9 @@
 #define COMMAND_Y       8
 #define LAST_COMMAND_Y  9
 
-#define KEY_A          97
-#define KEY_D         100
-#define KEY_K         107
-#define KEY_L         108
-#define KEY_O         111
-#define KEY_P         112
-
 
 int CURS_Y = 0;
 int CURS_X = 0;
-
-
-uint64_t delta = 0;
-int pressed_key = 0;
 
 
 int get_columns() {
@@ -245,48 +234,6 @@ void key_down_proc() {
     print_command_line();
 }
 
-
-/*
-void move_servo1_via_buttons(uint64_t input_delta) {
-    Connect::setId(DXL_ID1);
-    Connect::setTask(SET_ANGLE_TASK);
-    Connect::setValue(gservo1.getGoal() + input_delta);
-}
-
-
-void key_a_proc() {
-    move_servo1_via_buttons(delta);
-}
-
-
-void key_d_proc() {
-    move_servo1_via_buttons(-delta);
-}
-
-
-void manipulate_proc() {
-    getsyx(CURS_Y, CURS_X);
-    clear_command_line();
-    int key;
-    if (pressed_key == key && delta < 100) {
-        delta += 20;
-    }
-    else {
-        delta = 10;
-    }
-    pressed_key = key;
-    if (key == KEY_A) {
-        return key_a_proc();
-    }
-    if (key == KEY_D) {
-        return key_d_proc();
-    }
-
-    print_command_line();
-    move(CURS_Y, Connect::key_cmd.getCurs() + 1);
-    refresh();
-}
-*/
 
 void key_proc(int key) {
     auto symbol = static_cast<uint8_t>(key);

@@ -12,7 +12,7 @@
 #define DEVICE_NAME            "3"
 
 #define SERVO_BAUDRATE     1000000
-#define SERIAL_BAUDRATE    3000000
+#define SERIAL_BAUDRATE      38400
 
 #define DXL_ID1                  1
 #define DXL_ID2                  2
@@ -34,9 +34,10 @@
 #define TIMER                  100
 #define START_BYTE              64
 
-#define PING_DXL_ID              0
-#define PING_TASK                0
-#define PING_VALUE               0
+#define PING_DXL_ID             35  //  #  // Checksum = 81 (Q)
+#define PING_TASK               36  //  $
+#define PING_VALUE1             37  //  %
+#define PING_VALUE2             61  //  Q
 
 #define COMMAND_START_BYTE1_CELL 0
 #define COMMAND_START_BYTE2_CELL 1
@@ -66,10 +67,8 @@
 #define MESSAGE_Z2_CELL         17
 #define MESSAGE_CHECKSUM_CELL   18
 
-
 #define TASK_NUMBER             12         
 
-#define PING_TASK                0
 #define SET_ANGLE_TASK           1
 #define SET_SPEED_TASK           2
 #define TOOL_PUSH_TASK           3

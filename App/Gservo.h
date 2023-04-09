@@ -42,14 +42,6 @@ public:
     void setX(uint8_t _x1, uint8_t _x2);
     void setY(uint8_t _y1, uint8_t _y2);
     void setZ(uint8_t _z1, uint8_t _z2);
-
-    void setGoal(uint16_t _goal);
-    void setAngle(uint16_t _angle);
-    void setSpeed(uint16_t _speed);
-    void setTorque(uint16_t _torque);
-    void setX(uint16_t _x);
-    void setY(uint16_t _y);
-    void setZ(uint16_t _z);
 };
 
 
@@ -57,11 +49,6 @@ inline Gservo gservo1(1);
 inline Gservo gservo2(2);
 inline Gservo gservo3(3);
 inline Gservo gservo4(4);
-
-inline Gservo internal_servo1(1);
-inline Gservo internal_servo2(2);
-inline Gservo internal_servo3(3);
-inline Gservo internal_servo4(4);
 
 
 #endif //MANIPULATOR_GSERVO_H

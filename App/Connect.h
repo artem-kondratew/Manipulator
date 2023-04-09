@@ -22,15 +22,14 @@
 class Connect {
 private:
     inline static int Arduino = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
-    inline static char command[COMMAND_SIZE];
-    inline static char message[MESSAGE_SIZE];
+    inline static uint8_t command[COMMAND_SIZE];
+    inline static uint8_t message[MESSAGE_SIZE];
 
 public:
     inline static str key_cmd;
-    inline static bool manipulate_flag = false;
 
 private:
-    static void clearCommand();
+    static void resetCommand();
 
     static bool openArduino();
 
@@ -39,15 +38,16 @@ public:
     static void disconnectArduino();
 
 private:
+    static uint8_t crc8(const uint8_t pocket[], uint64_t size);
     static void calcCommandCheckSum();
-    static char calcMessageCheckSum(const char buffer[]);
+    static uint8_t calcMessageCheckSum(uint8_t buffer[]);
 
 public:
     static void sendCommand();
 
 private:
-    static void setId(char id);
-    static void setTask(char task);
+    static void setId(uint8_t id);
+    static void setTask(uint8_t task);
     static void setValue(uint16_t value);
     static void encodeCommand(uint64_t cmd);
 

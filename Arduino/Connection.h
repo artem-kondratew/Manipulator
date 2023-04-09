@@ -75,8 +75,6 @@ void Connection::setMsgValues(uint8_t id) {
 
     message[MESSAGE_IS_MOVING_CELL] = servo->isMoving();
 
-    message[MESSAGE_TORQUE1_CELL] = servo->getLoad() / 100;
-
     message[MESSAGE_X1_CELL] = 12;
     message[MESSAGE_X2_CELL] = 13;
     message[MESSAGE_Y1_CELL] = 14;
@@ -90,10 +88,6 @@ void Connection::setMsgValues(uint8_t id) {
 
 void Connection::sendMessage(uint8_t id) {
     setMsgValues(id);
-
-    Serial.print(char(64));
-    Serial.print(char(64));
-
 
     for (int cell = MESSAGE_START_BYTE1_CELL; cell < MESSAGE_SIZE; cell++) {
         Serial.print(char(message[cell]));

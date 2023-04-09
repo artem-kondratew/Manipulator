@@ -46,8 +46,7 @@ std::string History::get() {
     if (index == 0) {
         return current_command.get();
     }
-    //return list[index - 1]->get().get();
-    list.getData(index - 1);
+    return list.getData(index - 1);
 }
 
 
