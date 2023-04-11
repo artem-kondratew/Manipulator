@@ -85,12 +85,19 @@ void Connection::setMsgValues(uint8_t id) {
 
     message[MESSAGE_IS_MOVING_CELL] = servo->isMoving();
 
-    message[MESSAGE_X1_CELL] = 12;
-    message[MESSAGE_X2_CELL] = 13;
-    message[MESSAGE_Y1_CELL] = 14;
-    message[MESSAGE_Y2_CELL] = 15;
-    message[MESSAGE_Z1_CELL] = 16;
-    message[MESSAGE_Z2_CELL] = 17;
+    message[MESSAGE_X1_CELL] = 0;//joint4.get_x() / 100;
+    message[MESSAGE_X2_CELL] = 0;//joint4.get_x() % 100;
+    message[MESSAGE_Y1_CELL] = 0;//joint4.get_y() / 100;
+    message[MESSAGE_Y2_CELL] = 0;//joint4.get_y() % 100;
+    message[MESSAGE_Z1_CELL] = 0;//joint4.get_z() / 100;
+    message[MESSAGE_Z2_CELL] = 0;//joint4.get_z() % 100;
+
+    message[MESSAGE_Q01_CELL] = 18;
+    message[MESSAGE_Q02_CELL] = 19;
+    message[MESSAGE_Q11_CELL] = 20;
+    message[MESSAGE_Q12_CELL] = 21;
+    message[MESSAGE_Q21_CELL] = 22;
+    message[MESSAGE_Q22_CELL] = 23;
 
     message[MESSAGE_CHECKSUM_CELL] = calcMessageCheckSum();
 }
@@ -152,13 +159,13 @@ void Connection::findCommand() {
         return;
     }
     if (command[COMMAND_TASK_CELL] == SET_X_TASK) {
-        return Joint::setX(value);
+        return;
     }
     if (command[COMMAND_TASK_CELL] == SET_Y_TASK) {
-        return Joint::setY(value);
+        return;
     }
     if (command[COMMAND_TASK_CELL] == SET_Z_TASK) {
-        return Joint::setZ(value);
+        return;
     }
     if (command[COMMAND_TASK_CELL] == GO_HOME_TASK) {
         return Servo::getStartPosition();

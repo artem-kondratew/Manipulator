@@ -18,86 +18,116 @@ Gservo::Gservo(uint8_t _id) {
 }
 
 
-uint8_t Gservo::getId() const {
+uint8_t Gservo::get_id() const {
     return id;
 }
 
 
-uint16_t Gservo::getGoal() const {
+uint16_t Gservo::get_goal() const {
     return goal;
 }
 
 
-uint16_t Gservo::getAngle() const {
+uint16_t Gservo::get_angle() const {
     return angle;
 }
 
 
-uint16_t Gservo::getSpeed() const {
+uint16_t Gservo::get_speed() const {
     return speed;
 }
 
 
-uint16_t Gservo::getTorque() const {
+uint16_t Gservo::get_torque() const {
     return torque;
 }
 
 
-uint16_t Gservo::getIsMoving() const {
+uint16_t Gservo::get_is_moving() const {
     return is_moving;
 }
 
 
-uint16_t Gservo::getX() const {
+uint16_t Gservo::get_x() const {
     return x;
 }
 
 
-uint16_t Gservo::getY() const {
+uint16_t Gservo::get_y() const {
     return y;
 }
 
 
-uint16_t Gservo::getZ() const {
+uint16_t Gservo::get_z() const {
     return z;
 }
 
 
-void Gservo::setGoal(uint8_t _goal1, uint8_t _goal2) {
+uint16_t Gservo::get_q0() const {
+    return q0;
+}
+
+
+uint16_t Gservo::get_q1() const {
+    return q1;
+}
+
+
+uint16_t Gservo::get_q2() const {
+    return q2;
+}
+
+
+void Gservo::set_goal(uint8_t _goal1, uint8_t _goal2) {
     goal = _goal1 * 100 + _goal2;
 }
 
 
-void Gservo::setAngle(uint8_t _angle1, uint8_t _angle2) {
+void Gservo::set_angle(uint8_t _angle1, uint8_t _angle2) {
     angle = _angle1 * 100 + _angle2;
 }
 
 
-void Gservo::setSpeed(uint8_t _speed1, uint8_t _speed2) {
+void Gservo::set_speed(uint8_t _speed1, uint8_t _speed2) {
     speed = _speed1 * 100 + _speed2;
 }
 
 
-void Gservo::setTorque(uint8_t _torque1, uint8_t _torque2) {
+void Gservo::set_torque(uint8_t _torque1, uint8_t _torque2) {
     torque = _torque1 * 100 + _torque2;
 }
 
 
-void Gservo::setIsMoving(uint8_t _is_moving1) {
-    is_moving = _is_moving1;
+void Gservo::set_is_moving(uint8_t _is_moving) {
+    is_moving = _is_moving;
 }
 
 
-void Gservo::setX(uint8_t _x1, uint8_t _x2) {
+void Gservo::set_x(uint8_t _x1, uint8_t _x2) {
     x = _x1 * 100 + _x2;
 }
 
 
-void Gservo::setY(uint8_t _y1, uint8_t _y2) {
+void Gservo::set_y(uint8_t _y1, uint8_t _y2) {
     y = _y1 * 100 + _y2;
 }
 
 
-void Gservo::setZ(uint8_t _z1, uint8_t _z2) {
+void Gservo::set_z(uint8_t _z1, uint8_t _z2) {
     z = _z1 * 100 + _z2;
+}
+
+
+void Gservo::set_q0(uint8_t _q01, uint8_t _q02) {
+    q0 = _q01 * 100 + _q02;
+}
+
+
+void Gservo::set_q1(uint8_t _q11, uint8_t _q12) {
+    q1 = _q11 * 100 + _q12;
+}
+
+
+void Gservo::set_q2(uint8_t _q21, uint8_t _q22) {
+    q2 = _q21 * 100 + _q22;
 }

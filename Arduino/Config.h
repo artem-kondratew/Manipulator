@@ -29,7 +29,7 @@
 
 
 #define COMMAND_SIZE             7
-#define MESSAGE_SIZE            19
+#define MESSAGE_SIZE            25
 
 #define TIMER                  100
 #define START_BYTE              64
@@ -65,13 +65,13 @@
 #define MESSAGE_Y2_CELL         15
 #define MESSAGE_Z1_CELL         16
 #define MESSAGE_Z2_CELL         17
-#define MESSAGE_Q11_CELL        18
-#define MESSAGE_Q12_CELL        19
-#define MESSAGE_Q21_CELL        20
-#define MESSAGE_Q22_CELL        21
-#define MESSAGE_Q31_CELL        22
-#define MESSAGE_Q32_CELL        23
-#define MESSAGE_CHECKSUM_CELL   18
+#define MESSAGE_Q01_CELL        18
+#define MESSAGE_Q02_CELL        19
+#define MESSAGE_Q11_CELL        20
+#define MESSAGE_Q12_CELL        21
+#define MESSAGE_Q21_CELL        22
+#define MESSAGE_Q22_CELL        23
+#define MESSAGE_CHECKSUM_CELL   24
 
 #define TASK_NUMBER             12
 
@@ -97,8 +97,8 @@
 #define SERVO2_MIN_ANGLE       240
 #define SERVO2_MAX_ANGLE       570
 
-#define SERVO3_MIN_ANGLE       240
-#define SERVO3_MAX_ANGLE       460
+#define SERVO3_MIN_ANGLE         0
+#define SERVO3_MAX_ANGLE      1023
 
 #define SERVO4_MIN_ANGLE       512
 #define SERVO4_MAX_ANGLE      1023

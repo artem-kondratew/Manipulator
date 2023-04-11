@@ -69,8 +69,6 @@ public:
 
     static void toolPush();
     static void toolPop();
-
-    void reload();
 };
 
 
@@ -106,8 +104,7 @@ void Servo::getStartPosition() {
     servo1.setAngle(SERVO1_START_POSITION);
     servo2.setAngle(SERVO2_START_POSITION);
     servo3.setAngle(SERVO3_START_POSITION);
-    servo4.setAngle(SERVO4_START_POSITION);
-    delay(3000);
+    delay(1000);
 }
 
 
@@ -489,15 +486,6 @@ void Servo::toolPush() {
 
 void Servo::toolPop() {
     servo4.setAngle(SERVO4_MIN_ANGLE);
-}
-
-
-void Servo::reload() {
-    /*bool result = servos.reset(DXL_ID);
-    if (result == false) {
-        servo4.setSpeed(5192);
-    }*/
-    servo4.setAngle(1023);
 }
 
 

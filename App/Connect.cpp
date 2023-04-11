@@ -159,20 +159,22 @@ Gservo* Connect::findGservo(uint8_t id) {
     if (id == 4) {
         return &gservo4;
     }
-    return nullptr;
 }
 
 
 void Connect::decodeMessage() {
     Gservo* gservo = findGservo(message[MESSAGE_ID_CELL]);
-    gservo->setGoal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
-    gservo->setAngle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
-    gservo->setSpeed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
-    gservo->setTorque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
-    gservo->setIsMoving(message[MESSAGE_IS_MOVING_CELL]);
-    gservo->setX(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL]);
-    gservo->setY(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL]);
-    gservo->setZ(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL]);
+    gservo->set_goal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
+    gservo->set_angle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
+    gservo->set_speed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
+    gservo->set_torque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
+    gservo->set_is_moving(message[MESSAGE_IS_MOVING_CELL]);
+    Gservo::set_x(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL]);
+    Gservo::set_y(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL]);
+    Gservo::set_z(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL]);
+    Gservo::set_q0(message[MESSAGE_Q01_CELL], message[MESSAGE_Q02_CELL]);
+    Gservo::set_q1(message[MESSAGE_Q11_CELL], message[MESSAGE_Q12_CELL]);
+    Gservo::set_q2(message[MESSAGE_Q21_CELL], message[MESSAGE_Q22_CELL]);
 }
 
 

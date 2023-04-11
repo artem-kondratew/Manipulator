@@ -21,6 +21,7 @@ void setup() {
     servo4.setSpeed(DEFAULT_SPEED);
 
     Servo::getStartPosition();
+    Servo::toolPop();
     //Servo::Calibration_setup();
     //Servo::getStartPosition();
 }

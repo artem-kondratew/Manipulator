@@ -1,10 +1,14 @@
 
+#ifndef Joint_h
+#define Joint_h
+
+
 #include <cstdint>
 #include <cmath>
 #include "Servo.h"
 
 
-#define PI 3.14
+//#define PI 3.14
 
 // Lengths of links in mm
 #define X0    -25
@@ -77,11 +81,10 @@ int16_t Joint::get_x() {
             break;
         }
         default:
-            Serial.print("Wrong DXL_ID!");
+            print("Wrong DXL_ID!");
             break;
     }
-    
-    return x;
+    return 0;
 }
 
 
@@ -130,10 +133,10 @@ int16_t Joint::get_z() {
             break;
         }
         default:
-            Serial.print("Wrong DXL_ID!");
+            print("Wrong DXL_ID!");
             break;
     }
-    
+
     return z;
 }
 
@@ -203,3 +206,7 @@ Joint joint4(DXL_ID4);
             Serial.print("Wrong DXL_ID!");
             break;
     } */
+
+
+#endif
+    
