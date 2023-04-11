@@ -73,7 +73,7 @@
 #define MESSAGE_Q32_CELL        23
 #define MESSAGE_CHECKSUM_CELL   18
 
-#define TASK_NUMBER             12         
+#define TASK_NUMBER             12
 
 #define SET_ANGLE_TASK           1
 #define SET_SPEED_TASK           2

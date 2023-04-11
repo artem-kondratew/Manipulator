@@ -47,6 +47,7 @@ public:
 
     static void test(uint16_t msg);
     static bool talk(uint16_t _angle);
+    static void mv(uint16_t msg);
 
 private:
     int32_t readRegister(char* command);
@@ -403,6 +404,19 @@ bool Servo::talk(uint16_t msg) {
     }
     // servo->setAngle(msg_angle);
     // return true;
+}
+
+
+void Servo::mv(uint16_t msg) {
+    if (msg < 10000) {
+      return;
+    }
+    uint8_t id = msg / 10000;
+    Servo* servo = findServo(id);
+
+    uint16_t msg_angle = msg % 10000;
+
+    servo->setAngle(msg_angle);
 }
 
 

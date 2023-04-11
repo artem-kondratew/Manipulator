@@ -3,6 +3,7 @@
 #include "Calibration.h"
 #include "Connection.h"
 #include "Config.h"
+#include "Joint.h"
 #include "Servo.h"
 
 
