@@ -160,6 +160,9 @@ void Connection::findCommand() {
     if (command[COMMAND_TASK_CELL] == SET_Z_TASK) {
         return Joint::setZ(value);
     }
+    if (command[COMMAND_TASK_CELL] == GO_HOME_TASK) {
+        return Servo::getStartPosition();
+    }
 }
 
 

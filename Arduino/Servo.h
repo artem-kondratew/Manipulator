@@ -19,12 +19,11 @@ private:
     uint16_t min_angle;
     uint16_t max_angle;
     uint16_t angle;
-    bool inv;
     uint16_t new_angle;
     uint16_t speed;
 
 public:
-    Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle, bool _inv = 0);
+    Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle);
 
     static void init();
     static void pingServos();
@@ -74,20 +73,18 @@ public:
 };
 
 
-Servo servo1(DXL_ID1, SERVO1_MIN_ANGLE, SERVO1_MAX_ANGLE, 0);
-Servo servo2(DXL_ID2, SERVO2_MIN_ANGLE, SERVO2_MAX_ANGLE, 0);
-Servo servo3(DXL_ID3, SERVO3_MIN_ANGLE, SERVO3_MAX_ANGLE, 1);
-Servo servo4(DXL_ID4, SERVO4_MIN_ANGLE, SERVO4_MAX_ANGLE, 1);
+Servo servo1(DXL_ID1, SERVO1_MIN_ANGLE, SERVO1_MAX_ANGLE);
+Servo servo2(DXL_ID2, SERVO2_MIN_ANGLE, SERVO2_MAX_ANGLE);
+Servo servo3(DXL_ID3, SERVO3_MIN_ANGLE, SERVO3_MAX_ANGLE);
+Servo servo4(DXL_ID4, SERVO4_MIN_ANGLE, SERVO4_MAX_ANGLE);
 
 
-Servo::Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle,
-             bool _inv) {
+Servo::Servo(uint8_t _DXL_ID, uint16_t _min_angle, uint16_t _max_angle) {
     DXL_ID = _DXL_ID;
     min_angle = _min_angle;
     max_angle = _max_angle;
     angle = 0;
     new_angle = 0;
-    inv = _inv;
 }
 
 
@@ -143,33 +140,19 @@ Servo* Servo::findServo(uint8_t id) {
 void Servo::setAngle(uint16_t _angle) {
     uint16_t _min_angle = min_angle;;
     uint16_t _max_angle = max_angle;
-
-    if (inv == 1) {
-        _angle = 1023 - _angle;        // 800 -> 223
-        _max_angle = 1023 - min_angle; //  790 -> 633
-        _min_angle = 1023 - max_angle; //  390 -> 233
-    }
+    
     if (_angle < _min_angle) {
         angle = _min_angle;
         servos.goalPosition(DXL_ID, angle);
-        if (inv == 1) {
-            angle = 1023 - angle;
-        }
         return;
     }
     if (_angle > _max_angle) {
         angle = _max_angle;
         servos.goalPosition(DXL_ID, angle);
-        if (inv == 1) {
-            angle = 1023 - angle;
-        }
         return;
     }
     angle = _angle;
     servos.goalPosition(DXL_ID, angle);
-    if (inv == 1) {
-        angle = 1023 - angle;
-    }
 }
 
 
@@ -479,22 +462,19 @@ uint16_t Servo::getSpeed() {
 
 
 void Servo::toolPush() {
-    uint16_t angle = servo4.getAngle();
-    bool push_flag = false;
-    while (!push_flag) {
-        angle -= 10;
-        servo4.setAngle(angle);
-        delay(100);
-        if (servo4.getLoad() > SERVO4_MAX_LOAD) {
-            push_flag = true;
+    while (servo4.getGoal() != SERVO4_MAX_ANGLE) {
+        servo4.setAngle(servo4.getGoal() + 10);
+        if (servo4.getLoad() > TOOL_MAX_LOAD) {
+            servo4.setAngle(servo4.getGoal() - 10);
+            break;
         }
+        delay(50);
     }
 }
 
 
 void Servo::toolPop() {
-    servo4.reload();
-    servo4.setAngle(1023);
+    servo4.setAngle(SERVO4_MIN_ANGLE);
 }
 
 

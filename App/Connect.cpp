@@ -225,6 +225,11 @@ void Connect::toolPop() {
 }
 
 
+void Connect::goHome() {
+    command[COMMAND_TASK_CELL] = GO_HOME_TASK;
+}
+
+
 void Connect::decodeKeyInput() {
 
     if (checkNumberCommand() == key_cmd.size()) {
@@ -236,5 +241,8 @@ void Connect::decodeKeyInput() {
     }
     if (key_cmd.getStr() == "pop") {
         return toolPop();
+    }
+    if (key_cmd.getStr() == "home") {
+        return goHome();
     }
 }

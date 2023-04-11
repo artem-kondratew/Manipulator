@@ -22,7 +22,7 @@
 #define DEFAULT_SPEED          100
 #define DEFAULT_BOOST           40
 
-#define SERVO1_START_POSITION    0
+#define SERVO1_START_POSITION  512
 #define SERVO2_START_POSITION  512
 #define SERVO3_START_POSITION  512
 #define SERVO4_START_POSITION  512
@@ -65,6 +65,12 @@
 #define MESSAGE_Y2_CELL         15
 #define MESSAGE_Z1_CELL         16
 #define MESSAGE_Z2_CELL         17
+#define MESSAGE_Q11_CELL        18
+#define MESSAGE_Q12_CELL        19
+#define MESSAGE_Q21_CELL        20
+#define MESSAGE_Q22_CELL        21
+#define MESSAGE_Q31_CELL        22
+#define MESSAGE_Q32_CELL        23
 #define MESSAGE_CHECKSUM_CELL   18
 
 #define TASK_NUMBER             12         
@@ -80,20 +86,21 @@
 #define SET_Y_TASK               9
 #define SET_Z_TASK              10
 #define SET_START_POSE_TASK     11
+#define GO_HOME_TASK            12
 
 
-#define SERVO4_MAX_LOAD        600
+#define TOOL_MAX_LOAD          300
 
 #define SERVO1_MIN_ANGLE       150
 #define SERVO1_MAX_ANGLE       853
 
-#define SERVO2_MIN_ANGLE       212//200
-#define SERVO2_MAX_ANGLE       612//550
+#define SERVO2_MIN_ANGLE       240
+#define SERVO2_MAX_ANGLE       570
 
-#define SERVO3_MIN_ANGLE       390
-#define SERVO3_MAX_ANGLE       790
+#define SERVO3_MIN_ANGLE       240
+#define SERVO3_MAX_ANGLE       460
 
-#define SERVO4_MIN_ANGLE       511
+#define SERVO4_MIN_ANGLE       512
 #define SERVO4_MAX_ANGLE      1023
 
 #define ALPHA0 SERVO2_MAX_ANGLE

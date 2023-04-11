@@ -63,6 +63,7 @@ private:
 public:
     static void toolPush();
     static void toolPop();
+    static void goHome();
 
     static void decodeKeyInput();
 };
