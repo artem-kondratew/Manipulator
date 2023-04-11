@@ -159,13 +159,13 @@ void Connection::findCommand() {
         return;
     }
     if (command[COMMAND_TASK_CELL] == SET_X_TASK) {
-        return;
+        return Joint::set_x(value);
     }
     if (command[COMMAND_TASK_CELL] == SET_Y_TASK) {
-        return;
+        return Joint::set_y(value);
     }
     if (command[COMMAND_TASK_CELL] == SET_Z_TASK) {
-        return;
+        return Joint::set_z(value);
     }
     if (command[COMMAND_TASK_CELL] == GO_HOME_TASK) {
         return Servo::getStartPosition();
