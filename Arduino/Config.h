@@ -6,13 +6,10 @@
 #include <cstdint>
 
 
-#define PRINT_FLAG           false
-
-
 #define DEVICE_NAME            "3"
 
 #define SERVO_BAUDRATE     1000000
-#define SERIAL_BAUDRATE      38400
+#define SERIAL_BAUDRATE       9600
 
 #define DXL_ID1                  1
 #define DXL_ID2                  2
@@ -81,14 +78,10 @@
 #define SET_SPEED_TASK           2
 #define TOOL_PUSH_TASK           3
 #define TOOL_POP_TASK            4
-#define CALIBRATION_TASK         5
-#define REBOOT_TASK              6
-#define GET_ERROR_TASK           7
-#define SET_X_TASK               8
-#define SET_Y_TASK               9
-#define SET_Z_TASK              10
-#define SET_START_POSE_TASK     11
-#define GO_HOME_TASK            12
+#define SET_X_TASK               5
+#define SET_Y_TASK               6
+#define SET_Z_TASK               7
+#define GO_HOME_TASK             8
 
 
 #define TOOL_MAX_LOAD          300
@@ -105,11 +98,6 @@
 
 #define SERVO4_MIN_ANGLE       512
 #define SERVO4_MAX_ANGLE      1023
-
-#define ALPHA0 SERVO2_MAX_ANGLE
-#define BETA0 760//660
-const uint16_t MIN_GAMMA = 1023 + BETA0 - ALPHA0;//1023 - ALPHA0 + SERVO4_MIN_ANGLE - BETA0; // pos 512 instead of 1023
-const uint64_t MAX_GAMMA = 1 << 16;
 
 
 #endif

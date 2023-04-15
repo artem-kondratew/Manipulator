@@ -19,10 +19,10 @@ void Calibration::Calibration_max(Servo servo) {
     servo.setSpeed(100);
 
     while (true) {
-        println(servo.getLoad());  // DEBUG
-        println(servo_max_angle);
-        println(servo.getAngle());
-        println(" ");
+        Serial.println(servo.getLoad());  // DEBUG
+        Serial.println(servo_max_angle);
+        Serial.println(servo.getAngle());
+        Serial.println(" ");
 
         servo.setAngle(servo_max_angle);
         delay(100);
@@ -36,8 +36,8 @@ void Calibration::Calibration_max(Servo servo) {
 
     servo.setMaxAngle(servo_max_angle);
 
-    println(" ");
-    println(servo_max_angle);
+    Serial.println(" ");
+    Serial.println(servo_max_angle);
 }
 
 
@@ -45,10 +45,10 @@ void Calibration::Calibration_min(Servo servo) {
     uint16_t servo_min_angle = 512;
     servo.setSpeed(100);
     while (true) {
-        println(servo.getLoad());  // DEBUG
-        println(servo_min_angle);
-        println(servo.getAngle());
-        println(" ");
+        Serial.println(servo.getLoad());  // DEBUG
+        Serial.println(servo_min_angle);
+        Serial.println(servo.getAngle());
+        Serial.println(" ");
 
         servo.setAngle(servo_min_angle);
         delay(100);
@@ -62,8 +62,8 @@ void Calibration::Calibration_min(Servo servo) {
 
     servo.setMinAngle(servo_min_angle);
 
-    println(" ");
-    println(servo_min_angle);
+    Serial.println(" ");
+    Serial.println(servo_min_angle);
 }
 
 

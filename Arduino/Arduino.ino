@@ -8,7 +8,6 @@
 
 
 void setup() {
-
     Serial.begin(SERIAL_BAUDRATE);
     Serial.setTimeout(0);
 
@@ -22,17 +21,10 @@ void setup() {
 
     Servo::getStartPosition();
     Servo::toolPop();
-    //Servo::Calibration_setup();
-    //Servo::getStartPosition();
 }
 
 
 void loop() {
     Connection::receiveCommand();
-    //Servo::talk(Serial.parseInt());
     //Servo::mv(Serial.parseInt());
-    //joint4.get_coordinates();
-    //joint4.set_position(250, 0, 240);
-    //delay(500);
-
 }

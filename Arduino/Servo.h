@@ -7,7 +7,6 @@
 #include <string>
 #include <DynamixelWorkbench.h>
 #include "Config.h"
-#include "print.h"
 
 
 DynamixelWorkbench servos;
@@ -295,18 +294,14 @@ void Servo::test(uint16_t msg) {
         switch (place) { // Действия для каждой четверти
             case 1:
                 servo3.setAngle(msg_angle);
-                println("Case 1");
                 break;
 
             case 2:
                 correct_angle_2 = msg_angle - num2;
                 if (angle_2 < correct_angle_2) {
                     servo2.setAngle(correct_angle_2);
-                    print("Case 2, Angle_2 is ");
-                    println(correct_angle_2);
                 }
                 servo3.setAngle(msg_angle);
-                println("Case 2");
                 break;
 
             case 3:
@@ -314,11 +309,8 @@ void Servo::test(uint16_t msg) {
                 correct_angle_2 = servo2.max_angle - (neutral_angle_3 - msg_angle) / 2;
                 if (angle_2 > correct_angle_2) {
                     servo2.setAngle(correct_angle_2);
-                    print("Case 3 or 7, Angle_2 is ");
-                    println(correct_angle_2);
                 }
                 servo3.setAngle(msg_angle);
-                println("Case 3 or 7");
                 break;
 
             case 4:
@@ -326,33 +318,24 @@ void Servo::test(uint16_t msg) {
                 correct_angle_2 = servo2.min_angle + (neutral_angle_3 - msg_angle) / 2;
                 if (angle_2 < correct_angle_2) {
                     servo2.setAngle(correct_angle_2);
-                    print("Case 4 or 6, Angle_2 is ");
-                    println(correct_angle_2);
                 }
                 servo3.setAngle(msg_angle);
-                println("Case 4 or 6");
                 break;
 
             case 5:
                 correct_angle_2 = msg_angle + 50;
                 if (angle_2 > correct_angle_2) {
                     servo2.setAngle(correct_angle_2);
-                    print("Case 5, Angle_2 is ");
-                    println(correct_angle_2);
                 }
                 servo3.setAngle(msg_angle);
-                println("Case 5");
                 break;
 
             case 8:
                 correct_angle_2 = 300;
                 if (angle_2 < correct_angle_2) {
                     servo2.setAngle(correct_angle_2);
-                    print("Case 8, Angle_2 is ");
-                    println(correct_angle_2);
                 }
                 servo3.setAngle(msg_angle);
-                println("Case 8");
                 break;
 
             default:
@@ -368,22 +351,18 @@ bool Servo::talk(uint16_t msg) {
     }
     if (msg == 1) {
         servo1.setTorque(0);
-        println(servo1.getAngle());
         return true;
     }
     if (msg == 2) {
         servo2.setTorque(0);
-        println(servo2.getAngle());
         return true;
     }
     if (msg == 3) {
         servo3.setTorque(0);
-        println(1023 - servo3.getAngle());
         return true;
     }
     if (msg == 4) {
         servo4.setTorque(0);
-        println(servo4.getAngle());
         return true;
     }
 
@@ -399,8 +378,6 @@ bool Servo::talk(uint16_t msg) {
         servo3.setAngle(msg_angle);
         return true;
     }
-    // servo->setAngle(msg_angle);
-    // return true;
 }
 
 

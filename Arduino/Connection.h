@@ -160,15 +160,6 @@ void Connection::findCommand() {
     if (command[COMMAND_TASK_CELL] == TOOL_POP_TASK) {
         return Servo::toolPop();
     }
-    if (command[COMMAND_TASK_CELL] == CALIBRATION_TASK) {
-        return;
-    }
-    if (command[COMMAND_TASK_CELL] == REBOOT_TASK) {
-        return;
-    }
-    if (command[COMMAND_TASK_CELL] == GET_ERROR_TASK) {
-        return;
-    }
     if (command[COMMAND_TASK_CELL] == SET_X_TASK) {
         return Joint::set_x(value);
     }
