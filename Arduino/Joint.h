@@ -49,9 +49,6 @@ public:
     static int16_t get_x();
     static int16_t get_y();
     static int16_t get_z();
-    static int16_t get_x(uint16_t value);
-    static int16_t get_y(uint16_t value);
-    static int16_t get_z(uint16_t value);
     static void get_coordinates();
 };
 
@@ -61,14 +58,10 @@ Joint::Joint(uint8_t _DXL_ID) {
 }
 
 
-
 Joint joint1(DXL_ID1);
 Joint joint2(DXL_ID2);
 Joint joint3(DXL_ID3);
 Joint joint4(DXL_ID4);
-
-
-
 
 
 double calc_q0_rad(uint16_t angle) {
@@ -111,17 +104,17 @@ int16_t Joint::get_z(uint16_t q0, uint16_t q1, uint16_t q2) {
 
 
 int16_t Joint::get_x() {
-  (get_x(servo1.getAngle(), servo2.getAngle(), servo3.getAngle()));
+    get_x(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
 }
 
 
 int16_t Joint::get_y() {
-  (get_y(servo1.getAngle(), servo2.getAngle(), servo3.getAngle()));
+    get_y(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
 }
 
 
 int16_t Joint::get_z() {
-  (get_z(servo1.getAngle(), servo2.getAngle(), servo3.getAngle()));
+    get_z(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
 }
 
 
@@ -137,7 +130,7 @@ void Joint::set_position(int16_t my_x, int16_t my_y, int16_t my_z) {
         for (int16_t i = SERVO1_MIN_ANGLE; i <= SERVO1_MAX_ANGLE; i++) {
             for (int16_t j = SERVO2_MIN_ANGLE; j <= SERVO2_MAX_ANGLE; j++) {
                 for (int16_t k = SERVO3_MIN_ANGLE; k <= SERVO3_MAX_ANGLE; k++) {
-                    if (checkError(joint4.get_x(i, j, k), my_x) && checkError(joint4.get_y(i, j, k), my_y) && checkError(joint4.get_z(i, j, k), my_z)) {
+                    if (checkError(get_x(i, j, k), my_x) && checkError(get_y(i, j, k), my_y) && checkError(get_z(i, j, k), my_z)) {
                         servo1.setAngle(i);
                         servo2.setAngle(j);
                         servo3.setAngle(k);

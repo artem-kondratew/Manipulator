@@ -12,6 +12,7 @@ bool Connect::openArduino() {
             return false;
         }
     }
+
     tcgetattr(Arduino, &SerialPortSettings);
 
     SerialPortSettings.c_cflag |= (CLOCAL | CREAD);    // Ignore modem controls
@@ -26,6 +27,7 @@ bool Connect::openArduino() {
     SerialPortSettings.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG |IEXTEN);
     SerialPortSettings.c_cc[VMIN] = 0;     // read doesn't block
     SerialPortSettings.c_cc[VTIME] = 0;    // 0s read timeout
+
     tcsetattr(Arduino,TCSANOW,&SerialPortSettings);
 
     return true;
@@ -169,9 +171,9 @@ void Connect::decodeMessage() {
     gservo->set_speed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
     gservo->set_torque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
     gservo->set_is_moving(message[MESSAGE_IS_MOVING_CELL]);
-    Gservo::set_x(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL]);
-    Gservo::set_y(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL]);
-    Gservo::set_z(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL]);
+    Gservo::set_x(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL], message[MESSAGE_X_SIGN]);
+    Gservo::set_y(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL], message[MESSAGE_Y_SIGN]);
+    Gservo::set_z(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL], message[MESSAGE_Z_SIGN]);
     Gservo::set_q0(message[MESSAGE_Q01_CELL], message[MESSAGE_Q02_CELL]);
     Gservo::set_q1(message[MESSAGE_Q11_CELL], message[MESSAGE_Q12_CELL]);
     Gservo::set_q2(message[MESSAGE_Q21_CELL], message[MESSAGE_Q22_CELL]);
@@ -203,7 +205,7 @@ uint64_t Connect::checkNumberCommand() {
     uint64_t flag = 0;
     for (int i = 0; i < key_cmd.size(); i++) {
         for (uint8_t number: numbers) {
-            if (key_cmd.getStr()[i] == number) {
+            if (key_cmd.get_str()[i] == number) {
                 flag++;
                 break;
             }
@@ -235,16 +237,16 @@ void Connect::goHome() {
 void Connect::decodeKeyInput() {
 
     if (checkNumberCommand() == key_cmd.size()) {
-        Connect::encodeCommand(stoi(key_cmd.getStr()));
+        Connect::encodeCommand(stoi(key_cmd.get_str()));
         return;
     }
-    if (key_cmd.getStr() == "push") {
+    if (key_cmd.get_str() == "push") {
         return toolPush();
     }
-    if (key_cmd.getStr() == "pop") {
+    if (key_cmd.get_str() == "pop") {
         return toolPop();
     }
-    if (key_cmd.getStr() == "home") {
+    if (key_cmd.get_str() == "home") {
         return goHome();
     }
 }

@@ -28,11 +28,11 @@ void setup() {
 
 
 void loop() {
-    //Connection::receiveCommand();
+    Connection::receiveCommand();
     //Servo::talk(Serial.parseInt());
-    Servo::mv(Serial.parseInt());
-    joint4.get_coordinates();
-    joint4.set_position(250, 0, 240);
-    delay(500);
+    //Servo::mv(Serial.parseInt());
+    //joint4.get_coordinates();
+    //joint4.set_position(250, 0, 240);
+    //delay(500);
 
 }

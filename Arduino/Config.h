@@ -28,9 +28,6 @@
 #define SERVO4_START_POSITION  512
 
 
-#define COMMAND_SIZE             7
-#define MESSAGE_SIZE            25
-
 #define TIMER                  100
 #define START_BYTE              64
 
@@ -46,6 +43,7 @@
 #define COMMAND_VALUE1_CELL      4
 #define COMMAND_VALUE2_CELL      5
 #define COMMAND_CHECKSUM_CELL    6
+#define COMMAND_SIZE             7
 
 #define MESSAGE_START_BYTE1_CELL 0
 #define MESSAGE_START_BYTE2_CELL 1
@@ -61,17 +59,21 @@
 #define MESSAGE_IS_MOVING_CELL  11
 #define MESSAGE_X1_CELL         12
 #define MESSAGE_X2_CELL         13
-#define MESSAGE_Y1_CELL         14
-#define MESSAGE_Y2_CELL         15
-#define MESSAGE_Z1_CELL         16
-#define MESSAGE_Z2_CELL         17
-#define MESSAGE_Q01_CELL        18
-#define MESSAGE_Q02_CELL        19
-#define MESSAGE_Q11_CELL        20
-#define MESSAGE_Q12_CELL        21
-#define MESSAGE_Q21_CELL        22
-#define MESSAGE_Q22_CELL        23
-#define MESSAGE_CHECKSUM_CELL   24
+#define MESSAGE_X_SIGN          14
+#define MESSAGE_Y1_CELL         15
+#define MESSAGE_Y2_CELL         16
+#define MESSAGE_Y_SIGN          17
+#define MESSAGE_Z1_CELL         18
+#define MESSAGE_Z2_CELL         19
+#define MESSAGE_Z_SIGN          20
+#define MESSAGE_Q01_CELL        21
+#define MESSAGE_Q02_CELL        22
+#define MESSAGE_Q11_CELL        23
+#define MESSAGE_Q12_CELL        24
+#define MESSAGE_Q21_CELL        25
+#define MESSAGE_Q22_CELL        26
+#define MESSAGE_CHECKSUM_CELL   27
+#define MESSAGE_SIZE            28
 
 #define TASK_NUMBER             12
 
@@ -90,6 +92,7 @@
 
 
 #define TOOL_MAX_LOAD          300
+
 
 #define SERVO1_MIN_ANGLE       150
 #define SERVO1_MAX_ANGLE       853

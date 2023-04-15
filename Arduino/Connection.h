@@ -4,7 +4,6 @@
 
 
 #include "Config.h"
-//#include "FSM.h"
 #include "Joint.h"
 #include "Servo.h"
 
@@ -70,28 +69,40 @@ void Connection::setMsgValues(uint8_t id) {
     message[MESSAGE_START_BYTE2_CELL] = START_BYTE;
     
     message[MESSAGE_ID_CELL] = id;
-    
-    message[MESSAGE_GOAL1_CELL] = servo->getGoal() / 100;
-    message[MESSAGE_GOAL1_CELL] = servo->getGoal() % 100;
-    
-    message[MESSAGE_ANGLE1_CELL] = servo->getAngle() / 100;
-    message[MESSAGE_ANGLE2_CELL] = servo->getAngle() % 100;
-    
-    message[MESSAGE_SPEED1_CELL] = servo->getSpeed() / 100;
-    message[MESSAGE_SPEED2_CELL] = servo->getSpeed() % 100;
-    
-    message[MESSAGE_TORQUE1_CELL] = servo->getLoad() / 100;
-    message[MESSAGE_TORQUE2_CELL] = servo->getLoad() % 100;
+
+    uint16_t goal = servo->getGoal();
+    message[MESSAGE_GOAL1_CELL] = goal / 100;
+    message[MESSAGE_GOAL1_CELL] = goal % 100;
+
+    uint16_t angle = servo->getAngle();
+    message[MESSAGE_ANGLE1_CELL] = angle / 100;
+    message[MESSAGE_ANGLE2_CELL] = angle % 100;
+
+    uint16_t speed = servo->getSpeed();
+    message[MESSAGE_SPEED1_CELL] = speed / 100;
+    message[MESSAGE_SPEED2_CELL] = speed % 100;
+
+    uint16_t load = servo->getLoad();
+    message[MESSAGE_TORQUE1_CELL] = load / 100;
+    message[MESSAGE_TORQUE2_CELL] = load % 100;
 
     message[MESSAGE_IS_MOVING_CELL] = servo->isMoving();
 
-    message[MESSAGE_X1_CELL] = 0;//joint4.get_x() / 100;
-    message[MESSAGE_X2_CELL] = 0;//joint4.get_x() % 100;
-    message[MESSAGE_Y1_CELL] = 0;//joint4.get_y() / 100;
-    message[MESSAGE_Y2_CELL] = 0;//joint4.get_y() % 100;
-    message[MESSAGE_Z1_CELL] = 0;//joint4.get_z() / 100;
-    message[MESSAGE_Z2_CELL] = 0;//joint4.get_z() % 100;
+    int16_t x = Joint::get_x();
+    message[MESSAGE_X1_CELL] = abs(x / 100);
+    message[MESSAGE_X2_CELL] = abs(x % 100);
+    message[MESSAGE_X_SIGN] = (x >= 0) ? 1 : 0;
 
+    int16_t y = Joint::get_y();
+    message[MESSAGE_Y1_CELL] = abs(y / 100);
+    message[MESSAGE_Y2_CELL] = abs(y % 100);
+    message[MESSAGE_Y_SIGN] = (y >= 0) ? 1 : 0;
+
+    int16_t z = Joint::get_z();
+    message[MESSAGE_Z1_CELL] = abs(z / 100);
+    message[MESSAGE_Z2_CELL] = abs(z % 100);
+    message[MESSAGE_Z_SIGN] = (z >= 0) ? 1 : 0;
+    
     message[MESSAGE_Q01_CELL] = 18;
     message[MESSAGE_Q02_CELL] = 19;
     message[MESSAGE_Q11_CELL] = 20;

@@ -48,32 +48,32 @@ uint16_t Gservo::get_is_moving() const {
 }
 
 
-uint16_t Gservo::get_x() const {
+uint16_t Gservo::get_x(){
     return x;
 }
 
 
-uint16_t Gservo::get_y() const {
+uint16_t Gservo::get_y(){
     return y;
 }
 
 
-uint16_t Gservo::get_z() const {
+uint16_t Gservo::get_z(){
     return z;
 }
 
 
-uint16_t Gservo::get_q0() const {
+uint16_t Gservo::get_q0() {
     return q0;
 }
 
 
-uint16_t Gservo::get_q1() const {
+uint16_t Gservo::get_q1() {
     return q1;
 }
 
 
-uint16_t Gservo::get_q2() const {
+uint16_t Gservo::get_q2() {
     return q2;
 }
 
@@ -103,18 +103,21 @@ void Gservo::set_is_moving(uint8_t _is_moving) {
 }
 
 
-void Gservo::set_x(uint8_t _x1, uint8_t _x2) {
-    x = _x1 * 100 + _x2;
+void Gservo::set_x(uint8_t _x1, uint8_t _x2, bool x_sign) {
+    x = (_x1 * 100 + _x2);
+    x = (x_sign) ? x : -x;
 }
 
 
-void Gservo::set_y(uint8_t _y1, uint8_t _y2) {
-    y = _y1 * 100 + _y2;
+void Gservo::set_y(uint8_t _y1, uint8_t _y2, bool y_sign) {
+    y = (_y1 * 100 + _y2);
+    y = (y_sign) ? y : -y;
 }
 
 
-void Gservo::set_z(uint8_t _z1, uint8_t _z2) {
-    z = _z1 * 100 + _z2;
+void Gservo::set_z(uint8_t _z1, uint8_t _z2, bool z_sign) {
+    z = (_z1 * 100 + _z2);
+    z = (z_sign) ? z : -z;
 }
 
 

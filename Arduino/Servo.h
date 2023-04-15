@@ -61,9 +61,9 @@ public:
 
     uint16_t getGoal();
 
-    int32_t getLoad();
+    uint16_t getLoad();
 
-    int32_t isMoving();
+    uint8_t isMoving();
 
     uint16_t getSpeed();
 
@@ -432,7 +432,7 @@ uint8_t Servo::getDXL_ID() {
 uint16_t Servo::getAngle() {
     int32_t data;
     servos.readRegister(DXL_ID, "Present_Position", &data);
-    return data;
+    return (uint16_t)data;
 }
 
 
@@ -451,19 +451,19 @@ uint16_t Servo::getGoal() {
 }
 
 
-int32_t Servo::getLoad() {
+uint16_t Servo::getLoad() {
     int32_t data;
     servos.readRegister(DXL_ID, "Present_Load", &data);
     if (data > 1023)
         data -= 1023;
-    return data;
+    return (uint16_t)data;
 }
 
 
-int32_t Servo::isMoving() {
+uint8_t Servo::isMoving() {
     int32_t data;
     servos.readRegister(DXL_ID, "Moving", &data);
-    return data;
+    return (uint8_t)data;
 }
 
 

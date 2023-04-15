@@ -4,8 +4,6 @@
 
 #include "str.h"
 
-#include <utility>
-
 
 str::str() {
     string = "";
@@ -58,7 +56,7 @@ const char* str::get() {
 }
 
 
-std::string str::getStr() {
+std::string str::get_str() {
     return string;
 }
 

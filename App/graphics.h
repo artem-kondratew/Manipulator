@@ -189,7 +189,7 @@ void print_command_line() {
 
 
 void key_return_proc() {
-    if (Connect::key_cmd.getStr().empty()) {
+    if (Connect::key_cmd.get_str().empty()) {
         return;
     }
     History::append(Connect::key_cmd);
