@@ -70,23 +70,23 @@ void Connection::setMsgValues(uint8_t id) {
     
     message[MESSAGE_ID_CELL] = id;
 
-    uint16_t goal = servo->getGoal();
+    uint16_t goal = servo->get_goal();
     message[MESSAGE_GOAL1_CELL] = goal / 100;
     message[MESSAGE_GOAL1_CELL] = goal % 100;
 
-    uint16_t angle = servo->getAngle();
+    uint16_t angle = servo->get_angle();
     message[MESSAGE_ANGLE1_CELL] = angle / 100;
     message[MESSAGE_ANGLE2_CELL] = angle % 100;
 
-    uint16_t speed = servo->getSpeed();
+    uint16_t speed = servo->get_speed();
     message[MESSAGE_SPEED1_CELL] = speed / 100;
     message[MESSAGE_SPEED2_CELL] = speed % 100;
 
-    uint16_t load = servo->getLoad();
+    uint16_t load = servo->get_load();
     message[MESSAGE_TORQUE1_CELL] = load / 100;
     message[MESSAGE_TORQUE2_CELL] = load % 100;
 
-    message[MESSAGE_IS_MOVING_CELL] = servo->isMoving();
+    message[MESSAGE_IS_MOVING_CELL] = servo->is_moving();
 
     int16_t x = Joint::get_x();
     message[MESSAGE_X1_CELL] = abs(x / 100);
@@ -145,32 +145,33 @@ void Connection::receiveCommand() {
 
 void Connection::findCommand() {
     uint16_t value = command[COMMAND_VALUE1_CELL] * 100 + command[COMMAND_VALUE2_CELL];
-    if (command[COMMAND_TASK_CELL] == PING_TASK) {
+    uint8_t com = command[COMMAND_TASK1_CELL] * 100 + command[COMMAND_TASK2_CELL];
+    if (com == PING_TASK) {
         return;
     }
-    if (command[COMMAND_TASK_CELL] == SET_ANGLE_TASK) {
-        return Servo::setAngle(value, command[COMMAND_ID_CELL]);
+    if (com == SET_ANGLE_TASK) {
+        return Servo::set_angle(value, command[COMMAND_ID_CELL]);
     }
-    if (command[COMMAND_TASK_CELL] == SET_SPEED_TASK) {
-        return Servo::setSpeed(value, command[COMMAND_ID_CELL]);
+    if (com == SET_SPEED_TASK) {
+        return Servo::set_speed(value, command[COMMAND_ID_CELL]);
     }
-    if (command[COMMAND_TASK_CELL] == TOOL_PUSH_TASK) {
+    if (com == TOOL_PUSH_TASK) {
         return Servo::toolPush();
     }
-    if (command[COMMAND_TASK_CELL] == TOOL_POP_TASK) {
+    if (com == TOOL_POP_TASK) {
         return Servo::toolPop();
     }
-    if (command[COMMAND_TASK_CELL] == SET_X_TASK) {
+    if (com == SET_X_TASK) {
         return Joint::set_x(value);
     }
-    if (command[COMMAND_TASK_CELL] == SET_Y_TASK) {
+    if (com == SET_Y_TASK) {
         return Joint::set_y(value);
     }
-    if (command[COMMAND_TASK_CELL] == SET_Z_TASK) {
+    if (com == SET_Z_TASK) {
         return Joint::set_z(value);
     }
-    if (command[COMMAND_TASK_CELL] == GO_HOME_TASK) {
-        return Servo::getStartPosition();
+    if (com == GO_HOME_TASK) {
+        return Servo::setStartPosition();
     }
 }
 

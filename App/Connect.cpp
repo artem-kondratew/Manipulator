@@ -38,7 +38,8 @@ void Connect::resetCommand() {
     command[COMMAND_START_BYTE1_CELL] = START_BYTE;
     command[COMMAND_START_BYTE2_CELL] = START_BYTE;
     command[COMMAND_ID_CELL] = PING_DXL_ID;
-    command[COMMAND_TASK_CELL] = PING_TASK;
+    command[COMMAND_TASK1_CELL] = PING_TASK;
+    command[COMMAND_TASK2_CELL] = PING_TASK;
     command[COMMAND_VALUE1_CELL] = PING_VALUE1;
     command[COMMAND_VALUE2_CELL] = PING_VALUE2;
     calcCommandCheckSum();
@@ -126,7 +127,8 @@ void Connect::setId(uint8_t id) {
 
 
 void Connect::setTask(uint8_t task) {
-    command[COMMAND_TASK_CELL] = task;
+    command[COMMAND_TASK1_CELL] = task / 10;
+    command[COMMAND_TASK2_CELL] = task % 10;
 }
 
 
@@ -137,10 +139,10 @@ void Connect::setValue(uint16_t value) {
 
 
 void Connect::encodeCommand(uint64_t cmd) {
-    auto id = static_cast<uint8_t>(cmd / 100000);
+    auto id = static_cast<uint8_t>(cmd / 1000000);
     setId(id);
 
-    auto task = static_cast<uint8_t>((cmd % 100000) / 10000);
+    auto task = static_cast<uint8_t>((cmd % 1000000) / 10000);
     setTask(task);
 
     uint16_t value = cmd % 10000;
@@ -217,20 +219,20 @@ uint64_t Connect::checkNumberCommand() {
 
 void Connect::toolPush() {
     resetCommand();
-    command[COMMAND_ID_CELL] = DXL_ID4;
-    command[COMMAND_TASK_CELL] = TOOL_PUSH_TASK;
+    setId(DXL_ID4);
+    setTask(TOOL_PUSH_TASK);
 }
 
 
 void Connect::toolPop() {
     resetCommand();
-    command[COMMAND_ID_CELL] = DXL_ID4;
-    command[COMMAND_TASK_CELL] = TOOL_POP_TASK;
+    setId(DXL_ID4);
+    setTask(TOOL_POP_TASK);
 }
 
 
 void Connect::goHome() {
-    command[COMMAND_TASK_CELL] = GO_HOME_TASK;
+    setTask(GO_HOME_TASK);
 }
 
 

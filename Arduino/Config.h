@@ -28,19 +28,20 @@
 #define TIMER                  100
 #define START_BYTE              64
 
-#define PING_DXL_ID             35  //  #  // Checksum = 81 (Q)
-#define PING_TASK               36  //  $
-#define PING_VALUE1             37  //  %
-#define PING_VALUE2             61  //  Q
+#define PING_DXL_ID             0
+#define PING_TASK               0
+#define PING_VALUE1             0
+#define PING_VALUE2             0
 
 #define COMMAND_START_BYTE1_CELL 0
 #define COMMAND_START_BYTE2_CELL 1
 #define COMMAND_ID_CELL          2
-#define COMMAND_TASK_CELL        3
-#define COMMAND_VALUE1_CELL      4
-#define COMMAND_VALUE2_CELL      5
-#define COMMAND_CHECKSUM_CELL    6
-#define COMMAND_SIZE             7
+#define COMMAND_TASK1_CELL       3
+#define COMMAND_TASK2_CELL       4
+#define COMMAND_VALUE1_CELL      5
+#define COMMAND_VALUE2_CELL      6
+#define COMMAND_CHECKSUM_CELL    7
+#define COMMAND_SIZE             8
 
 #define MESSAGE_START_BYTE1_CELL 0
 #define MESSAGE_START_BYTE2_CELL 1
