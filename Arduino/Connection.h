@@ -88,17 +88,17 @@ void Connection::setMsgValues(uint8_t id) {
 
     message[MESSAGE_IS_MOVING_CELL] = servo->is_moving();
 
-    int16_t x = Joint::get_x();
+    int16_t x = joint4.get_x();
     message[MESSAGE_X1_CELL] = abs(x / 100);
     message[MESSAGE_X2_CELL] = abs(x % 100);
     message[MESSAGE_X_SIGN] = (x >= 0) ? 1 : 0;
 
-    int16_t y = Joint::get_y();
+    int16_t y = joint4.get_y();
     message[MESSAGE_Y1_CELL] = abs(y / 100);
     message[MESSAGE_Y2_CELL] = abs(y % 100);
     message[MESSAGE_Y_SIGN] = (y >= 0) ? 1 : 0;
 
-    int16_t z = Joint::get_z();
+    int16_t z = joint4.get_z();
     message[MESSAGE_Z1_CELL] = abs(z / 100);
     message[MESSAGE_Z2_CELL] = abs(z % 100);
     message[MESSAGE_Z_SIGN] = (z >= 0) ? 1 : 0;
@@ -160,15 +160,6 @@ void Connection::findCommand() {
     }
     if (com == TOOL_POP_TASK) {
         return Servo::toolPop();
-    }
-    if (com == SET_X_TASK) {
-        return Joint::set_x(value);
-    }
-    if (com == SET_Y_TASK) {
-        return Joint::set_y(value);
-    }
-    if (com == SET_Z_TASK) {
-        return Joint::set_z(value);
     }
     if (com == GO_HOME_TASK) {
         return Servo::setStartPosition();

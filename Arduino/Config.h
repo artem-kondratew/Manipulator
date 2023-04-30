@@ -79,10 +79,7 @@
 #define SET_SPEED_TASK           2
 #define TOOL_PUSH_TASK           3
 #define TOOL_POP_TASK            4
-#define SET_X_TASK               5
-#define SET_Y_TASK               6
-#define SET_Z_TASK               7
-#define GO_HOME_TASK             8
+#define GO_HOME_TASK             5
 
 
 #define TOOL_MAX_LOAD          300
