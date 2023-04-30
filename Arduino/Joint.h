@@ -104,17 +104,17 @@ int16_t Joint::get_z(uint16_t q0, uint16_t q1, uint16_t q2) {
 
 
 int16_t Joint::get_x() {
-    get_x(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
+    get_x(servo1.get_angle(), servo2.get_angle(), servo3.get_angle());
 }
 
 
 int16_t Joint::get_y() {
-    get_y(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
+    get_y(servo1.get_angle(), servo2.get_angle(), servo3.get_angle());
 }
 
 
 int16_t Joint::get_z() {
-    get_z(servo1.getAngle(), servo2.getAngle(), servo3.getAngle());
+    get_z(servo1.get_angle(), servo2.get_angle(), servo3.get_angle());
 }
 
 
@@ -131,9 +131,9 @@ void Joint::set_position(int16_t my_x, int16_t my_y, int16_t my_z) {
             for (int16_t j = SERVO2_MIN_ANGLE; j <= SERVO2_MAX_ANGLE; j++) {
                 for (int16_t k = SERVO3_MIN_ANGLE; k <= SERVO3_MAX_ANGLE; k++) {
                     if (checkError(get_x(i, j, k), my_x) && checkError(get_y(i, j, k), my_y) && checkError(get_z(i, j, k), my_z)) {
-                        servo1.setAngle(i);
-                        servo2.setAngle(j);
-                        servo3.setAngle(k);
+                        servo1.set_angle(i);
+                        servo2.set_angle(j);
+                        servo3.set_angle(k);
                         return;
                     }
                 }
