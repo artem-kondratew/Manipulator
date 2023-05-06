@@ -257,9 +257,6 @@ void key_down_proc() {
 
 void key_proc(int key) {
     auto symbol = static_cast<uint8_t>(key);
-    /*if (Connect::manipulate_flag) {
-        manipulate_proc();
-    }*/
 
     if (key == KEY_RETURN) {
         return key_return_proc();
@@ -365,12 +362,12 @@ void print_params_from_servo(Gservo gservo) {
     print_speed(gservo.get_id(), gservo.get_speed());
     print_torque(gservo.get_id(), gservo.get_torque());
     print_is_moving(gservo.get_id(), gservo.get_is_moving());
-    print_x(gservo.get_x());
-    print_y(gservo.get_y());
-    print_z(gservo.get_z());
-    print_q0(gservo.get_q0());
-    print_q1(gservo.get_q1());
-    print_q2(gservo.get_q2());
+    print_x(Gservo::get_x());
+    print_y(Gservo::get_y());
+    print_z(Gservo::get_z());
+    print_q0(Gservo::get_q0());
+    print_q1(Gservo::get_q1());
+    print_q2(Gservo::get_q2());
 }
 
 
