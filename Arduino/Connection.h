@@ -156,7 +156,7 @@ void Connection::findCommand() {
         return Servo::set_speed(value, command[COMMAND_ID_CELL]);
     }
     if (com == TOOL_PUSH_TASK) {
-        return Servo::toolPush();
+        return Servo::toolPush(true);
     }
     if (com == TOOL_POP_TASK) {
         return Servo::toolPop();

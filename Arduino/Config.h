@@ -83,6 +83,7 @@
 
 
 #define TOOL_MAX_LOAD          300
+#define TOOL_TIMER              50
 
 
 #define SERVO1_MIN_ANGLE       150
