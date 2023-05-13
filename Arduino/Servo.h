@@ -460,7 +460,7 @@ void Servo::toolPush(bool start) {
         return;
     }
     servo4.set_angle(servo4.get_goal() + 10);
-    if (servo4.get_load() > TOOL_MAX_LOAD) {
+    if (servo4.get_load() > TOOL_MAX_LOAD || servo4.get_goal() >= SERVO4_MAX_ANGLE) {
         servo4.set_angle(servo4.get_goal() - 10);
         tool_flag = false;
     }
