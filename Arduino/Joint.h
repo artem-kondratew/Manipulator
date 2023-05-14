@@ -35,7 +35,6 @@ public:
     Joint(uint8_t _DXL_ID);
     ~Joint() = default;
 
-    void GoTo(int16_t my_x, int16_t my_y, int16_t my_z);
     void get_radians();
     int16_t get_x();
     int16_t get_y();
@@ -50,9 +49,9 @@ Joint::Joint(uint8_t _DXL_ID) {
 
 
 void Joint::get_radians() {
-    q0 = map(servo1.get_angle(), 0, 1023, 30, 330) - 180;
-    q1 = map(servo2.get_angle(), 0, 1023, 30, 330) - 90;
-    q2 = map(servo3.get_angle(), 0, 1023, 330, 30) - 232;
+    //q0 = map(servo1.get_angle(), 0, 1023, 30, 330) - 180;
+    //q1 = map(servo2.get_angle(), 0, 1023, 30, 330) - 90;
+    //q2 = map(servo3.get_angle(), 0, 1023, 330, 30) - 232;
     q0_rad = (map(servo1.get_angle(), 0, 1023, 30, 330) - 180) / 180.0 * PI;
     q1_rad = (map(servo2.get_angle(), 0, 1023, 30, 330) - 90) / 180.0 * PI;
     q2_rad = (map(servo3.get_angle(), 0, 1023, 30, 330) - 128) / 180.0 * PI;
@@ -141,12 +140,12 @@ int16_t Joint::get_z() {
 
 
 void Joint::get_coordinates() {
-    Serial.print("Angle q0: ");
-    Serial.print(q0); Serial.print("  "); Serial.print(q0_rad); Serial.print("  "); Serial.println(servo1.get_angle());
-    Serial.print("Angle q1: ");
-    Serial.print(q1); Serial.print("  "); Serial.print(q1_rad); Serial.print("  "); Serial.println(servo2.get_angle());
-    Serial.print("Angle q2: ");
-    Serial.print(q2); Serial.print("  "); Serial.print(q2_rad); Serial.print("  "); Serial.println(servo3.get_angle());
+    //Serial.print("Angle q0: ");
+    //Serial.print(q0); Serial.print("  "); Serial.print(q0_rad); Serial.print("  "); Serial.println(servo1.get_angle());
+    //Serial.print("Angle q1: ");
+    //Serial.print(q1); Serial.print("  "); Serial.print(q1_rad); Serial.print("  "); Serial.println(servo2.get_angle());
+    //Serial.print("Angle q2: ");
+    //Serial.print(q2); Serial.print("  "); Serial.print(q2_rad); Serial.print("  "); Serial.println(servo3.get_angle());
 
     Serial.print("Coordinate x: ");
     Serial.println(get_x());
@@ -163,5 +162,12 @@ Joint joint2(DXL_ID2);
 Joint joint3(DXL_ID3);
 Joint joint4(DXL_ID4);
 
+
+#undef X0
+#undef Z0
+#undef LEN1
+#undef LEN2
+#undef LEN3
+#undef LEN4
 
 #endif
