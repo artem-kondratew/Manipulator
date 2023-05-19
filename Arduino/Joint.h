@@ -8,15 +8,13 @@
 #include "Servo.h"
 
 
-//#define PI 3.14
-
 // Lengths of links in mm
-#define X0    -25
-#define Z0     91
+#define X0    -30
+#define Z0     87
 #define LEN1 94.4
 #define LEN2  150
 #define LEN3  150
-#define LEN4  134
+#define LEN4  141
 
 
 class Joint {
@@ -37,7 +35,6 @@ public:
     Joint(uint8_t _DXL_ID);
     ~Joint() = default;
 
-    void GoTo(int16_t my_x, int16_t my_y, int16_t my_z);
     void get_radians();
     int16_t get_x();
     int16_t get_y();
@@ -52,12 +49,12 @@ Joint::Joint(uint8_t _DXL_ID) {
 
 
 void Joint::get_radians() {
-    q0 = map(servo1.get_angle(), 0, 1023, 30, 330) - 180;
-    q1 = map(servo2.get_angle(), 0, 1023, -240, -88);
-    q2 = map(servo3.get_angle(), 0, 1023, -122, 237);
-    q0_rad = q0 / 180.0 * PI;
-    q1_rad = q1 / 180.0 * PI;
-    q2_rad = q2 / 180.0 * PI;
+    //q0 = map(servo1.get_angle(), 0, 1023, 30, 330) - 180;
+    //q1 = map(servo2.get_angle(), 0, 1023, 30, 330) - 90;
+    //q2 = map(servo3.get_angle(), 0, 1023, 330, 30) - 232;
+    q0_rad = (map(servo1.get_angle(), 0, 1023, 30, 330) - 180) / 180.0 * PI;
+    q1_rad = (map(servo2.get_angle(), 0, 1023, 30, 330) - 90) / 180.0 * PI;
+    q2_rad = (map(servo3.get_angle(), 0, 1023, 30, 330) - 128) / 180.0 * PI;
 }
 
 
@@ -84,7 +81,8 @@ int16_t Joint::get_x() {
             Serial.print("Wrong DXL_ID!");
             break;
     }
-    return 0;
+    
+    return x;
 }
 
 
@@ -129,7 +127,7 @@ int16_t Joint::get_z() {
             break;
         }
         case 4: {
-            z = Z0 + LEN2 * sin(q1_rad) + LEN3 * sin(q2_rad);
+            z = Z0 + LEN2 * sin(q1_rad) + LEN3 * sin(q2_rad) - 17;
             break;
         }
         default:
@@ -142,12 +140,12 @@ int16_t Joint::get_z() {
 
 
 void Joint::get_coordinates() {
-    Serial.print("Angle q0: ");
-    Serial.print(q0); Serial.print(" "); Serial.print(servo1.get_angle()); Serial.print(" "); Serial.println(q0_rad);
-    Serial.print("Angle q1: ");
-    Serial.print(q1); Serial.print(" "); Serial.print(servo2.get_angle()); Serial.print(" "); Serial.println(q1_rad);
-    Serial.print("Angle q2: ");
-    Serial.print(q2); Serial.print(" "); Serial.print(servo3.get_angle()); Serial.print(" "); Serial.println(q2_rad);
+    //Serial.print("Angle q0: ");
+    //Serial.print(q0); Serial.print("  "); Serial.print(q0_rad); Serial.print("  "); Serial.println(servo1.get_angle());
+    //Serial.print("Angle q1: ");
+    //Serial.print(q1); Serial.print("  "); Serial.print(q1_rad); Serial.print("  "); Serial.println(servo2.get_angle());
+    //Serial.print("Angle q2: ");
+    //Serial.print(q2); Serial.print("  "); Serial.print(q2_rad); Serial.print("  "); Serial.println(servo3.get_angle());
 
     Serial.print("Coordinate x: ");
     Serial.println(get_x());
@@ -159,53 +157,17 @@ void Joint::get_coordinates() {
 }
 
 
-/* void Joint::getAngles() {
-    int8_t q0 = map(servo1.getAngle(), 0, 1023, -179, 180);
-    int8_t q1 = map(servo2.getAngle(), 0, 1023, -240, -88);
-    int8_t q2 = map(servo3.getAngle(), 0, 1023, 388, 0);
-    double q0_rad = q0 / 180.0 * PI;
-    double q1_rad = q1 / 180.0 * PI;
-    double q2_rad = q2 / 180.0 * PI;
-
-
-} */
-
-
 Joint joint1(DXL_ID1);
 Joint joint2(DXL_ID2);
 Joint joint3(DXL_ID3);
 Joint joint4(DXL_ID4);
 
 
-/*    switch (DXL_ID) {
-        case 1: {
-            x = x0 * cos(q0_rad);
-            y = x0 * sin(q0_rad);
-            z = z0;
-            break;
-        }
-        case 2: {
-            x = (x0 + len2 * cos(q1)) * cos(q0);
-            y = (x0 + len2 * cos(q1)) * sin(q0);
-            z = z0 + len2 * sin(q1);
-            break;
-        }
-        case 3: {
-            x = (x0 + len2 * cos(q1) + len3 * cos(q2)) * cos(q0);
-            y = (x0 + len2 * cos(q1) + len3 * cos(q2)) * sin(q0);
-            z = z0 + len1 * sin(q1) + len3 * sin(q2);
-            break;
-        }
-        case 4: {
-            x = (x0 + len2 * cos(q1_rad) + len3 * cos(q2_rad) + len4) * cos(q0_rad);
-            y = (x0 + len2 * cos(q1_rad) + len3 * cos(q2_rad) + len4) * sin(q0_rad);
-            z = z0 + len2 * sin(q1_rad) + len3 * sin(q2_rad);
-            break;
-        }
-        default:
-            Serial.print("Wrong DXL_ID!");
-            break;
-    } */
-
+#undef X0
+#undef Z0
+#undef LEN1
+#undef LEN2
+#undef LEN3
+#undef LEN4
 
 #endif
