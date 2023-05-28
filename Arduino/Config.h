@@ -67,7 +67,7 @@
 #define MESSAGE_Y_SIGN           15
 #define MESSAGE_Z1_CELL          16
 #define MESSAGE_Z2_CELL          17
-#define MESSAGE_Z_SIGN           28
+#define MESSAGE_Z_SIGN           18
 #define MESSAGE_CHECKSUM_CELL    19
 #define MESSAGE_SIZE             20
 
