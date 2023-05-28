@@ -48,10 +48,10 @@ public:
     static void mv(uint16_t msg);
 
 private:
-    void findCommand(int id, int task, int value);
+    static void findCommand(int id, int task, int value);
 
 public:
-    bool parseCommand(uint64_t command);
+    static bool parseCommand(uint64_t command);
 
 private:
     int32_t readRegister(char* command);

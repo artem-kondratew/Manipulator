@@ -31,8 +31,8 @@ void setup() {
 
 
 void loop() {
-    Connection::receiveCommand();
-    //Servo::mv(Serial.parseInt());
+    //Connection::receiveCommand();
+    Servo::parseCommand(Serial.parseInt());
     Serial.println(servo1.get_angle());
     now = millis();
     if (now - tool_timer > TOOL_TIMER) {
