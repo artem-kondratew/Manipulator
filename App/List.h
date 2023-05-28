@@ -1,5 +1,5 @@
 //
-// Created by user on 11.02.23.
+// Created by artem-kondratew on 11.02.23.
 //
 
 #ifndef HELLO_WORLD_LIST_H

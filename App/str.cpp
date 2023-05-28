@@ -1,5 +1,5 @@
 //
-// Created by user on 3/17/23.
+// Created by artem-kondratew on 3/17/23.
 //
 
 #include "str.h"

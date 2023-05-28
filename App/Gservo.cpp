@@ -1,5 +1,5 @@
 //
-// Created by user on 3/18/23.
+// Created by artem-kondratew on 3/18/23.
 //
 
 #include "Gservo.h"
@@ -7,7 +7,6 @@
 
 Gservo::Gservo(uint8_t _id) {
     id = _id;
-    goal = 0;
     angle = 0;
     speed = 0;
     torque = 0;
@@ -20,11 +19,6 @@ Gservo::Gservo(uint8_t _id) {
 
 uint8_t Gservo::get_id() const {
     return id;
-}
-
-
-uint16_t Gservo::get_goal() const {
-    return goal;
 }
 
 
@@ -48,38 +42,18 @@ uint16_t Gservo::get_is_moving() const {
 }
 
 
-uint16_t Gservo::get_x(){
+uint16_t Gservo::get_x() {
     return x;
 }
 
 
-uint16_t Gservo::get_y(){
+uint16_t Gservo::get_y() {
     return y;
 }
 
 
-uint16_t Gservo::get_z(){
+uint16_t Gservo::get_z() {
     return z;
-}
-
-
-uint16_t Gservo::get_q0() {
-    return q0;
-}
-
-
-uint16_t Gservo::get_q1() {
-    return q1;
-}
-
-
-uint16_t Gservo::get_q2() {
-    return q2;
-}
-
-
-void Gservo::set_goal(uint8_t _goal1, uint8_t _goal2) {
-    goal = _goal1 * 100 + _goal2;
 }
 
 
@@ -118,19 +92,4 @@ void Gservo::set_y(uint8_t _y1, uint8_t _y2, bool y_sign) {
 void Gservo::set_z(uint8_t _z1, uint8_t _z2, bool z_sign) {
     z = (_z1 * 100 + _z2);
     z = (z_sign) ? z : -z;
-}
-
-
-void Gservo::set_q0(uint8_t _q01, uint8_t _q02) {
-    q0 = _q01 * 100 + _q02;
-}
-
-
-void Gservo::set_q1(uint8_t _q11, uint8_t _q12) {
-    q1 = _q11 * 100 + _q12;
-}
-
-
-void Gservo::set_q2(uint8_t _q21, uint8_t _q22) {
-    q2 = _q21 * 100 + _q22;
 }

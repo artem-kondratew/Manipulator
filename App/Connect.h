@@ -1,5 +1,5 @@
 //
-// Created by user on 05.03.23.
+// Created by artem-kondratew on 05.03.23.
 //
 
 #ifndef MANIPULATOR_CONNECT_H

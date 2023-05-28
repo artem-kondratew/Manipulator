@@ -1,14 +1,15 @@
 //
-// Created by user on 3/17/23.
+// Created by artem-kondratew on 3/17/23.
 //
 
 #ifndef MANIPULATOR_STR_H
 #define MANIPULATOR_STR_H
 
 
+#include <cstdint>
+#include <cstring>
 #include <iostream>
 #include <utility>
-#include <cstring>
 
 
 class str {

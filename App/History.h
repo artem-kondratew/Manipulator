@@ -1,5 +1,5 @@
 //
-// Created by user on 3/21/23.
+// Created by artem-kondratew on 3/21/23.
 //
 
 #ifndef MANIPULATOR_HISTORY_H

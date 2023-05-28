@@ -1,5 +1,5 @@
 //
-// Created by user on 05.03.23.
+// Created by artem-kondratew on 05.03.23.
 //
 
 #include "Connect.h"
@@ -38,8 +38,7 @@ void Connect::resetCommand() {
     command[COMMAND_START_BYTE1_CELL] = START_BYTE;
     command[COMMAND_START_BYTE2_CELL] = START_BYTE;
     command[COMMAND_ID_CELL] = PING_DXL_ID;
-    command[COMMAND_TASK1_CELL] = PING_TASK;
-    command[COMMAND_TASK2_CELL] = PING_TASK;
+    command[COMMAND_TASK_CELL] = PING_TASK;
     command[COMMAND_VALUE1_CELL] = PING_VALUE1;
     command[COMMAND_VALUE2_CELL] = PING_VALUE2;
     calcCommandCheckSum();
@@ -127,8 +126,7 @@ void Connect::setId(uint8_t id) {
 
 
 void Connect::setTask(uint8_t task) {
-    command[COMMAND_TASK1_CELL] = task / 10;
-    command[COMMAND_TASK2_CELL] = task % 10;
+    command[COMMAND_TASK_CELL] = task;
 }
 
 
@@ -168,7 +166,6 @@ Gservo* Connect::findGservo(uint8_t id) {
 
 void Connect::decodeMessage() {
     Gservo* gservo = findGservo(message[MESSAGE_ID_CELL]);
-    gservo->set_goal(message[MESSAGE_GOAL1_CELL], message[MESSAGE_GOAL2_CELL]);
     gservo->set_angle(message[MESSAGE_ANGLE1_CELL], message[MESSAGE_ANGLE2_CELL]);
     gservo->set_speed(message[MESSAGE_SPEED1_CELL], message[MESSAGE_SPEED2_CELL]);
     gservo->set_torque(message[MESSAGE_TORQUE1_CELL], message[MESSAGE_TORQUE2_CELL]);
@@ -176,9 +173,6 @@ void Connect::decodeMessage() {
     Gservo::set_x(message[MESSAGE_X1_CELL], message[MESSAGE_X2_CELL], message[MESSAGE_X_SIGN]);
     Gservo::set_y(message[MESSAGE_Y1_CELL], message[MESSAGE_Y2_CELL], message[MESSAGE_Y_SIGN]);
     Gservo::set_z(message[MESSAGE_Z1_CELL], message[MESSAGE_Z2_CELL], message[MESSAGE_Z_SIGN]);
-    Gservo::set_q0(message[MESSAGE_Q01_CELL], message[MESSAGE_Q02_CELL]);
-    Gservo::set_q1(message[MESSAGE_Q11_CELL], message[MESSAGE_Q12_CELL]);
-    Gservo::set_q2(message[MESSAGE_Q21_CELL], message[MESSAGE_Q22_CELL]);
 }
 
 

@@ -78,10 +78,8 @@ int16_t Joint::get_x() {
             break;
         }
         default:
-            Serial.print("Wrong DXL_ID!");
             break;
     }
-    
     return x;
 }
 
@@ -106,7 +104,6 @@ int16_t Joint::get_y() {
             break;
         }
     }
-
     return y;
 }
 
@@ -131,10 +128,8 @@ int16_t Joint::get_z() {
             break;
         }
         default:
-            Serial.print("Wrong DXL_ID!");
             break;
     }
-
     return z;
 }
 
@@ -146,14 +141,6 @@ void Joint::get_coordinates() {
     //Serial.print(q1); Serial.print("  "); Serial.print(q1_rad); Serial.print("  "); Serial.println(servo2.get_angle());
     //Serial.print("Angle q2: ");
     //Serial.print(q2); Serial.print("  "); Serial.print(q2_rad); Serial.print("  "); Serial.println(servo3.get_angle());
-
-    Serial.print("Coordinate x: ");
-    Serial.println(get_x());
-    Serial.print("Coordinate y: ");
-    Serial.println(get_y());
-    Serial.print("Coordinate z: ");
-    Serial.println(get_z());
-    Serial.println();
 }
 
 
